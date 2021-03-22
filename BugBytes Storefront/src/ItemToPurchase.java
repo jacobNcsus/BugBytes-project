@@ -1,5 +1,5 @@
 /**
- * Write a description of class Template here.
+ * ItemToPurchase is a class containing information about an item to be used in a virtual storefront. 
  *
  * @author Jacob Normington
  * @version 2/10/2020
