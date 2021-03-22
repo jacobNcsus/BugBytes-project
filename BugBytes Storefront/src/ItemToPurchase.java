@@ -2,13 +2,10 @@
  * ItemToPurchase is a class containing information about an item to be used in a virtual storefront. 
  *
  * @author Jacob Normington
- * @version 2/10/2020
+ * @version 3/22/2021
  */
-public class ItemToPurchase
+public class ItemToPurchase extends Item
 {
-   private String itemName;
-   private String itemDescription;
-   private int itemPrice;
    private int itemQuantity;
 
    /**
@@ -22,51 +19,8 @@ public class ItemToPurchase
    
    public ItemToPurchase(String name, String description, int price, int quantity)
    {
-      itemName = name;
-      itemDescription = description;
-      itemPrice = price;
-      itemQuantity = quantity;
-   }
-   
-   /**
-    * An example of a method - replace this comment with your own
-    */
-   public static void main(String args[])
-   {
-        
-   }
-    
-   /**
-    * An example of a method - replace this comment with your own
-    *
-    * @param      none
-    * @return     name of the item
-    */
-   public String getName()
-   {
-      return itemName;
-   }
-   public void setName(String name)
-   {
-      itemName = name;
-   }
-   
-   public String getDescription()
-   {
-      return itemDescription;
-   }
-   public void setDescription(String description)
-   {
-      itemDescription = description;
-   }
-
-   public int getPrice()
-   {
-      return itemPrice;
-   }
-   public void setPrice(int price)
-   {
-      itemPrice = price;
+      super(name, description, price);
+      itemQuantity = quantity; 
    }
    
    public int getQuantity()
@@ -79,19 +33,27 @@ public class ItemToPurchase
    }
    
    /**
+    * Returns the item price times quantity. 
+    */
+   public double getTotalCost()
+   {
+      return getPrice()*itemQuantity;
+   } 
+   
+   /**
     * Outputs the item name followed by the quantity, price, and subtotal
     */
    public void printItemCost()
    {
-      System.out.println(itemName + " " + itemQuantity 
-         + " @ $" + itemPrice + " = $" + (itemQuantity*itemPrice));
+      System.out.println(getName() + " " + itemQuantity 
+         + " @ $" + getPrice() + " = $" + (itemQuantity*getPrice()));
    }
    
    /**
-    * Outputs the item name and description
+    * Returns a 
     */
-   public void printItemDescription()
+   public String toString()
    {
-      System.out.println(itemName + ": " + itemDescription);
+      return super.toString() + ""; 
    }
 }

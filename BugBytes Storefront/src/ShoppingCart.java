@@ -4,7 +4,7 @@ import java.util.ArrayList;
  * functionality similar to that used in virtual storefronts.
  *
  * @author Jacob Normington
- * @version 2/12/2020
+ * @version 3/22/2021
  */
 public class ShoppingCart
 {
@@ -43,7 +43,6 @@ public class ShoppingCart
     * Adds an item to cartItems list
     *
     * @param  item   an item to be added to the cart
-    * @return        none
     */
    public void addItem(ItemToPurchase item)
    {
@@ -51,22 +50,31 @@ public class ShoppingCart
    }
    
    /**
-    * Removes an item from cartItems list
+    * Removes an item from the cart
     *
     * @param  name   the name of the item to be removed
-    * @return        none
+    * @return        the item removed from the list, or null if not found
     */
-   public void removeItem(String name)
+   public ItemToPurchase removeItem(String name)
    {
       for (ItemToPurchase item : cartItems)
       {
          if (item.getName().equals(name))
          {
             cartItems.remove(item);
-            return;
+            return item;
          }
       }
       System.out.println("Item not found in cart. Nothing removed.");
+      return null; 
+   }
+   
+   /**
+    * Adds an item to the shopping cart from the database
+    */
+   public void addToCart()
+   {
+      //I don't know how to do that
    }
    
    /**
@@ -88,7 +96,7 @@ public class ShoppingCart
                itemX.setQuantity(item.getQuantity());
             
             if(!(item.getPrice() == 0))
-               itemX.setPrice(item.getPrice());
+               itemX.setPrice((int) (item.getPrice()*100));
             
             return;
          }
@@ -102,7 +110,7 @@ public class ShoppingCart
     * @param     none
     * @return    total number of items in cart
     */
-   public int getNumItemsInCart()
+   public int getCartSize()
    {
       int itemCount = 0;
       for (ItemToPurchase item : cartItems)
@@ -115,21 +123,20 @@ public class ShoppingCart
    /**
     * Determines and returns the total cost of items in cart
     *
-    * @param     none
     * @return    total check out price of the cart
     */
-   public int getCostOfCart()
+   public int getSubtotal()
    {
       int cartPrice = 0;
       for (ItemToPurchase item : cartItems)
       {
-         cartPrice += (item.getQuantity()*item.getPrice());
+         cartPrice += item.getTotalCost();
       }
       return cartPrice;
    }
    
    /**
-    * Outputs total of objects in cart
+    * Prints out the cart with item prices
     */
    public void printTotal()
    {
@@ -140,7 +147,7 @@ public class ShoppingCart
       }
       System.out.println(customerName + "'s Shopping Cart -" + currentDate);
       System.out.println();
-      System.out.println("Number of Items: " + getNumItemsInCart());
+      System.out.println("Number of Items: " + getCartSize());
       System.out.println();
       int total = 0;
       for (ItemToPurchase item : cartItems)
@@ -170,6 +177,4 @@ public class ShoppingCart
          item.printItemDescription();
       }
    }
-   
-   
 }

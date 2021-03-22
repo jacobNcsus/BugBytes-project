@@ -7,9 +7,6 @@ import java.util.Scanner;
  */
 public class ShoppingCartPrinter
 {
-     /**
-    * An example of a method - replace this comment with your own
-    */
    public static void main(String args[])
    {
       ItemToPurchase item1 = new ItemToPurchase();
