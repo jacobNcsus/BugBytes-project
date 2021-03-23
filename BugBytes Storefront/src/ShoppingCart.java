@@ -183,6 +183,19 @@ public class ShoppingCart
 		   }
 		   node = node.getNext(); 
 	   }
+	   if(tail.getValue().getName().equals(item.getName()))
+	   {
+		   if(item.getDescription().equals("none"))
+			   tail.getValue().setDescription(item.getDescription());
+            
+            if(!(item.getQuantity() == 0))
+            	tail.getValue().setQuantity(item.getQuantity());
+            
+            if(!(item.getPrice() == 0))
+            	tail.getValue().setPrice((int) (item.getPrice()*100));
+            
+            return;
+	   }
 	   System.out.println("Item not found in cart. Nothing modified.");
    }
    
