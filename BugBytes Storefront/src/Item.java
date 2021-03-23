@@ -27,6 +27,11 @@ public abstract class Item
 	      itemDescription = description;
 	      itemPrice = price;
 	   }
+	   
+	   public int getProductId()
+	   {
+		   return id; 
+	   }
 
 	   public String getName()
 	   {
