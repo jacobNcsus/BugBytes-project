@@ -105,7 +105,7 @@ public abstract class Item
 	   public void printItemCost()
 	   {
 	      System.out.println(getName() + " " + itemQuantity 
-	         + " @ $" + itemPrice + " = $" + (itemQuantity/100.0*itemPrice));
+	         + " @ $" + itemPrice + " = $" + getTotalCost());
 	   }
 	   
 	   /**

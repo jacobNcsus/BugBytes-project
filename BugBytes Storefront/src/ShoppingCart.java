@@ -275,6 +275,9 @@ public class ShoppingCart
    }
 }
 
+/**
+ * Node in a doubly-linked list of Item objects
+ */
 class CartNode
 {
 	private CartNode previous; 
