@@ -1,4 +1,6 @@
 /**
+ * Discontinued, do not use
+ * 
  * ItemToPurchase is a class containing information about an item to be used in a virtual storefront. 
  *
  * @author Jacob Normington
@@ -19,7 +21,6 @@ public class ItemToPurchase extends Item
    
    public ItemToPurchase(String name, String description, int price, int quantity)
    {
-      super(name, description, price);
       itemQuantity = quantity; 
    }
    

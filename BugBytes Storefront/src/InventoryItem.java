@@ -1,10 +1,6 @@
 /**
- * An object describing an item up for sale in a virtual storefront. 
+ * This is dumb, do not use this
  *
  * @author Jacob Normington
- * @version 3/22/2021
+ * @version 3/29/2021
  */ 
-public class InventoryItem extends Item 
-{
-	
-}
