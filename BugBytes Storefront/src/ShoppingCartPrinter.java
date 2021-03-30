@@ -1,6 +1,6 @@
 import java.util.Scanner;
 /**
- * Write a description of class Template here.
+ * Test code for shopping cart
  *
  * @author Jacob Normington
  * @version 2/10/2020
@@ -9,7 +9,7 @@ public class ShoppingCartPrinter
 {
    public static void main(String args[])
    {
-      ItemToPurchase item1 = new ItemToPurchase();
+      Item item1 = new Item();
       Scanner input = new Scanner(System.in);
       System.out.println("Item 1");
       System.out.println("Enter the item name:");
@@ -20,7 +20,7 @@ public class ShoppingCartPrinter
       item1.setQuantity(input.nextInt());
 
       
-      ItemToPurchase item2 = new ItemToPurchase();
+      Item item2 = new Item();
       System.out.println();
       System.out.println("Item 2");
       System.out.println("Enter the item name:");
@@ -35,8 +35,7 @@ public class ShoppingCartPrinter
       item1.printItemCost();
       item2.printItemCost();
       System.out.println();
-      System.out.println("Total: $" + ((item1.getQuantity()*item1.getPrice())
-          + (item2.getQuantity()*item2.getPrice())));
+      System.out.println("Total: $" + item1.getTotalCost() + item2.getTotalCost() );
       
       input.close();
    }

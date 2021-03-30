@@ -4,7 +4,7 @@
  * @author Jacob Normington
  * @version 3/22/2021
  */
-public abstract class Item 
+public class Item 
 {
 	   private int id; //database product id
 	   private String itemName;

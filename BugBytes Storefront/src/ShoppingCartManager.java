@@ -64,7 +64,7 @@ public class ShoppingCartManager
             int price = java.lang.Integer.parseInt(in.next());
             System.out.println("Enter the item quantity:");
             int quantity = java.lang.Integer.parseInt(in.next());
-            cart.addItem(new ItemToPurchase(name, description, price, quantity));
+            cart.addItem(new Item(name, description, price, quantity));
          }
          if(next.equals("d")) //remove an item from cart
          {
@@ -75,7 +75,7 @@ public class ShoppingCartManager
          if(next.equals("c")) //change item quantity
          {
             System.out.println("CHANGE ITEM QUANTITY");
-            ItemToPurchase item = new ItemToPurchase();
+            Item item = new Item();
             System.out.println("Enter the item name:");
             item.setName(in.nextLine());
             System.out.println("Enter the new quantity:");
