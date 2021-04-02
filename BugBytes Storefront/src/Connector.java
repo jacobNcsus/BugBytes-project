@@ -31,6 +31,20 @@ public class Connector
 		//c.read();
 		//c.delete();
 		c.read(); 
+		
+		c.close();
+	}
+	
+	public void close()
+	{
+		try
+		{
+			myConn.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace(); 
+		}
 	}
 	
 	public void read() 
@@ -48,7 +62,6 @@ public class Connector
 			}
 			
 			myStmt.close(); 
-			myConn.close();
 		}
 		catch (Exception e)
 		{
@@ -71,7 +84,6 @@ public class Connector
 			System.out.println("Insert complete."); 
 		
 			myStmt.close(); 
-			myConn.close();
 		}
 		catch (Exception e)
 		{
@@ -94,7 +106,6 @@ public class Connector
 			System.out.println("Update complete."); 
 
 			myStmt.close(); 
-			myConn.close();
 
 		}
 		catch (Exception e)
@@ -117,7 +128,6 @@ public class Connector
 			System.out.println("Delete complete."); 
 
 			myStmt.close(); 
-			myConn.close();
 
 		}
 		catch (Exception e)
