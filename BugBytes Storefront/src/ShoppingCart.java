@@ -9,6 +9,7 @@ public class ShoppingCart
 {
    private String customerName;
    private String currentDate;
+   private int id; 
    
    private CartNode head; //beginning of list
    private CartNode tail; //end of list
@@ -43,6 +44,11 @@ public class ShoppingCart
    public String getDate()
    {
       return currentDate;
+   }
+   
+   public int getCustomerId()
+   {
+	   return id; 
    }
    
    /**
