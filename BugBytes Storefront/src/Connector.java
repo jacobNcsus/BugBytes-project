@@ -5,9 +5,9 @@ public class Connector
 	private Connection myConn;
 	private String query;
 	
-	private String url = "jdbc:mysql://localhost:3306/demo";
-	private String username = "student";
-	private String password = "student"; 
+	private static final String url = "jdbc:mysql://localhost:3306/demo";
+	private static final String username = "student";
+	private static final String password = "student"; 
 	
 	public Connector()
 	{
