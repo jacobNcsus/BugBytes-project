@@ -1,5 +1,7 @@
 import java.sql.*;
 
+//nonsensical test comment from Daniel
+
 public class Connector 
 {
 	private Connection myConn;
