@@ -7,7 +7,7 @@ public class Product {
 	private Connection myConn;
 	private String query;
 	
-	private String url = "jdbc:mysql://localhost:3306/demo";
+	private String url = "jdbc:mysql://localhost:3306/shop_test";
 	private String username = "student";
 	private String password = "student"; 
 	
@@ -72,6 +72,7 @@ public class Product {
 			}
 			
 			myStmt.close(); 
+			System.out.println();
 		}
 		catch (Exception e)
 		{
@@ -94,6 +95,7 @@ public class Product {
 			}
 			
 			myStmt.close(); 
+			System.out.println();
 		}
 		catch (Exception e)
 		{
@@ -116,6 +118,7 @@ public class Product {
 			}
 			
 			myStmt.close(); 
+			System.out.println();
 		}
 		catch (Exception e)
 		{
@@ -138,6 +141,7 @@ public class Product {
 			}
 			
 			myStmt.close(); 
+			System.out.println();
 		}
 		catch (Exception e)
 		{
@@ -160,6 +164,7 @@ public class Product {
 			}
 			
 			myStmt.close(); 
+			System.out.println();
 		}
 		catch (Exception e)
 		{
@@ -174,7 +179,7 @@ public class Product {
 			// 2. Create a statement
 			Statement myStmt = myConn.createStatement();
 			// 3. Execute a SQL query
-			ResultSet myRs = myStmt.executeQuery("select * from meat_seafood ;");
+			ResultSet myRs = myStmt.executeQuery("select * from meat_seafood;");
 			// 4. Process the result set 
 			while(myRs.next())
 			{
@@ -182,6 +187,7 @@ public class Product {
 			}
 			
 			myStmt.close(); 
+			System.out.println();
 		}
 		catch (Exception e)
 		{
@@ -204,6 +210,7 @@ public class Product {
 			}
 			
 			myStmt.close(); 
+			System.out.println();
 		}
 		catch (Exception e)
 		{
