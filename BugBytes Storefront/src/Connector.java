@@ -1,7 +1,11 @@
 import java.sql.*;
 
-//nonsensical test comment from Daniel
-
+/**
+ * An example class to create a JDBC connection to a database demo. 
+ *
+ * @author Jacob Normington
+ * @version 4/9/2021
+ */
 public class Connector 
 {
 	private Connection myConn;

@@ -8,8 +8,8 @@ public class Product {
 	private String query;
 	
 	private String url = "jdbc:mysql://localhost:3306/shop_test";
-	private String username = "student";
-	private String password = "student"; 
+	private String username = "shopMgr";
+	private String password = "csc131"; 
 	
 	public Product()
 	{

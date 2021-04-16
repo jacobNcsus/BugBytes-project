@@ -1,5 +1,4 @@
 //Youser Alalusi
-package Cart;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,13 +10,13 @@ public class Cart {
     
     private Connection myConn;
     private String url = "jdbc:mysql://localhost:3306/shop_test";
-    private String username = "root";
-    private String password = "root"; 
+    private String username = "shopMgr";
+    private String password = "csc131"; 
 
     
     public Cart() {
         try {
-                Class.forName("com.mysql.cj.jdbc.Driver");
+                //Class.forName("com.mysql.cj.jdbc.Driver"); //this is unnecessary, class is already included in referenced libraries
                 myConn = DriverManager.getConnection(url, username, password);
         } catch (Exception e){
                 e.printStackTrace();
