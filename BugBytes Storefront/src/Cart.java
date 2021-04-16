@@ -74,7 +74,7 @@ public class Cart {
         // Add to cart
         try {
             Statement myStmt = myConn.createStatement();
-            String statementText = "INSERT INTO cart(CUSTOMER_ID_CARD, PRODUCT_ID, NAME, QUANTITY, TOTAL_COST) VALUES(" + custID + ", \"" + prodID + "\", \"" + name + "\", " + quantity + ", \"$" + (price * quantity) + "\")";
+            String statementText = "INSERT INTO cart(CUSTOMER_ID_CART, PRODUCT_ID, NAME, QUANTITY, TOTAL_COST) VALUES(" + custID + ", \"" + prodID + "\", \"" + name + "\", " + quantity + ", \"$" + (price * quantity) + "\")";
             myStmt.executeUpdate(statementText);
             myStmt.close(); 
         } catch (Exception e) {
@@ -85,7 +85,7 @@ public class Cart {
     public void removeFromCart(int custID, String prodID) {
         try {
             Statement myStmt = myConn.createStatement();
-            String statementText = "DELETE FROM cart WHERE PRODUCT_ID=\"" + prodID + "\" AND CUSTOMER_ID_CARD=\"" + custID + "\""; 
+            String statementText = "DELETE FROM cart WHERE PRODUCT_ID=\"" + prodID + "\" AND CUSTOMER_ID_CART=\"" + custID + "\""; 
             myStmt.executeUpdate(statementText);
             myStmt.close(); 
         } catch (Exception e) {
@@ -96,9 +96,9 @@ public class Cart {
     public void getCartItems(int custID) {
         try {
             Statement myStmt = myConn.createStatement();
-            ResultSet myRs = myStmt.executeQuery("SELECT * FROM cart WHERE CUSTOMER_ID_CARD=\"" + custID + "\"");
+            ResultSet myRs = myStmt.executeQuery("SELECT * FROM cart WHERE CUSTOMER_ID_CART=\"" + custID + "\"");
             while(myRs.next()) {
-                System.out.println(myRs.getString("CUSTOMER_ID_CARD") + ", " + myRs.getString("PRODUCT_ID") + ", " + myRs.getString("NAME") + ", " + myRs.getString("QUANTITY") + ", " + myRs.getString("TOTAL_COST"));
+                System.out.println(myRs.getString("CUSTOMER_ID_CART") + ", " + myRs.getString("PRODUCT_ID") + ", " + myRs.getString("NAME") + ", " + myRs.getString("QUANTITY") + ", " + myRs.getString("TOTAL_COST"));
             }
             myStmt.close(); 
         } catch (Exception e) {
@@ -109,7 +109,7 @@ public class Cart {
         
         try {
             Statement myStmt = myConn.createStatement();
-            String statementText = "SELECT c.PRODUCT_ID, p.NAME, c.QUANTITY, p.QUANTITY AS stockRemaining FROM cart c LEFT JOIN products p ON c.PRODUCT_ID = p.PRODUCT_ID WHERE CUSTOMER_ID_CARD=\"" + custID+ "\"";
+            String statementText = "SELECT c.PRODUCT_ID, p.NAME, c.QUANTITY, p.QUANTITY AS stockRemaining FROM cart c LEFT JOIN products p ON c.PRODUCT_ID = p.PRODUCT_ID WHERE CUSTOMER_ID_CART=\"" + custID+ "\"";
             ResultSet myRs = myStmt.executeQuery(statementText);
             while(myRs.next()) {
                 System.out.println();
