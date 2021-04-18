@@ -8,8 +8,8 @@ public class Product {
 	private String query;
 	
 	private String url = "jdbc:mysql://localhost:3306/shop_test";
-	private String username = "shopMgr";
-	private String password = "csc131"; 
+	private String username = "shopMgr"; // shopMgr, or student
+	private String password = "csc131"; // csc131, or student
 	
 	public Product()
 	{
@@ -35,12 +35,12 @@ public class Product {
 		//c.read(); 
 		
 		c.all();
-		c.alcohol();
-		c.bakery();
-		c.breakfast();
-		c.dairy();
-		c.meat();
-		c.produce();
+		c.printAisle("alcohol");
+		c.printAisle("bakery");
+		c.printAisle("breakfast");
+		c.printAisle("dairy");
+		c.printAisle("meat_seafood");
+		c.printAisle("produce");
 		
 		c.close();
 	}
@@ -59,39 +59,22 @@ public class Product {
 	
 	public void all() 
 	{
-		try
-		{
-			// 2. Create a statement
-			Statement myStmt = myConn.createStatement();
-			// 3. Execute a SQL query
-			ResultSet myRs = myStmt.executeQuery("select * from products");
-			// 4. Process the result set 
-			while(myRs.next())
-			{
-				System.out.println(myRs.getString("PRODUCT_ID") + ", " + myRs.getString("PRODUCT_TYPE") + ", " + myRs.getString("NAME") + ", " + myRs.getString("PRICE") + ", " + myRs.getString("QUANTITY") + ", " + myRs.getString("REORDER"));
-			}
-			
-			myStmt.close(); 
-			System.out.println();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace(); 
-		}
+		printAisle("products");
 	}
 	
-	public void alcohol() 
+	public void printAisle(String aisle) 
 	{
 		try
 		{
 			// 2. Create a statement
 			Statement myStmt = myConn.createStatement();
 			// 3. Execute a SQL query
-			ResultSet myRs = myStmt.executeQuery("select * from alcohol;");
+			ResultSet myRs = myStmt.executeQuery("select * from " + aisle + ";");
 			// 4. Process the result set 
 			while(myRs.next())
 			{
-				System.out.println(myRs.getString("PRODUCT_ID") + ", " + myRs.getString("PRODUCT_TYPE") + ", " + myRs.getString("NAME") + ", " + myRs.getString("PRICE") + ", " + myRs.getString("QUANTITY") + ", " + myRs.getString("REORDER"));
+				System.out.println(myRs.getString("PRODUCT_ID") + ", " + myRs.getString("PRODUCT_TYPE") + ", " + myRs.getString("PRODUCT_NAME") + ", " 
+			+ myRs.getString("PRICE") + ", " + myRs.getString("QUANTITY_IN_STOCK") + ", " + myRs.getString("REORDER"));
 			}
 			
 			myStmt.close(); 
@@ -103,121 +86,7 @@ public class Product {
 		}
 	}
 	
-	public void bakery() 
-	{
-		try
-		{
-			// 2. Create a statement
-			Statement myStmt = myConn.createStatement();
-			// 3. Execute a SQL query
-			ResultSet myRs = myStmt.executeQuery("select * from bakery;");
-			// 4. Process the result set 
-			while(myRs.next())
-			{
-				System.out.println(myRs.getString("PRODUCT_ID") + ", " + myRs.getString("PRODUCT_TYPE") + ", " + myRs.getString("NAME") + ", " + myRs.getString("PRICE") + ", " + myRs.getString("QUANTITY") + ", " + myRs.getString("REORDER"));
-			}
-			
-			myStmt.close(); 
-			System.out.println();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace(); 
-		}
-	}
-	
-	public void breakfast() 
-	{
-		try
-		{
-			// 2. Create a statement
-			Statement myStmt = myConn.createStatement();
-			// 3. Execute a SQL query
-			ResultSet myRs = myStmt.executeQuery("select * from breakfast;");
-			// 4. Process the result set 
-			while(myRs.next())
-			{
-				System.out.println(myRs.getString("PRODUCT_ID") + ", " + myRs.getString("PRODUCT_TYPE") + ", " + myRs.getString("NAME") + ", " + myRs.getString("PRICE") + ", " + myRs.getString("QUANTITY") + ", " + myRs.getString("REORDER"));
-			}
-			
-			myStmt.close(); 
-			System.out.println();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace(); 
-		}
-	}
-	
-	public void dairy() 
-	{
-		try
-		{
-			// 2. Create a statement
-			Statement myStmt = myConn.createStatement();
-			// 3. Execute a SQL query
-			ResultSet myRs = myStmt.executeQuery("select * from dairy;");
-			// 4. Process the result set 
-			while(myRs.next())
-			{
-				System.out.println(myRs.getString("PRODUCT_ID") + ", " + myRs.getString("PRODUCT_TYPE") + ", " + myRs.getString("NAME") + ", " + myRs.getString("PRICE") + ", " + myRs.getString("QUANTITY") + ", " + myRs.getString("REORDER"));
-			}
-			
-			myStmt.close(); 
-			System.out.println();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace(); 
-		}
-	}
-	
-	public void meat() 
-	{
-		try
-		{
-			// 2. Create a statement
-			Statement myStmt = myConn.createStatement();
-			// 3. Execute a SQL query
-			ResultSet myRs = myStmt.executeQuery("select * from meat_seafood;");
-			// 4. Process the result set 
-			while(myRs.next())
-			{
-				System.out.println(myRs.getString("PRODUCT_ID") + ", " + myRs.getString("PRODUCT_TYPE") + ", " + myRs.getString("NAME") + ", " + myRs.getString("PRICE") + ", " + myRs.getString("QUANTITY") + ", " + myRs.getString("REORDER"));
-			}
-			
-			myStmt.close(); 
-			System.out.println();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace(); 
-		}
-	}
-	
-	public void produce() 
-	{
-		try
-		{
-			// 2. Create a statement
-			Statement myStmt = myConn.createStatement();
-			// 3. Execute a SQL query
-			ResultSet myRs = myStmt.executeQuery("select * from produce;");
-			// 4. Process the result set 
-			while(myRs.next())
-			{
-				System.out.println(myRs.getString("PRODUCT_ID") + ", " + myRs.getString("PRODUCT_TYPE") + ", " + myRs.getString("NAME") + ", " + myRs.getString("PRICE") + ", " + myRs.getString("QUANTITY") + ", " + myRs.getString("REORDER"));
-			}
-			
-			myStmt.close(); 
-			System.out.println();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace(); 
-		}
-	}
-	
+
 /*
  * &	public void insert()
 	{

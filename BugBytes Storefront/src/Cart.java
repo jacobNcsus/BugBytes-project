@@ -47,7 +47,8 @@ public class Cart {
             Statement myStmt = myConn.createStatement();
             ResultSet myRs = myStmt.executeQuery("select * from products WHERE PRODUCT_TYPE='"+prodType+"'");
             while(myRs.next()) {
-                System.out.println(myRs.getString("PRODUCT_ID") + ", " + myRs.getString("PRODUCT_TYPE") + ", " + myRs.getString("NAME") + ", " + myRs.getString("PRICE") + ", " + myRs.getString("QUANTITY") + ", " + myRs.getString("REORDER"));
+                System.out.println(myRs.getString("PRODUCT_ID") + ", " + myRs.getString("PRODUCT_TYPE") + ", " + myRs.getString("PRODUCT_NAME") + ", " 
+            + myRs.getString("PRICE") + ", " + myRs.getString("QUANTITY_IN_STOCK") + ", " + myRs.getString("REORDER"));
             }
             myStmt.close(); 
         } catch (Exception e) {
@@ -61,10 +62,10 @@ public class Cart {
         Double price = 0.0;
         try {
             Statement myStmt = myConn.createStatement();
-            String statementText = "SELECT NAME, PRICE, QUANTITY FROM products WHERE PRODUCT_ID=\"" + prodID + "\"";
+            String statementText = "SELECT NAME, PRICE, QUANTITY_IN_STOCK FROM products WHERE PRODUCT_ID=\"" + prodID + "\"";
             ResultSet myRs = myStmt.executeQuery(statementText);
             myRs.next();
-            name = myRs.getString("NAME");
+            name = myRs.getString("PRODUCT_NAME");
             price = myRs.getDouble("PRICE");       
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,7 +74,7 @@ public class Cart {
         // Add to cart
         try {
             Statement myStmt = myConn.createStatement();
-            String statementText = "INSERT INTO cart(CUSTOMER_ID_CART, PRODUCT_ID, NAME, QUANTITY, TOTAL_COST) VALUES(" + custID + ", \"" + prodID + "\", \"" + name + "\", " + quantity + ", \"$" + (price * quantity) + "\")";
+            String statementText = "INSERT INTO cart(CUSTOMER_ID_CART, PRODUCT_ID, PRODUCT_NAME, QUANTITY_IN_STOCK, TOTAL_COST) VALUES(" + custID + ", \"" + prodID + "\", \"" + name + "\", " + quantity + ", \"$" + (price * quantity) + "\")";
             myStmt.executeUpdate(statementText);
             myStmt.close(); 
         } catch (Exception e) {
@@ -97,7 +98,7 @@ public class Cart {
             Statement myStmt = myConn.createStatement();
             ResultSet myRs = myStmt.executeQuery("SELECT * FROM cart WHERE CUSTOMER_ID_CART=\"" + custID + "\"");
             while(myRs.next()) {
-                System.out.println(myRs.getString("CUSTOMER_ID_CART") + ", " + myRs.getString("PRODUCT_ID") + ", " + myRs.getString("NAME") + ", " + myRs.getString("QUANTITY") + ", " + myRs.getString("TOTAL_COST"));
+                System.out.println(myRs.getString("CUSTOMER_ID_CART") + ", " + myRs.getString("PRODUCT_ID") + ", " + myRs.getString("PRODUCT_NAME") + ", " + myRs.getString("QUANTITY_IN_STOCK") + ", " + myRs.getString("TOTAL_COST"));
             }
             myStmt.close(); 
         } catch (Exception e) {
@@ -108,11 +109,11 @@ public class Cart {
         
         try {
             Statement myStmt = myConn.createStatement();
-            String statementText = "SELECT c.PRODUCT_ID, p.NAME, c.QUANTITY, p.QUANTITY AS stockRemaining FROM cart c LEFT JOIN products p ON c.PRODUCT_ID = p.PRODUCT_ID WHERE CUSTOMER_ID_CART=\"" + custID+ "\"";
+            String statementText = "SELECT c.PRODUCT_ID, p.PRODUCT_NAME, c.QUANTITY_IN_STOCK, p.QUANTITY_IN_STOCK AS stockRemaining FROM cart c LEFT JOIN products p ON c.PRODUCT_ID = p.PRODUCT_ID WHERE CUSTOMER_ID_CART=\"" + custID+ "\"";
             ResultSet myRs = myStmt.executeQuery(statementText);
             while(myRs.next()) {
                 System.out.println();
-                if (myRs.getInt("stockRemaining") < myRs.getInt("QUANTITY")) {
+                if (myRs.getInt("stockRemaining") < myRs.getInt("QUANTITY_IN_STOCK")) {
                     System.out.println("Insufficient inventory");
                 } else {
                     System.out.println("Order placed");
