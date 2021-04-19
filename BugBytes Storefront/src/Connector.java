@@ -46,7 +46,8 @@ public class Connector
 		//c.printAisle("meat_seafood");
 		//c.printAisle("produce");
 		
-		//c.printCart(1);
+		c.signUp(1, "user1", "first", "last", "foo@bar.com", "18000000000");
+		c.printCart(1);
 		c.addToCart(1, "ALC01", 2);
 		c.printCart(1);
         c.removeFromCart(1, "ALC01");
@@ -274,6 +275,8 @@ public class Connector
 	
 	public void printCart(int custID) 
 	{
+		System.out.println("User " + custID + "'s cart: ");
+		
 		try
 		{
 			// 2. Create a statement
@@ -281,10 +284,17 @@ public class Connector
 			// 3. Execute a SQL query
 			ResultSet myRs = myStmt.executeQuery("select * from cart WHERE CUSTOMER_ID_CART='" + custID +"';");
 			// 4. Process the result set 
-			while(myRs.next())
-			{
-				System.out.println(myRs.getString("CUSTOMER_ID_CART") + ", " + myRs.getString("PRODUCT_ID") + ", " + myRs.getString("PRODUCT_NAME") + ", " 
-			+ myRs.getString("QUANTITY_IN_STOCK") + ", " + myRs.getString("TOTAL_COST"));
+			if (myRs.next() == false) 
+			{ 
+				System.out.println("Cart is empty"); 
+			} 
+			else 
+			{ 
+				do 
+				{ 
+					System.out.println(myRs.getString("CUSTOMER_ID_CART") + ", " + myRs.getString("PRODUCT_ID") + ", " + myRs.getString("QUANTITY_ORDERED") + ", " 
+							+ myRs.getString("TOTAL_COST"));
+				} while (myRs.next()); 
 			}
 			
 			myStmt.close(); 
@@ -299,7 +309,6 @@ public class Connector
 	public void addToCart(int custID, String prodID, int quantity) 
 	{
         // Retrieve product details
-        String name = "";
         Double price = 0.0;
         try 
         {
@@ -307,8 +316,8 @@ public class Connector
             String statementText = "SELECT * FROM products WHERE PRODUCT_ID=\"" + prodID + "\"";
             ResultSet myRs = myStmt.executeQuery(statementText);
             myRs.next();
-            name = myRs.getString("PRODUCT_NAME");
-            price = myRs.getDouble("PRICE");       
+            price = myRs.getDouble("PRICE"); 
+            myStmt.close();
         } 
         catch (Exception e) 
         {
@@ -318,10 +327,16 @@ public class Connector
         // Add to cart
         try 
         {
-            Statement myStmt = myConn.createStatement();
-            String statementText = "INSERT INTO cart(CUSTOMER_ID_CART, PRODUCT_ID, PRODUCT_NAME, QUANTITY_IN_STOCK, TOTAL_COST) VALUES(" 
-            		+ custID + ", \"" + prodID + "\", \"" + name + "\", " + quantity + ", \"$" + (price * quantity) + "\")";
-            myStmt.executeUpdate(statementText);
+            query = "INSERT INTO cart (CUSTOMER_ID_CART, PRODUCT_ID, QUANTITY_ORDERED, TOTAL_COST) VALUES (?,?,?,?)";
+        	PreparedStatement myStmt = myConn.prepareStatement(query);
+        	
+        	myStmt.setInt(1, custID);
+        	myStmt.setString(2, prodID);
+        	myStmt.setInt(3, quantity);
+        	myStmt.setDouble(4, price * quantity);
+        	
+            myStmt.executeUpdate();
+            System.out.println("Item successfully added to cart.\n");
             myStmt.close(); 
         } 
         catch (Exception e) 
@@ -337,6 +352,7 @@ public class Connector
             Statement myStmt = myConn.createStatement();
             String statementText = "DELETE FROM cart WHERE PRODUCT_ID=\"" + prodID + "\" AND CUSTOMER_ID_CART=\"" + custID + "\""; 
             myStmt.executeUpdate(statementText);
+            System.out.println("Item successfully removed from cart.\n");
             myStmt.close(); 
         } 
         catch (Exception e) 
@@ -351,11 +367,11 @@ public class Connector
         try 
         {
             Statement myStmt = myConn.createStatement();
-            String statementText = "SELECT c.PRODUCT_ID, p.PRODUCT_NAME, c.QUANTITY_IN_STOCK, p.QUANTITY_IN_STOCK AS stockRemaining FROM cart c LEFT JOIN products p ON c.PRODUCT_ID = p.PRODUCT_ID WHERE CUSTOMER_ID_CART=\"" + custID+ "\"";
+            String statementText = "SELECT c.PRODUCT_ID, p.PRODUCT_NAME, c.QUANTITY_ORDERED, p.QUANTITY_IN_STOCK AS stockRemaining FROM cart c LEFT JOIN products p ON c.PRODUCT_ID = p.PRODUCT_ID WHERE CUSTOMER_ID_CART=\"" + custID+ "\"";
             ResultSet myRs = myStmt.executeQuery(statementText);
             while(myRs.next()) 
             {
-                System.out.println();
+                System.out.println("Inside the while loop");
                 if (myRs.getInt("stockRemaining") < myRs.getInt("QUANTITY_IN_STOCK")) 
                 {
                     System.out.println("Insufficient inventory");
@@ -373,5 +389,47 @@ public class Connector
             e.printStackTrace();
         }
         
+    }
+    
+    public void signUp(int id, String username, String firstName, String lastName, String email, String phone)
+    {
+    	try 
+        {
+    		// 2. Create a statement
+    		Statement myStmt = myConn.createStatement();
+    		// 3. Execute a SQL query
+    		ResultSet myRs = myStmt.executeQuery("select * from customer WHERE CUSTOMER_ID='" + id +"';");
+    		// 4. Process the result set 
+    		myRs.next();
+    		if (myRs.getString("CUSTOMER_ID") != null) 
+    		{
+    			System.out.println("This account already exists.\n");
+    			return;
+    		}	
+        }
+    	catch (Exception e) 
+        {
+            e.printStackTrace(); 
+        }
+    	
+    	try //create new account
+    	{
+    		query = "INSERT INTO customer (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (?,?,?,?,?,?)";
+        	PreparedStatement myStmt = myConn.prepareStatement(query);
+        	
+        	myStmt.setInt(1, id);
+        	myStmt.setString(2, username);
+        	myStmt.setString(3, firstName);
+        	myStmt.setString(4, lastName);
+        	myStmt.setString(5, email);
+        	myStmt.setString(6, phone);
+        	
+            myStmt.executeUpdate();
+            myStmt.close(); 
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace(); 
+        }
     }
 }

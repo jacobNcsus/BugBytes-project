@@ -1,4 +1,4 @@
-//Youser Alalusi
+//Youser Alalusi, depricated.
 
 import java.sql.Connection;
 import java.sql.DriverManager;
