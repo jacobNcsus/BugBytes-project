@@ -36,7 +36,7 @@ public class ShoppingCartManager
     * @param   cart  the shopping cart to be modified
     * @return        none
     */
-   public static void printMenu(ShoppingCart cart)
+   private static void printMenu(ShoppingCart cart)
    {
       Scanner in = new Scanner(System.in);
       System.out.println();

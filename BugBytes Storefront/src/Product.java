@@ -1,5 +1,5 @@
 import java.sql.*;
-//Test
+//Daniel, depricated 
 
 
 public class Product {
