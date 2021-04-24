@@ -1,5 +1,5 @@
 /**
- * A ShoppingCart is an ArrayList of ItemToPurchase objects, with 
+ * A ShoppingCart is an List of Item objects, with 
  * functionality similar to that used in virtual storefronts.
  *
  * @author Jacob Normington
@@ -9,6 +9,7 @@ public class ShoppingCart
 {
    private String customerName;
    private String currentDate;
+   private int id; 
    
    private CartNode head; //beginning of list
    private CartNode tail; //end of list
@@ -45,6 +46,11 @@ public class ShoppingCart
       return currentDate;
    }
    
+   public int getCustomerId()
+   {
+	   return id; 
+   }
+   
    /**
     * Returns the number of items in the cart
     *
@@ -60,7 +66,7 @@ public class ShoppingCart
     *
     * @param  item   an item to be added to the cart
     */
-   public void addItem(ItemToPurchase item)
+   public void addItem(Item item)
    {
       if (head == null)
       {
@@ -81,7 +87,7 @@ public class ShoppingCart
     * @param  name   the name of the item to be removed
     * @return        the item removed from the list, or null if not found
     */
-   public ItemToPurchase removeItem(String name)
+   public Item removeItem(String name)
    {
 	   if (size > 0)
 	   {
@@ -163,7 +169,7 @@ public class ShoppingCart
     * @param   item  the item to be modified
     * @return        none
     */
-   public void modifyItem(ItemToPurchase item) //this is probably not useful 
+   public void modifyItem(Item item) //this is probably not useful 
    {
 	   CartNode node = head; 
 	   while(node.hasNext())
@@ -275,26 +281,29 @@ public class ShoppingCart
    }
 }
 
+/**
+ * Node in a doubly-linked list of Item objects
+ */
 class CartNode
 {
 	private CartNode previous; 
-	private ItemToPurchase value;
+	private Item value;
 	private CartNode next; 
 	
-	public CartNode(ItemToPurchase val)
+	public CartNode(Item val)
 	{
 		value = val; 
 		previous = null; 
 		next = null; 
 	}
 	
-	public CartNode(ItemToPurchase val, CartNode previous)
+	public CartNode(Item val, CartNode previous)
 	{
 		value = val; 
 		this.previous = previous; 
 	}
 	
-	public void add(ItemToPurchase next)
+	public void add(Item next)
 	{
 		this.next = new CartNode(next, this); 
 	}
@@ -322,10 +331,10 @@ class CartNode
 		this.previous = previous;
 	}
 
-	public ItemToPurchase getValue() {
+	public Item getValue() {
 		return value;
 	}
-	public void setValue(ItemToPurchase value) {
+	public void setValue(Item value) {
 		this.value = value;
 	}
 

@@ -1,16 +1,17 @@
 /**
- * A generic object of an item for sale. 
+ * An item of inventory for a store. 
  *
  * @author Jacob Normington
  * @version 3/22/2021
  */
-public abstract class Item 
+public class Item 
 {
-	   private int id; //are we going to actually use this?
+	   private int id; //database product id
 	   private String itemName;
-	   private String category; 
+	   private String category;
 	   private String itemDescription;
 	   private int itemPrice; //in USD cents 
+	   private int itemQuantity;
 
 	   /**
 	    * Default constructor for objects of ItemToPurchase class, 
@@ -18,14 +19,18 @@ public abstract class Item
 	    */
 	   public Item()
 	   {
-	      new ItemToPurchase("none", "none", 0, 0);
+		   itemName = null;
+		   itemDescription = null;
+		   itemPrice = 0;
+		   itemQuantity = 0;
 	   }
 	   
-	   public Item(String name, String description, int price)
+	   public Item(String name, String description, int price, int quantity)
 	   {
 	      itemName = name;
 	      itemDescription = description;
 	      itemPrice = price;
+	      itemQuantity = quantity;
 	   }
 	   
 	   public int getProductId()
@@ -77,12 +82,30 @@ public abstract class Item
 	      itemPrice = price;
 	   }
 	   
-	   /**
-	    * Outputs the item name and description
-	    */
-	   public String toString()
+	   public int getQuantity()
 	   {
-	      return itemName + ": " + itemDescription;
+	      return itemQuantity;
+	   }
+	   public void setQuantity(int quantity)
+	   {
+	      itemQuantity = quantity;
+	   }
+	   
+	   /**
+	    * Returns the item price times quantity. 
+	    */
+	   public double getTotalCost()
+	   {
+	      return itemQuantity/100.0*itemPrice;
+	   } 
+	   
+	   /**
+	    * Outputs the item name followed by the quantity, price, and subtotal
+	    */
+	   public void printItemCost()
+	   {
+	      System.out.println(getName() + " " + itemQuantity 
+	         + " @ $" + itemPrice + " = $" + getTotalCost());
 	   }
 	   
 	   /**
@@ -90,6 +113,14 @@ public abstract class Item
 	    */
 	   public void printItemDescription()
 	   {
-	      System.out.println(toString()); 
+	      System.out.println(itemName + ": " + itemDescription); 
+	   }
+	   
+	   /**
+	    * Outputs the item name and description
+	    */
+	   public String toString()
+	   {
+	      return itemQuantity + " " + itemName + " @ " + itemQuantity + ": " + itemDescription;
 	   }
 	}
