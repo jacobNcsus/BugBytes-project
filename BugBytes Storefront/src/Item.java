@@ -6,9 +6,9 @@
  */
 public class Item 
 {
-	   private int id; //database product id
-	   private String itemName;
+	   private String id; //database product id
 	   private String category;
+	   private String itemName;
 	   private String itemDescription;
 	   private int itemPrice; //in USD cents 
 	   private int itemQuantity;
@@ -25,15 +25,16 @@ public class Item
 		   itemQuantity = 0;
 	   }
 	   
-	   public Item(String name, String description, int price, int quantity)
+	   public Item(String id, String category, String name, double price, int quantity)
 	   {
+	      this.id = id; 
+	      this.category = category;
 	      itemName = name;
-	      itemDescription = description;
-	      itemPrice = price;
+	      itemPrice = (int) (price*100); //round
 	      itemQuantity = quantity;
 	   }
 	   
-	   public int getProductId()
+	   public String getProductId()
 	   {
 		   return id; 
 	   }

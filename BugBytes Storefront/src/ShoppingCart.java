@@ -8,8 +8,9 @@
 public class ShoppingCart
 {
    private String customerName;
-   private String currentDate;
-   private int id; 
+   private String currentDate; //is this important?
+   private int id; //user id
+   private Connector c; 
    
    private CartNode head; //beginning of list
    private CartNode tail; //end of list
@@ -22,6 +23,8 @@ public class ShoppingCart
    {
       customerName = "none";
       currentDate = "January 1, 2020";
+      c=Connector.getCon();
+      
       head = null;  
       tail = head; 
       size = 0; 
@@ -63,10 +66,11 @@ public class ShoppingCart
    
    /**
     * Adds a new item to the shopping cart at the end of the list
+    * Not reflected in database. 
     *
     * @param  item   an item to be added to the cart
     */
-   public void addItem(Item item)
+   private void addItem(Item item)
    {
       if (head == null)
       {
@@ -82,12 +86,13 @@ public class ShoppingCart
    }
    
    /**
-    * Removes an item from the cart
+    * Removes an item from the cart.
+    * Not reflected in database.
     *
     * @param  name   the name of the item to be removed
     * @return        the item removed from the list, or null if not found
     */
-   public Item removeItem(String name)
+   private Item removeItem(String name)
    {
 	   if (size > 0)
 	   {
@@ -121,28 +126,13 @@ public class ShoppingCart
    }
    
    /**
-    * Adds an item to the shopping cart from the database
-    */
-   public void addToCart()
-   {
-      //I don't know how to do that
-   }
-   
-   /**
-    * Searches through the database for changes which need to be made to the cart
-    */
-   public void update()
-   {
-      //I don't know how to do that
-   }
-   
-   /**
     * Alters the quantity of an item in the cart. 
+    * Not reflected in database.
     * 
     * @param	name		the name of the item to alter
     * 			amount		the number of item user wants to buy
     */
-   public void changeQuantity(String name, int amount)
+   private void changeQuantity(String name, int amount)
    {
 	   if (size > 0)
 	   {
@@ -164,12 +154,13 @@ public class ShoppingCart
    }
    
    /**
-    * Modifies an item's description, price, and/or quantity
+    * Modifies an item's description, price, and/or quantity.
+    * Not reflected in database.
     *
     * @param   item  the item to be modified
     * @return        none
     */
-   public void modifyItem(Item item) //this is probably not useful 
+   private void modifyItem(Item item) //this is probably not useful 
    {
 	   CartNode node = head; 
 	   while(node.hasNext())
@@ -203,6 +194,46 @@ public class ShoppingCart
             return;
 	   }
 	   System.out.println("Item not found in cart. Nothing modified.");
+   }
+   
+   /**
+    * Adds an item to the shopping cart from the database. 
+    */
+   public void addToCart(String prodID, int quantity)
+   {
+	   //find item
+	   String category = c.readItem(prodID, "PRODUCT_TYPE");
+	   String name = c.readItem(prodID, "PRODUCT_NAME");
+	   double price = Double.parseDouble(c.readItem(prodID, "PRICE")); 
+	   
+	   
+	   addItem(new Item(prodID, category, name, price, quantity)); //update cart
+	   
+	   c.addToCart(id, prodID, quantity); //update database
+   }
+   
+   /**
+    * Removes an item from the shopping cart. 
+    */
+   public void removeFromCart()
+   {
+      //I don't know how to do that
+   }
+   
+   /**
+    * Changes the quantity of an item in the cart. 
+    */
+   public void changeCartQuantity()
+   {
+      //I don't know how to do that
+   }
+   
+   /**
+    * Searches through the database for changes which need to be made to the cart
+    */
+   public void update()
+   {
+      //I don't know how to do that
    }
    
    /**

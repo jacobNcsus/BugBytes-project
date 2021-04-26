@@ -14,8 +14,10 @@ public class Connector
 	private String url = "jdbc:mysql://localhost:3306/shop_test";
 	private String username = "shopMgr";
     private String password = "csc131"; 
+    
+    private static Connector singleton = new Connector(); 
 	
-	public Connector()
+	private Connector() //do not use
 	{
 		try
 		{
@@ -28,9 +30,14 @@ public class Connector
 		}
 	}
 	
+	public static Connector getCon()
+	{
+		return singleton;
+	}
+	
 	public static void main(String[] args)
 	{
-		Connector c = new Connector();
+		Connector c = Connector.getCon();
 		//c.insert();
 		//c.read();
 		//c.update(); 
@@ -75,17 +82,17 @@ public class Connector
 	/**
 	    * Reads an item from the inventory
 	    *
-	    * @param	name	the name of the item
+	    * @param	id		the product id of the item to be inspected
 	    * 			column 	the quantity you want to find
 	    * @return        	a String representation of the column value
 	    */
-	public String readItem(String name, String column) 
+	public String readItem(String id, String column) 
 	{
 		try
 		{
 			// 2. Create a statement
-			PreparedStatement myStmt = myConn.prepareStatement("select * from products where PRODUCT_NAME = ?");
-			myStmt.setString(1, name); //1 specifies the first parameter in the query
+			PreparedStatement myStmt = myConn.prepareStatement("select * from products where PRODUCT_ID = ?");
+			myStmt.setString(1, id); //1 specifies the first parameter in the query
 			// 3. Execute a SQL query
 			ResultSet myRs = myStmt.executeQuery();
 			// 4. Process the result set 
