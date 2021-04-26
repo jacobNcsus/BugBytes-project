@@ -64,13 +64,13 @@ public class ShoppingCartManager
             int price = java.lang.Integer.parseInt(in.next());
             System.out.println("Enter the item quantity:");
             int quantity = java.lang.Integer.parseInt(in.next());
-            cart.addItem(new Item(name, description, price, quantity));
+            //cart.addItem(new Item(name, description, price, quantity));
          }
          if(next.equals("d")) //remove an item from cart
          {
             System.out.println("REMOVE ITEM FROM CART");
             System.out.println("Enter name of item to remove:");
-            cart.removeItem(in.nextLine());
+            //cart.removeItem(in.nextLine());
          }
          if(next.equals("c")) //change item quantity
          {
@@ -80,7 +80,7 @@ public class ShoppingCartManager
             item.setName(in.nextLine());
             System.out.println("Enter the new quantity:");
             item.setQuantity(in.nextInt());
-            cart.modifyItem(item);
+            //cart.modifyItem(item);
          }
          if(next.equals("i")) //outputs item's descriptions
          {

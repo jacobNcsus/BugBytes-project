@@ -89,17 +89,17 @@ public class ShoppingCart
     * Removes an item from the cart.
     * Not reflected in database.
     *
-    * @param  name   the name of the item to be removed
-    * @return        the item removed from the list, or null if not found
+    * @param  id   	a string representing the item in the cart
+    * @return       the item removed from the list, or null if not found
     */
-   private Item removeItem(String name)
+   private Item removeItem(String id)
    {
 	   if (size > 0)
 	   {
 		   CartNode node = head; 
 		   while(node.hasNext()) //does not include last element
 		   {
-			   if (node.getValue().getName().equals(name))
+			   if (node.getValue().getProductId().equals(id))
 		       { 
 				   if(node == head)
 				   {
@@ -113,7 +113,7 @@ public class ShoppingCart
 		       }
 			   node = node.getNext(); 
 		   }
-		   if (tail.getValue().getName().equals(name))
+		   if (tail.getValue().getProductId().equals(id))
 		   {
 			   tail = null; 
 			   node.getPrevious().setNext(null); //remove link from previous node
@@ -129,23 +129,23 @@ public class ShoppingCart
     * Alters the quantity of an item in the cart. 
     * Not reflected in database.
     * 
-    * @param	name		the name of the item to alter
+    * @param	id		a string representing the item in the database
     * 			amount		the number of item user wants to buy
     */
-   private void changeQuantity(String name, int amount)
+   private void changeQuantity(String id, int amount)
    {
 	   if (size > 0)
 	   {
 		   CartNode node = head; 
 		   while(node.hasNext()) //does not include last element
 		   {
-			   if (node.getValue().getName().equals(name))
+			   if (node.getValue().getProductId().equals(id))
 		       { 
 				   node.getValue().setQuantity(amount); 
 		       }
 			   node = node.getNext(); 
 		   }
-		   if (tail.getValue().getName().equals(name))
+		   if (tail.getValue().getProductId().equals(id))
 		   {
 			   tail.getValue().setQuantity(amount); 
 		   }
@@ -198,6 +198,10 @@ public class ShoppingCart
    
    /**
     * Adds an item to the shopping cart from the database. 
+    * 
+    * @param   	prodID		a string representing the item in the database
+    * 			quantity	the quantity of that item to be purchased
+    * @return        		none
     */
    public void addToCart(String prodID, int quantity)
    {
@@ -214,18 +218,25 @@ public class ShoppingCart
    
    /**
     * Removes an item from the shopping cart. 
+    * 
+    * @param   	prodID		a string representing the item in the database
+    * @return        		none
     */
-   public void removeFromCart()
+   public void removeFromCart(String prodID)
    {
-      //I don't know how to do that
+      removeItem(prodID); //update cart
+      
+      c.removeFromCart(id, prodID); //update database
    }
    
    /**
     * Changes the quantity of an item in the cart. 
     */
-   public void changeCartQuantity()
+   public void changeCartQuantity(String prodID, int quantity)
    {
-      //I don't know how to do that
+	   	changeQuantity(prodID, quantity);
+	   	
+	   	c.removeFromCart(id, prodID);
    }
    
    /**

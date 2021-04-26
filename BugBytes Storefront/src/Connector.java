@@ -57,6 +57,8 @@ public class Connector
 		c.printCart(1);
 		c.addToCart(1, "ALC01", 2);
 		c.printCart(1);
+		c.updateCart(1, "ALC01", 5);
+		c.printCart(1);
         c.removeFromCart(1, "ALC01");
         c.printCart(1);
         c.CONFIRM_ORDER(1);
@@ -152,7 +154,7 @@ public class Connector
 	    * 			REORDER				the amount of stock at which this item should be restocked
 	    * @return        		0 on failure, or 1 on success
 	    */
-	public int insert(String PRODUCT_ID, String PRODUCT_TYPE, String PRODUCT_NAME, double PRICE, int QUANTITY_IN_STOCK, int REORDER)
+	private int insert(String PRODUCT_ID, String PRODUCT_TYPE, String PRODUCT_NAME, double PRICE, int QUANTITY_IN_STOCK, int REORDER)
 	{
 		if ( !(PRODUCT_TYPE.equals("'Alcohol'") 
 				|| PRODUCT_TYPE.equals("'Bakery'") 
@@ -205,7 +207,7 @@ public class Connector
 		return 0; 
 	}
 	
-	public void update() //demo
+	private void update() //demo
 	{
 		try
 		{
@@ -228,7 +230,7 @@ public class Connector
 		}
 	}
 	
-	public void delete() //demo
+	private void delete() //demo
 	{
 		try
 		{
@@ -320,8 +322,8 @@ public class Connector
         try 
         {
             Statement myStmt = myConn.createStatement();
-            String statementText = "SELECT * FROM products WHERE PRODUCT_ID=\"" + prodID + "\"";
-            ResultSet myRs = myStmt.executeQuery(statementText);
+            query = "SELECT * FROM products WHERE PRODUCT_ID=\"" + prodID + "\"";
+            ResultSet myRs = myStmt.executeQuery(query);
             myRs.next();
             price = myRs.getDouble("PRICE"); 
             myStmt.close();
@@ -357,8 +359,8 @@ public class Connector
         try 
         {
             Statement myStmt = myConn.createStatement();
-            String statementText = "DELETE FROM cart WHERE PRODUCT_ID=\"" + prodID + "\" AND CUSTOMER_ID_CART=\"" + custID + "\""; 
-            myStmt.executeUpdate(statementText);
+            query = "DELETE FROM cart WHERE PRODUCT_ID=\"" + prodID + "\" AND CUSTOMER_ID_CART=\"" + custID + "\""; 
+            myStmt.executeUpdate(query);
             System.out.println("Item successfully removed from cart.\n");
             myStmt.close(); 
         } 
@@ -367,6 +369,48 @@ public class Connector
             e.printStackTrace(); 
         }
     }
+    
+    private void updateCart(int custID, String prodID, int value) //really just changes quantity
+	{
+		try
+		{
+			query = "UPDATE cart SET QUANTITY_ORDERED=? WHERE PRODUCT_ID=? AND CUSTOMER_ID_CART=?"; //first, set quantity
+        	PreparedStatement myStmt = myConn.prepareStatement(query);
+        	
+        	myStmt.setInt(1, value);
+        	myStmt.setString(2, prodID);
+        	myStmt.setInt(3, custID);
+        	
+            myStmt.executeUpdate();
+            
+            
+            Double price = 0.0;
+            query = "select * from products where PRODUCT_ID = ?"; // Retrieve product details
+            myStmt = myConn.prepareStatement(query); 
+         	myStmt.setString(1, prodID); //1 specifies the first parameter in the query
+         	ResultSet myRs = myStmt.executeQuery();
+         	myRs.next();
+         	price = myRs.getDouble("PRICE");
+            
+
+            query = "UPDATE cart SET TOTAL_COST=? WHERE PRODUCT_ID=? AND CUSTOMER_ID_CART=?"; //then you have to update total price
+        	myStmt = myConn.prepareStatement(query);
+        	
+        	myStmt.setDouble(1, price*value);
+        	myStmt.setString(2, prodID);
+        	myStmt.setInt(3, custID);
+        	
+            myStmt.executeUpdate();
+            
+            System.out.println("Update complete.\n");
+            myStmt.close(); 
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace(); 
+		}
+	}
     
     public void CONFIRM_ORDER(int custID) 
     {
