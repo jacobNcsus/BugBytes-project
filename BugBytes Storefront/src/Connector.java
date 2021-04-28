@@ -4,16 +4,16 @@ import java.sql.*;
  * Creates a connection to the shopping
  *
  * @author Jacob Normington, Daniel Beauchamp, Youser Alalusi
- * @version 4/18/2021
+ * @version 4/28/2021
  */
 public class Connector 
 {
 	private Connection myConn;
 	private String query;
 	
-	private String url = "jdbc:mysql://localhost:3306/shop_test";
-	private String username = "shopMgr";
-    private String password = "csc131"; 
+	private static final String url = "jdbc:mysql://localhost:3306/shop_test";
+	private static final String username = "shopMgr";
+    private static final String password = "csc131"; 
     
     private static Connector singleton = new Connector(); 
 	
@@ -30,6 +30,11 @@ public class Connector
 		}
 	}
 	
+	/**
+	 * Creates a singleton object of Connector in order to access the database. 
+	 * 
+	 * @return		a Connector object connected to the shop_test database
+	 */
 	public static Connector getCon()
 	{
 		return singleton;
@@ -67,8 +72,8 @@ public class Connector
 	}
 	
 	/**
-	    * Closes the connection to the database once it is no longer needed
-	    */
+	 * Closes the connection to the database once it is no longer needed. 
+	 */
 	public void close()
 	{
 		try
@@ -82,12 +87,12 @@ public class Connector
 	}
 	
 	/**
-	    * Reads an item from the inventory
-	    *
-	    * @param	id		the product id of the item to be inspected
-	    * 			column 	the quantity you want to find
-	    * @return        	a String representation of the column value
-	    */
+	 * Reads an item from the inventory
+	 *
+	 * @param	id		a series of alphanumeric characters representing a unique product
+	 * 			column 	the quantity you want to find
+	 * @return        	a String representation of the column value
+	 */
 	public String readItem(String id, String column) 
 	{
 		try
@@ -111,11 +116,11 @@ public class Connector
 		return null;
 	}
 	
-	public void printAll() 
-	{
-		printAisle("products");
-	}
-	
+	/**
+	 * Prints out an aisle/category from the shop database. 
+	 *
+	 * @param	aisle	a String object of the aisle to be displayed, either 'Alcohol', 'Bakery', 'Breakfast', 'Dairy', 'Meat_seafood', or 'Produce'
+	 */
 	public void printAisle(String aisle) 
 	{
 		try
@@ -141,19 +146,27 @@ public class Connector
 	}
 	
 	/**
-	    * Adds a new item to inventory
-	    *
-	    * @throws	IllegalArgumentException	if type is not one of the six aisles
-	    * 			IllegalArgumentException	if the price entered has more than two decimal points
-	    * 			IllegalArgumentException	if price is non-positive
-	    * @param	PRODUCT_ID			the name of the item
-	    * 			PRODUCT_TYPE		the product type or category
-	    * 			PRODUCT_NAME		the name of the item
-	    * 			PRICE				the price of the item
-	    * 			QUANTITY_IN_STOCK	the number of item in stock
-	    * 			REORDER				the amount of stock at which this item should be restocked
-	    * @return        		0 on failure, or 1 on success
-	    */
+	 * Prints to console every product in the inventory. 
+	 */
+	public void printAll() 
+	{
+		printAisle("products");
+	}
+	
+	/**
+	 * Adds a new item to inventory
+	 *
+	 * @throws	IllegalArgumentException	if type is not one of the six aisles
+	 * 			IllegalArgumentException	if the price entered has more than two decimal points
+	 * 			IllegalArgumentException	if price is non-positive
+	 * @param	PRODUCT_ID			a series of alphanumeric characters representing a unique product
+	 * 			PRODUCT_TYPE		the product type or category
+	 * 			PRODUCT_NAME		the name of the item
+	 * 			PRICE				the price of the item
+	 * 			QUANTITY_IN_STOCK	the number of item in stock
+	 * 			REORDER				the amount of stock at which this item should be restocked
+	 * @return        		0 on failure, or 1 on success
+	 */
 	private int insert(String PRODUCT_ID, String PRODUCT_TYPE, String PRODUCT_NAME, double PRICE, int QUANTITY_IN_STOCK, int REORDER)
 	{
 		if ( !(PRODUCT_TYPE.equals("'Alcohol'") 
@@ -207,6 +220,9 @@ public class Connector
 		return 0; 
 	}
 	
+	/**
+	 * 	An example method to change a value in a sample database
+	 */
 	private void update() //demo
 	{
 		try
@@ -230,6 +246,9 @@ public class Connector
 		}
 	}
 	
+	/**
+	 * 	An example method to remove an entry from a sample database
+	 */
 	private void delete() //demo
 	{
 		try
@@ -253,35 +272,22 @@ public class Connector
 	}
 	
 	/**
-	    * Reads an item from the cart
-	    *
-	    * @param	name	the name of the item
-	    * 			column 	the quantity you want to find
-	    * @return        	a String representation of the column value
-	    */
-	public String readCart(String name, String column) 
+	 * Reads an item from a user's shopping cart. 
+	 *
+	 * @param	name	the product id of the item 
+	 * 			column 	the quantity you want to find
+	 * @return        	a String representation of the column value
+	 */
+	public String readCart(String id, String column) 
 	{
-		try
-		{
-			// 2. Create a statement
-			PreparedStatement myStmt = myConn.prepareStatement("select * from cart where PRODUCT_NAME = ?");
-			myStmt.setString(1, name); //1 specifies the first parameter in the query
-			// 3. Execute a SQL query
-			ResultSet myRs = myStmt.executeQuery();
-			// 4. Process the result set 
-			myRs.next();
-			String ret = myRs.getString(column);
-			
-			myStmt.close();
-			return ret;
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace(); 
-		}
-		return null;
+		return readItem(id, column); 
 	}
 	
+	/**
+	 * Reads an item from a user's shopping cart. 
+	 *
+	 * @param	custID	a positive integer, the id number of the customer
+	 */
 	public void printCart(int custID) 
 	{
 		System.out.println("User " + custID + "'s cart: ");
@@ -315,6 +321,13 @@ public class Connector
 		}
 	}
 	
+	/**
+	 * Adds a new item to a user's shopping cart. 
+	 *
+	 * @param	custID		a positive integer, the id number of the customer
+	 * 			prodID		a series of alphanumeric characters representing a unique product
+	 * 			quantity	the number of this item to add
+	 */
 	public void addToCart(int custID, String prodID, int quantity) 
 	{
         // Retrieve product details
@@ -354,6 +367,12 @@ public class Connector
         }
     }
     
+	/**
+	 * Removes an item from a user's shopping cart. 
+	 *
+	 * @param	custID		a positive integer, the id number of the customer
+	 * 			prodID		a series of alphanumeric characters representing a unique product
+	 */
     public void removeFromCart(int custID, String prodID) 
     {
         try 
@@ -370,14 +389,21 @@ public class Connector
         }
     }
     
-    private void updateCart(int custID, String prodID, int value) //really just changes quantity
+    /**
+	 * Changes the quantity of an item in a user's cart.
+	 *
+	 * @param	custID		a positive integer, the id number of the customer
+	 * 			prodID		a series of alphanumeric characters representing a unique product
+	 * 			quantity	the number of this item you now want to have
+	 */
+    private void updateCart(int custID, String prodID, int quantity) //really just changes quantity
 	{
 		try
 		{
 			query = "UPDATE cart SET QUANTITY_ORDERED=? WHERE PRODUCT_ID=? AND CUSTOMER_ID_CART=?"; //first, set quantity
         	PreparedStatement myStmt = myConn.prepareStatement(query);
         	
-        	myStmt.setInt(1, value);
+        	myStmt.setInt(1, quantity);
         	myStmt.setString(2, prodID);
         	myStmt.setInt(3, custID);
         	
@@ -396,7 +422,7 @@ public class Connector
             query = "UPDATE cart SET TOTAL_COST=? WHERE PRODUCT_ID=? AND CUSTOMER_ID_CART=?"; //then you have to update total price
         	myStmt = myConn.prepareStatement(query);
         	
-        	myStmt.setDouble(1, price*value);
+        	myStmt.setDouble(1, price*quantity);
         	myStmt.setString(2, prodID);
         	myStmt.setInt(3, custID);
         	
@@ -442,7 +468,10 @@ public class Connector
         
     }
     
-    public void signUp(int id, String username, String firstName, String lastName, String email, String phone)
+    /**
+	 *	Creates a new customer profile in the database. 
+	 */
+    private void signUp(int id, String username, String firstName, String lastName, String email, String phone)
     {
     	try 
         {
