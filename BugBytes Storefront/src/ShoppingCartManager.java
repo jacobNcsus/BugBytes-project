@@ -19,11 +19,7 @@ public class ShoppingCartManager
         String name = in.nextLine();
         System.out.println("Customer Name: " + name);
         System.out.println("...");
-        System.out.println("Please enter today's date.");
-        String date = in.nextLine();
-        System.out.println("Current Date: " + date);
-        System.out.println("...");
-        ShoppingCart cart = new ShoppingCart(name, date);
+        ShoppingCart cart = new ShoppingCart(name);
         printMenu(cart);
         
         in.close();

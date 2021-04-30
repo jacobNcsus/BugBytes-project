@@ -51,22 +51,32 @@ public class Connector
 		//System.out.println("Result should be: MEA05 -- " + c.readItem("Pork", "PRODUCT_ID")); 
 		
 		//c.printAll();
-		//c.printAisle("alcohol");
+		c.printAisle("alcohol");
 		//c.printAisle("bakery");
 		//c.printAisle("breakfast");
 		//c.printAisle("dairy");
 		//c.printAisle("meat_seafood");
 		//c.printAisle("produce");
 		
+		
+		c.clearOrders();
+		c.purgeLogins();
 		c.signUp(1, "user1", "first", "last", "foo@bar.com", "18000000000");
 		c.printCart(1);
 		c.addToCart(1, "ALC01", 2);
 		c.printCart(1);
 		c.updateCart(1, "ALC01", 5);
 		c.printCart(1);
-        c.removeFromCart(1, "ALC01");
-        c.printCart(1);
+		c.addToCart(1, "ALC02", 2);
+		c.addToCart(1, "ALC03", 1);
+		c.printCart(1);
         c.CONFIRM_ORDER(1);
+        c.placeOrder(1, 10.00, 5.4544, 93.3744); //rounds off the last two decimals
+        c.addToOrder(1, 1, "ALC01", 5, 10.9913);
+        c.addToOrder(1, 2, "ALC02", 2, 5.991);
+        c.addToOrder(1, 3, "ALC03", 1, 10.991);
+        c.emptyCart(1);
+        c.printCart(1);
 		
 		c.close();
 	}
@@ -157,12 +167,12 @@ public class Connector
 	 * Adds a new item to inventory
 	 *
 	 * @throws	IllegalArgumentException	if type is not one of the six aisles
-	 * 			IllegalArgumentException	if the price entered has more than two decimal points
 	 * 			IllegalArgumentException	if price is non-positive
+	 * 			IllegalArgumentException	if quantity is non-positive
 	 * @param	PRODUCT_ID			a series of alphanumeric characters representing a unique product
 	 * 			PRODUCT_TYPE		the product type or category
 	 * 			PRODUCT_NAME		the name of the item
-	 * 			PRICE				the price of the item
+	 * 			PRICE				the price of the item, rounded to two decimal places
 	 * 			QUANTITY_IN_STOCK	the number of item in stock
 	 * 			REORDER				the amount of stock at which this item should be restocked
 	 * @return        		0 on failure, or 1 on success
@@ -179,14 +189,14 @@ public class Connector
 			throw new IllegalArgumentException("Product type invalid, please choose 'Alcohol', 'Bakery', 'Dairy', 'Meat_seafood', or 'Produce'.");
 		}
 		
-		if ( !((int) (PRICE*100) == PRICE*100) ) //if price has more than two digits
-		{
-			throw new IllegalArgumentException("Price invalid, please use a value with no more than two decimal places.");
-		}
-		
 		if ( !(PRICE <= 0) ) //if price is non-positive
 		{
 			throw new IllegalArgumentException("Price invalid, please enter a price greater than zero.");
+		}
+		
+		if ( !(QUANTITY_IN_STOCK <= 0) ) //if quantity is non-positive
+		{
+			throw new IllegalArgumentException("Quantity invalid, please enter a quantity greater than zero.");
 		}
 		
 		//other checks
@@ -202,7 +212,7 @@ public class Connector
 			myStmt.setString(1, PRODUCT_ID);
 			myStmt.setString(2, PRODUCT_TYPE);
 			myStmt.setString(3, PRODUCT_NAME);
-			myStmt.setDouble(4, PRICE);
+			myStmt.setDouble(4, round(PRICE, 2));
 			myStmt.setInt(5, QUANTITY_IN_STOCK);
 			myStmt.setInt(6, REORDER);
 			// 4. Execute a SQL query
@@ -355,7 +365,7 @@ public class Connector
         	myStmt.setInt(1, custID);
         	myStmt.setString(2, prodID);
         	myStmt.setInt(3, quantity);
-        	myStmt.setDouble(4, price * quantity);
+        	myStmt.setDouble(4, round(price * quantity, 2));
         	
             myStmt.executeUpdate();
             System.out.println("Item successfully added to cart.\n");
@@ -390,13 +400,34 @@ public class Connector
     }
     
     /**
+	 * Removes all items from a user's shopping cart. 
+	 *
+	 * @param	custID		a positive integer, the id number of the customer
+	 */
+    public void emptyCart(int custID) 
+    {
+        try 
+        {
+            Statement myStmt = myConn.createStatement();
+            query = "DELETE FROM cart WHERE CUSTOMER_ID_CART=\"" + custID + "\""; 
+            myStmt.executeUpdate(query);
+            System.out.println("Cart emptied");
+            myStmt.close(); 
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace(); 
+        }
+    }
+    
+    /**
 	 * Changes the quantity of an item in a user's cart.
 	 *
 	 * @param	custID		a positive integer, the id number of the customer
 	 * 			prodID		a series of alphanumeric characters representing a unique product
 	 * 			quantity	the number of this item you now want to have
 	 */
-    private void updateCart(int custID, String prodID, int quantity) //really just changes quantity
+    public void updateCart(int custID, String prodID, int quantity) //really just changes quantity
 	{
 		try
 		{
@@ -438,6 +469,11 @@ public class Connector
 		}
 	}
     
+    /**
+	 * Final method to confirm an order is valid, and then turn it in to the server. 
+	 *
+	 * @param	custID		a positive integer, the id number of the customer
+	 */
     public void CONFIRM_ORDER(int custID) 
     {
         
@@ -448,30 +484,143 @@ public class Connector
             ResultSet myRs = myStmt.executeQuery(statementText);
             while(myRs.next()) 
             {
-                System.out.println("Inside the while loop");
-                if (myRs.getInt("stockRemaining") < myRs.getInt("QUANTITY_IN_STOCK")) 
+                //System.out.println("Inside the while loop");
+                if (myRs.getInt("stockRemaining") < myRs.getInt("QUANTITY_ORDERED")) 
                 {
-                    System.out.println("Insufficient inventory");
-                } 
-                else 
+                    System.out.println("Insufficient inventory, restocking items");
+                    System.out.println("Please try again later \n");
+                    return;
+                }
+                else
                 {
-                    System.out.println("Order placed");
-                    // call order.placeOrder(custID) method
+                	System.out.println(myRs.getString("PRODUCT_NAME") + ", " + myRs.getString("QUANTITY_ORDERED") + ": In stock");
                 }
             }
-            
+            System.out.println("Order confirmed \n");
         } 
         catch (Exception e) 
         {
             e.printStackTrace();
         }
+    }
+    
+    /**
+	 * Issues an order to the database. 
+	 *
+	 * @param	custID		a positive integer, the id number of the customer
+	 * 			shipping	a double value representing the shipping price to be collected, rounded to two decimal places
+	 * 			tax			a double value representing the tax to be collected, rounded to two decimal places
+	 * 			total		a double value representing the total price to be charged for the order, rounded to two decimal places
+	 */
+    public void placeOrder(int custID, double shipping, double tax, double total) 
+    {
         
+        try 
+        {
+        	query = "INSERT INTO shop_test.order (ORDER_ID, CUSTOMER_ID, ORDER_DATE, SHIPPING_COST, TAX, TOTAL_COST) VALUES (?,?,?,?,?,?)";
+        	PreparedStatement myStmt = myConn.prepareStatement(query);
+        	
+        	myStmt.setInt(1, 1); //does not account for multiple orders
+        	myStmt.setInt(2, custID);
+        	myStmt.setDate(3, new java.sql.Date(System.currentTimeMillis())); //order date is now
+        	myStmt.setDouble(4, round(shipping, 2));
+        	myStmt.setDouble(5, round(tax, 2));
+        	myStmt.setDouble(6, round(total, 2));
+        	
+            myStmt.executeUpdate();
+            System.out.println("Order placed \n");
+            myStmt.close(); 
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+	 * Adds a new item to an order. 
+	 *
+	 * @param	orderID		a positive integer uniquely identifying the order this is a part of
+	 * 			lineNumber	a positive integer representing which item in the order this is
+	 * 			prodID		a series of alphanumeric characters representing a unique product
+	 * 			quantity	a positive integer representing the number of an item to purchase
+	 * 			price		a double representing the unit price of an item, rounded to two decimal places
+	 */
+    public void addToOrder(int orderID, int lineNumber, String prodID, int quantity, double price) 
+    {
+        
+        try 
+        {
+        	query = "INSERT INTO order_details (ORDER_ID, ORDER_LINE_NUMBER, PRODUCT_ID, ORDERED_QUANTITY, PRICE) VALUES (?,?,?,?,?)";
+        	PreparedStatement myStmt = myConn.prepareStatement(query);
+        	
+        	myStmt.setInt(1, orderID); 
+        	myStmt.setInt(2, lineNumber);
+        	myStmt.setString(3, prodID); 
+        	myStmt.setInt(4, quantity);
+        	myStmt.setDouble(5, round(price, 2));
+        	
+            myStmt.executeUpdate();
+            System.out.println("Item added to order: " + lineNumber + " \n");
+            myStmt.close(); 
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+	 * Removes all orders from the store database. 
+	 */
+    private void clearOrders() 
+    {
+        
+        try 
+        {
+        	Statement myStmt = myConn.createStatement();
+        	query = "DELETE FROM shop_test.order";
+            myStmt.executeUpdate(query);
+            myStmt.close(); 
+            
+            myStmt = myConn.createStatement();
+            query = "DELETE FROM order_details";
+            myStmt.executeUpdate(query);
+            myStmt.close();
+            
+            System.out.println("All orders cleared");
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+	 * Removes all login information from the store database. 
+	 */
+    private void purgeLogins() 
+    {
+        
+        try 
+        {
+        	Statement myStmt = myConn.createStatement();
+        	query = "DELETE FROM customer";
+            myStmt.executeUpdate(query);
+            myStmt.close(); 
+            
+            System.out.println("All customer information removed");
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
     }
     
     /**
 	 *	Creates a new customer profile in the database. 
 	 */
-    private void signUp(int id, String username, String firstName, String lastName, String email, String phone)
+    public void signUp(int id, String username, String firstName, String lastName, String email, String phone)
     {
     	try 
         {
@@ -480,12 +629,12 @@ public class Connector
     		// 3. Execute a SQL query
     		ResultSet myRs = myStmt.executeQuery("select * from customer WHERE CUSTOMER_ID='" + id +"';");
     		// 4. Process the result set 
-    		myRs.next();
-    		if (myRs.getString("CUSTOMER_ID") != null) 
+    		if (myRs.next()) //if anything matches the results
     		{
     			System.out.println("This account already exists.\n");
     			return;
-    		}	
+    		}
+
         }
     	catch (Exception e) 
         {
@@ -506,10 +655,21 @@ public class Connector
         	
             myStmt.executeUpdate();
             myStmt.close(); 
+            System.out.println("New account registered: " + username + "\n"); 
         } 
         catch (Exception e) 
         {
             e.printStackTrace(); 
         }
+    }
+    
+    private static double round (double value, int places) 
+    {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 }

@@ -7,14 +7,16 @@
  */
 public class ShoppingCart
 {
-   private String customerName;
-   private String currentDate; //is this important?
-   private int id; //user id
-   private Connector c; 
+	private static double TAX_RATE = 0.07;
+	private static double SHIPPING_RATE = 10.00;
+	
+	private String customerName;
+	private int id; //user id
+	private Connector c; 
    
-   private CartNode head; //beginning of list
-   private CartNode tail; //end of list
-   private int size; //the total number of items in the cart
+	private CartNode head; //beginning of list
+	private CartNode tail; //end of list
+	private int size; //the total number of items in the cart
 
    /**
     * Default constructor for ShoppingCart objects
@@ -22,7 +24,6 @@ public class ShoppingCart
    public ShoppingCart()
    {
       customerName = "none";
-      currentDate = "January 1, 2020";
       c=Connector.getCon();
       
       head = null;  
@@ -30,10 +31,9 @@ public class ShoppingCart
       size = 0; 
    }
    
-   public ShoppingCart(String name, String date)
+   public ShoppingCart(String name)
    {
       customerName = name;
-      currentDate = date;
       head = null;  
       tail = head; 
       size = 0;
@@ -42,11 +42,6 @@ public class ShoppingCart
    public String getCustomerName()
    {
       return customerName;
-   }
-   
-   public String getDate()
-   {
-      return currentDate;
    }
    
    public int getCustomerId()
@@ -132,22 +127,26 @@ public class ShoppingCart
     * @param	id		a string representing the item in the database
     * 			amount		the number of item user wants to buy
     */
-   private void changeQuantity(String id, int amount)
+   private void changeQuantity(String prodID, int amount)
    {
 	   if (size > 0)
 	   {
 		   CartNode node = head; 
 		   while(node.hasNext()) //does not include last element
 		   {
-			   if (node.getValue().getProductId().equals(id))
+			   if (node.getValue().getProductId().equals(prodID))
 		       { 
 				   node.getValue().setQuantity(amount); 
+				   c.updateCart(id, prodID, amount); //updates database
+				   return;
 		       }
 			   node = node.getNext(); 
 		   }
-		   if (tail.getValue().getProductId().equals(id))
+		   if (tail.getValue().getProductId().equals(prodID))
 		   {
-			   tail.getValue().setQuantity(amount); 
+			   tail.getValue().setQuantity(amount);
+			   c.updateCart(id, prodID, amount); //updates database
+			   return;
 		   }
 	   }
 	   System.out.println("Item not found in cart. No change.");
@@ -240,7 +239,34 @@ public class ShoppingCart
    }
    
    /**
-    * Searches through the database for changes which need to be made to the cart
+    * Checks out cart and clears its contents. 
+    */
+   public void checkout()
+   {
+	   c.CONFIRM_ORDER(id);
+	   
+	   c.placeOrder(id, getShipping(), getTax(), getTotalCost()); //issues a new order
+	   
+	   CartNode current = head; //populates order
+	   int line = 0;
+	   while (current.hasNext())
+	   {
+		   Item i = current.getValue();
+		   c.addToOrder(1, line, i.getProductId(), i.getQuantity(), i.getPrice()); //does not account for more than one order
+		   
+		   current = current.getNext();
+		   line++;
+	   }
+	   
+	   c.emptyCart(id); //clears database
+	   
+	   head.getNext().setPrevious(null); //remove reference from second
+	   head = null; //remove reference from head
+	   //garbage collector will delete all the stray nodes in frontend cart
+   }
+   
+   /**
+    * Searches through the database for changes which need to be made to the cart.
     */
    public void update()
    {
@@ -248,13 +274,13 @@ public class ShoppingCart
    }
    
    /**
-    * Determines and returns the total cost of items in cart
+    * Determines and returns the total cost of items in cart.
     *
     * @return    total check out price of the cart
     */
-   public int getSubtotal()
+   public double getSubtotal()
    {
-      int cartPrice = 0;
+      double cartPrice = 0;
       if (size > 0)
       {
 		   CartNode node = head; 
@@ -265,8 +291,38 @@ public class ShoppingCart
 		   }
 		   cartPrice += tail.getValue().getTotalCost(); 
       }
-	  return cartPrice; 
+	  return cartPrice;
    }
+   
+   	/**
+     * Determines and returns the tax to be collected for all items in the cart. 
+     *
+     * @return    the total tax to be collected
+     */
+   	public double getTax()
+   	{
+   		return getSubtotal()*TAX_RATE;
+   	}
+   	
+   	/**
+     * Determines and returns the shipping and handling price to be collected. 
+     *
+     * @return    the total shipping cost to be charged
+     */
+   	public double getShipping()
+   	{
+   		return SHIPPING_RATE;
+   	}
+   	
+   	/**
+     * Determines and returns the final cost to be charged for items in the cart. 
+     *
+     * @return    the total cost of the user's shopping cart
+     */
+   	public double getTotalCost()
+   	{
+   		return getSubtotal() * (1+TAX_RATE) + SHIPPING_RATE;
+   	}
    
    /**
     * Prints out the cart with item prices
@@ -279,7 +335,7 @@ public class ShoppingCart
       }
       else
       {
-    	  System.out.println(customerName + "'s Shopping Cart -" + currentDate);
+    	  System.out.println(customerName + "'s Shopping Cart");
           System.out.println();
           System.out.println("Number of Items: " + getCartSize());
           System.out.println();
@@ -308,7 +364,7 @@ public class ShoppingCart
       }
       else
       {
-    	  System.out.println(customerName + "'s Shopping Cart -" + currentDate);
+    	  System.out.println(customerName + "'s Shopping Cart");
     	  System.out.println();
           System.out.println("Item Descriptions");
           System.out.println();
