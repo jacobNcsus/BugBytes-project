@@ -257,6 +257,7 @@ public class ShoppingCart
 		   current = current.getNext();
 		   line++;
 	   }
+	   System.out.println(); //for structuring, placeOrder and addToOrder should be in one block
 	   
 	   c.emptyCart(id); //clears database
 	   

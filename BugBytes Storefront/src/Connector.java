@@ -8,12 +8,13 @@ import java.sql.*;
  */
 public class Connector 
 {
-	private Connection myConn;
-	private String query;
-	
 	private static final String url = "jdbc:mysql://localhost:3306/shop_test";
 	private static final String username = "shopMgr";
     private static final String password = "csc131"; 
+    public static final String[] aisles = {"Alcohol", "Bakery", "Breakfast", "Dairy", "Meat_seafood", "Produce"};
+    
+    private Connection myConn;
+	private String query;
     
     private static Connector singleton = new Connector(); 
 	
@@ -33,7 +34,7 @@ public class Connector
 	/**
 	 * Creates a singleton object of Connector in order to access the database. 
 	 * 
-	 * @return		a Connector object connected to the shop_test database
+	 * @return		a Connector object attached to the shop_test database
 	 */
 	public static Connector getCon()
 	{
@@ -51,7 +52,7 @@ public class Connector
 		//System.out.println("Result should be: MEA05 -- " + c.readItem("Pork", "PRODUCT_ID")); 
 		
 		//c.printAll();
-		c.printAisle("alcohol");
+		//c.printAisle("alcohol");
 		//c.printAisle("bakery");
 		//c.printAisle("breakfast");
 		//c.printAisle("dairy");
@@ -59,24 +60,27 @@ public class Connector
 		//c.printAisle("produce");
 		
 		
-		c.clearOrders();
-		c.purgeLogins();
-		c.signUp(1, "user1", "first", "last", "foo@bar.com", "18000000000");
-		c.printCart(1);
-		c.addToCart(1, "ALC01", 2);
-		c.printCart(1);
-		c.updateCart(1, "ALC01", 5);
-		c.printCart(1);
-		c.addToCart(1, "ALC02", 2);
-		c.addToCart(1, "ALC03", 1);
-		c.printCart(1);
-        c.CONFIRM_ORDER(1);
-        c.placeOrder(1, 10.00, 5.4544, 93.3744); //rounds off the last two decimals
-        c.addToOrder(1, 1, "ALC01", 5, 10.9913);
-        c.addToOrder(1, 2, "ALC02", 2, 5.991);
-        c.addToOrder(1, 3, "ALC03", 1, 10.991);
-        c.emptyCart(1);
-        c.printCart(1);
+		//c.clearOrders();
+		//c.purgeLogins();
+		//c.signUp(1, "user1", "first", "last", "foo@bar.com", "18000000000");
+		//c.printCart(1);
+		//c.addToCart(1, "ALC01", 2);
+		//c.printCart(1);
+		//c.updateCart(1, "ALC01", 5);
+		//c.printCart(1);
+		//c.addToCart(1, "ALC02", 2);
+		//c.addToCart(1, "ALC03", 1);
+		//c.printCart(1);
+        //c.CONFIRM_ORDER(1);
+        //c.placeOrder(1, 10.00, 5.4544, 93.3744); //rounds off the last two decimals
+        //c.addToOrder(1, 1, "ALC01", 5, 10.9913);
+        //c.addToOrder(1, 2, "ALC02", 2, 5.991);
+        //c.addToOrder(1, 3, "ALC03", 1, 10.991);
+        //System.out.println();
+        //c.emptyCart(1); 
+        //c.printCart(1); //checks that cart is now empty
+		
+		Connector.showShop();
 		
 		c.close();
 	}
@@ -129,16 +133,22 @@ public class Connector
 	/**
 	 * Prints out an aisle/category from the shop database. 
 	 *
+	 * @throws	IllegalArgumentException	if aisle is not one of the valid aisles
 	 * @param	aisle	a String object of the aisle to be displayed, either 'Alcohol', 'Bakery', 'Breakfast', 'Dairy', 'Meat_seafood', or 'Produce'
 	 */
 	public void printAisle(String aisle) 
 	{
+		if ( ! isAisle(aisle) & ! aisle.equalsIgnoreCase("products"))
+		{
+			throw new IllegalArgumentException("Product type invalid, please choose 'Alcohol', 'Bakery', 'Dairy', 'Meat_seafood', or 'Produce'.");
+		}
+		
 		try
 		{
 			// 2. Create a statement
 			Statement myStmt = myConn.createStatement();
 			// 3. Execute a SQL query
-			ResultSet myRs = myStmt.executeQuery("select * from " + aisle + ";");
+			ResultSet myRs = myStmt.executeQuery("select * from " + aisle);
 			// 4. Process the result set 
 			while(myRs.next())
 			{
@@ -179,12 +189,7 @@ public class Connector
 	 */
 	private int insert(String PRODUCT_ID, String PRODUCT_TYPE, String PRODUCT_NAME, double PRICE, int QUANTITY_IN_STOCK, int REORDER)
 	{
-		if ( !(PRODUCT_TYPE.equals("'Alcohol'") 
-				|| PRODUCT_TYPE.equals("'Bakery'") 
-				|| PRODUCT_TYPE.equals("'Breakfast'") 
-				|| PRODUCT_TYPE.equals("'Dairy'") 
-				|| PRODUCT_TYPE.equals("'Meat_seafood'") 
-				|| PRODUCT_TYPE.equals("'Produce'") ) )
+		if ( ! isAisle(PRODUCT_TYPE))
 		{
 			throw new IllegalArgumentException("Product type invalid, please choose 'Alcohol', 'Bakery', 'Dairy', 'Meat_seafood', or 'Produce'.");
 		}
@@ -296,10 +301,16 @@ public class Connector
 	/**
 	 * Reads an item from a user's shopping cart. 
 	 *
+	 * @throws	IllegalArgumentException	if custID is non-positive
 	 * @param	custID	a positive integer, the id number of the customer
 	 */
 	public void printCart(int custID) 
 	{
+		if (custID < 1)
+        {
+        	throw new IllegalArgumentException("Invalid customer id. Please use an customer id greater than zero.");
+        }
+		
 		System.out.println("User " + custID + "'s cart: ");
 		
 		try
@@ -334,13 +345,24 @@ public class Connector
 	/**
 	 * Adds a new item to a user's shopping cart. 
 	 *
+	 * @throws	IllegalArgumentException	if custID is non-positive
+	 * 			IllegalArgumentException	if quantity is non-positive
 	 * @param	custID		a positive integer, the id number of the customer
 	 * 			prodID		a series of alphanumeric characters representing a unique product
 	 * 			quantity	the number of this item to add
 	 */
 	public void addToCart(int custID, String prodID, int quantity) 
 	{
-        // Retrieve product details
+		if (custID < 1)
+        {
+        	throw new IllegalArgumentException("Invalid customer id. Please use an customer id greater than zero.");
+        }
+		if (quantity < 1)
+        {
+        	throw new IllegalArgumentException("Invalid quantity. Please use a quantity greater than zero.");
+        }
+		
+		// Retrieve product details
         Double price = 0.0;
         try 
         {
@@ -380,12 +402,18 @@ public class Connector
 	/**
 	 * Removes an item from a user's shopping cart. 
 	 *
+	 * @throws	IllegalArgumentException	if custID is non-positive
 	 * @param	custID		a positive integer, the id number of the customer
 	 * 			prodID		a series of alphanumeric characters representing a unique product
 	 */
     public void removeFromCart(int custID, String prodID) 
     {
-        try 
+    	if (custID < 1)
+        {
+        	throw new IllegalArgumentException("Invalid customer id. Please use an customer id greater than zero.");
+        }
+    	
+    	try 
         {
             Statement myStmt = myConn.createStatement();
             query = "DELETE FROM cart WHERE PRODUCT_ID=\"" + prodID + "\" AND CUSTOMER_ID_CART=\"" + custID + "\""; 
@@ -402,16 +430,22 @@ public class Connector
     /**
 	 * Removes all items from a user's shopping cart. 
 	 *
+	 * @throws	IllegalArgumentException	if custID is non-positive
 	 * @param	custID		a positive integer, the id number of the customer
 	 */
     public void emptyCart(int custID) 
     {
-        try 
+    	if (custID < 1)
+        {
+        	throw new IllegalArgumentException("Invalid customer id. Please use an customer id greater than zero.");
+        }
+    	
+    	try 
         {
             Statement myStmt = myConn.createStatement();
             query = "DELETE FROM cart WHERE CUSTOMER_ID_CART=\"" + custID + "\""; 
             myStmt.executeUpdate(query);
-            System.out.println("Cart emptied");
+            System.out.println("Cart emptied \n");
             myStmt.close(); 
         } 
         catch (Exception e) 
@@ -423,13 +457,24 @@ public class Connector
     /**
 	 * Changes the quantity of an item in a user's cart.
 	 *
+	 * @throws	IllegalArgumentException	if custID is non-positive
+	 * 			IllegalArgumentException	if quantity is non-positive
 	 * @param	custID		a positive integer, the id number of the customer
 	 * 			prodID		a series of alphanumeric characters representing a unique product
 	 * 			quantity	the number of this item you now want to have
 	 */
     public void updateCart(int custID, String prodID, int quantity) //really just changes quantity
 	{
-		try
+    	if (custID < 1)
+        {
+        	throw new IllegalArgumentException("Invalid customer id. Please use an customer id greater than zero.");
+        }
+		if (quantity < 1)
+        {
+        	throw new IllegalArgumentException("Invalid quantity. Please use a quantity greater than zero.");
+        }
+    	
+    	try
 		{
 			query = "UPDATE cart SET QUANTITY_ORDERED=? WHERE PRODUCT_ID=? AND CUSTOMER_ID_CART=?"; //first, set quantity
         	PreparedStatement myStmt = myConn.prepareStatement(query);
@@ -472,11 +517,16 @@ public class Connector
     /**
 	 * Final method to confirm an order is valid, and then turn it in to the server. 
 	 *
+	 * @throws	IllegalArgumentException	if custID is non-positive
 	 * @param	custID		a positive integer, the id number of the customer
 	 */
     public void CONFIRM_ORDER(int custID) 
     {
-        
+    	if (custID < 1)
+        {
+        	throw new IllegalArgumentException("Invalid customer id. Please use an customer id greater than zero.");
+        }
+    	
         try 
         {
             Statement myStmt = myConn.createStatement();
@@ -507,6 +557,10 @@ public class Connector
     /**
 	 * Issues an order to the database. 
 	 *
+	 * @throws	IllegalArgumentException	if custID is non-positive
+	 * 			IllegalArgumentException	if shipping is negative
+	 * 			IllegalArgumentException	if tax is negative
+	 * 			IllegalArgumentException	if total is negative
 	 * @param	custID		a positive integer, the id number of the customer
 	 * 			shipping	a double value representing the shipping price to be collected, rounded to two decimal places
 	 * 			tax			a double value representing the tax to be collected, rounded to two decimal places
@@ -514,8 +568,24 @@ public class Connector
 	 */
     public void placeOrder(int custID, double shipping, double tax, double total) 
     {
+    	if (custID < 1)
+        {
+        	throw new IllegalArgumentException("Invalid customer id. Please use an customer id greater than zero.");
+        }
+    	if (shipping < 0)
+        {
+        	throw new IllegalArgumentException("Invalid shipping. Please use a positive shipping price.");
+        }
+    	if (tax < 0)
+        {
+        	throw new IllegalArgumentException("Invalid tax cost. Please use a positive tax.");
+        }
+    	if (total < 0)
+        {
+        	throw new IllegalArgumentException("Invalid total cost. Please use a positive total.");
+        }
         
-        try 
+    	try 
         {
         	query = "INSERT INTO shop_test.order (ORDER_ID, CUSTOMER_ID, ORDER_DATE, SHIPPING_COST, TAX, TOTAL_COST) VALUES (?,?,?,?,?,?)";
         	PreparedStatement myStmt = myConn.prepareStatement(query);
@@ -528,7 +598,7 @@ public class Connector
         	myStmt.setDouble(6, round(total, 2));
         	
             myStmt.executeUpdate();
-            System.out.println("Order placed \n");
+            System.out.println("Order placed");
             myStmt.close(); 
         } 
         catch (Exception e) 
@@ -538,8 +608,12 @@ public class Connector
     }
     
     /**
-	 * Adds a new item to an order. 
+	 * Adds a new item to an order. Follow by a newline. 
 	 *
+	 * @throws 	IllegalArgumentException	if orderID is non-positive
+	 * 			IllegalArgumentException	if lineNumber is non-positive
+	 * 			IllegalArgumentException	if quantity is non-positive
+	 * 			IllegalArgumentException	if price is negative
 	 * @param	orderID		a positive integer uniquely identifying the order this is a part of
 	 * 			lineNumber	a positive integer representing which item in the order this is
 	 * 			prodID		a series of alphanumeric characters representing a unique product
@@ -549,7 +623,24 @@ public class Connector
     public void addToOrder(int orderID, int lineNumber, String prodID, int quantity, double price) 
     {
         
-        try 
+        if (orderID < 1)
+        {
+        	throw new IllegalArgumentException("Invalid order id. Please use an order id greater than zero.");
+        }
+        if (lineNumber < 1)
+        {
+        	throw new IllegalArgumentException("Invalid order line. Please use an order line number greater than zero.");
+        }
+        if (quantity < 1)
+        {
+        	throw new IllegalArgumentException("Invalid quantity. Please use a quantity greater than zero.");
+        }
+        if (price < 0)
+        {
+        	throw new IllegalArgumentException("Invalid price. Please use a price greater than zero.");
+        }
+    	
+    	try 
         {
         	query = "INSERT INTO order_details (ORDER_ID, ORDER_LINE_NUMBER, PRODUCT_ID, ORDERED_QUANTITY, PRICE) VALUES (?,?,?,?,?)";
         	PreparedStatement myStmt = myConn.prepareStatement(query);
@@ -558,10 +649,10 @@ public class Connector
         	myStmt.setInt(2, lineNumber);
         	myStmt.setString(3, prodID); 
         	myStmt.setInt(4, quantity);
-        	myStmt.setDouble(5, round(price, 2));
+        	myStmt.setDouble(5, round(price, 2)*quantity); //should be total price, not unit price
         	
             myStmt.executeUpdate();
-            System.out.println("Item added to order: " + lineNumber + " \n");
+            System.out.println("Item added to order: " + lineNumber);
             myStmt.close(); 
         } 
         catch (Exception e) 
@@ -588,28 +679,7 @@ public class Connector
             myStmt.executeUpdate(query);
             myStmt.close();
             
-            System.out.println("All orders cleared");
-        } 
-        catch (Exception e) 
-        {
-            e.printStackTrace();
-        }
-    }
-    
-    /**
-	 * Removes all login information from the store database. 
-	 */
-    private void purgeLogins() 
-    {
-        
-        try 
-        {
-        	Statement myStmt = myConn.createStatement();
-        	query = "DELETE FROM customer";
-            myStmt.executeUpdate(query);
-            myStmt.close(); 
-            
-            System.out.println("All customer information removed");
+            System.out.println("All orders cleared \n");
         } 
         catch (Exception e) 
         {
@@ -619,9 +689,16 @@ public class Connector
     
     /**
 	 *	Creates a new customer profile in the database. 
+	 *
+	 *	@throws		IllegalArgumentException	if id is non-positive
 	 */
     public void signUp(int id, String username, String firstName, String lastName, String email, String phone)
     {
+    	if (id < 1)
+        {
+        	throw new IllegalArgumentException("Invalid id. Please use a customer id greater than zero.");
+        }
+    	
     	try 
         {
     		// 2. Create a statement
@@ -629,7 +706,7 @@ public class Connector
     		// 3. Execute a SQL query
     		ResultSet myRs = myStmt.executeQuery("select * from customer WHERE CUSTOMER_ID='" + id +"';");
     		// 4. Process the result set 
-    		if (myRs.next()) //if anything matches the results
+    		if (myRs.next()) //if anything is in the result set
     		{
     			System.out.println("This account already exists.\n");
     			return;
@@ -663,6 +740,27 @@ public class Connector
         }
     }
     
+    /**
+	 * Removes all login information from the store database. 
+	 */
+    private void purgeLogins() 
+    {
+        
+        try 
+        {
+        	Statement myStmt = myConn.createStatement();
+        	query = "DELETE FROM customer";
+            myStmt.executeUpdate(query);
+            myStmt.close(); 
+            
+            System.out.println("All customer information removed \n");
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    
     private static double round (double value, int places) 
     {
         if (places < 0) throw new IllegalArgumentException();
@@ -671,5 +769,35 @@ public class Connector
         value = value * factor;
         long tmp = Math.round(value);
         return (double) tmp / factor;
+    }
+    
+    /**
+     * Prints the aisles in the shop. 
+     */
+    public static void showShop()
+    {
+    	System.out.println("Virtual Storefront Aisles: ");
+    	for (String aisle : aisles)
+    	{
+    		System.out.println("\t" + aisle);
+    	}
+    	System.out.println(); 
+    }
+    
+    /**
+     * Evaluates if a string parameter is one of the valid aisles. Not case sensitive. 
+     * 
+     * @param	s	a string to be checked against
+     */
+    public static boolean isAisle(String s)
+    {
+    	for (String aisle : aisles)
+    	{
+    		if (s.equalsIgnoreCase(aisle))
+    		{
+    			return true;
+    		}
+    	}
+    	return false; 
     }
 }
