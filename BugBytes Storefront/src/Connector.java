@@ -44,21 +44,28 @@ public class Connector
 	public static void main(String[] args)
 	{
 		Connector c = Connector.getCon();
-		//c.insert();
-		//c.read();
-		//c.update(); 
-		//c.read();
-		//c.delete();
-		//System.out.println("Result should be: MEA05 -- " + c.readItem("Pork", "PRODUCT_ID")); 
-		
-		//c.printAll();
-		//c.printAisle("alcohol");
-		//c.printAisle("bakery");
-		//c.printAisle("breakfast");
-		//c.printAisle("dairy");
-		//c.printAisle("meat_seafood");
-		//c.printAisle("produce");
-		
+	
+		/*
+		c.clearOrders();
+		c.purgeLogins();
+		c.signUp(1, "user1", "first", "last", "foo@bar.com", "18000000000");
+		c.printCart(1);
+		c.addToCart(1, "ALC01", 2);
+		c.printCart(1);
+		c.updateCart(1, "ALC01", 5);
+		c.printCart(1);
+		c.addToCart(1, "ALC02", 2);
+		c.addToCart(1, "ALC03", 1);
+		c.printCart(1);
+        c.CONFIRM_ORDER(1);
+        c.placeOrder(1, 10.00, 5.4544, 93.3744); //rounds off the last two decimals
+        c.addToOrder(1, 1, "ALC01", 5, 10.9913);
+        c.addToOrder(1, 2, "ALC02", 2, 5.991);
+        c.addToOrder(1, 3, "ALC03", 1, 10.991);
+        c.emptyCart(1);
+        c.printCart(1);
+		*/
+
 		
 		//c.clearOrders();
 		//c.purgeLogins();
@@ -82,6 +89,7 @@ public class Connector
 		
 		Connector.showShop();
 		
+
 		c.close();
 	}
 	
@@ -262,12 +270,16 @@ public class Connector
 			throw new IllegalArgumentException("Product type invalid, please choose 'Alcohol', 'Bakery', 'Dairy', 'Meat_seafood', or 'Produce'.");
 		}
 		
+
 		if (PRICE <= 0) //if price is non-positive
+
 		{
 			throw new IllegalArgumentException("Price invalid, please enter a price greater than zero.");
 		}
 		
+
 		if (QUANTITY_IN_STOCK <= 0) //if quantity is non-positive
+
 		{
 			throw new IllegalArgumentException("Quantity invalid, please enter a quantity greater than zero.");
 		}
@@ -333,14 +345,14 @@ public class Connector
 	/**
 	 * 	An example method to remove an entry from a sample database
 	 */
-	private void delete() //demo
+	public void delete(String productID) //demo
 	{
 		try
 		{
 			// 2. Create a statement
 			Statement myStmt = myConn.createStatement();
 			// 3. Execute a SQL query
-			query = "delete from employees where last_name='Brown'"; 
+			query = "delete from products where PRODUCT_ID ='"+ productID + "'"; 
 			int rowsAffected = myStmt.executeUpdate(query); 
 			
 			System.out.println("Rows affected: " + rowsAffected);
