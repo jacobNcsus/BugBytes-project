@@ -37,7 +37,7 @@ public class ShoppingCartManager
       Scanner in = new Scanner(System.in);
       System.out.println();
       System.out.println("MENU");
-      System.out.println("s - View/Edit shop's inventory");
+      System.out.println("v - View/Edit shop's inventory");
       System.out.println("a - Add item to cart");
       System.out.println("d - Remove item from cart");
       System.out.println("c - Change item quantity");
@@ -104,7 +104,7 @@ public class ShoppingCartManager
              	 System.out.println("ID      Type   Name    Price    Stock");  
              	 database.printAisle("produce");
               }
-              
+            
               
               if(nextInv.equals("i"))  //Inserts a product into database
               {
@@ -112,7 +112,6 @@ public class ShoppingCartManager
              	 String s1 = in.nextLine();
              	 System.out.println("Insert the type of product: Ex(Alcohol,Bakery,Breakfast,Dairy,Meat_seafood,Produce)");
              	 String s2 = in.nextLine();
-             	 		s2 = "'" +s2+ "'";
              	 System.out.println("Insert name of Product");
              	 String s3 = in.nextLine(); 
              	 System.out.println("Insert price of Product");
@@ -128,6 +127,7 @@ public class ShoppingCartManager
              	 String productID = in.nextLine();
              	 database.delete(productID);
               }
+          }
             
     	  if(next.equals("a")) //add an item to cart
          {
@@ -221,3 +221,5 @@ public class ShoppingCartManager
 	}
 	*/
 }
+
+
