@@ -4,7 +4,7 @@ import java.sql.*;
  * Creates a connection to the shopping
  *
  * @author Jacob Normington, Daniel Beauchamp, Youser Alalusi
- * @version 4/28/2021
+ * @version 4/30/2021
  */
 public class Connector 
 {
@@ -53,17 +53,17 @@ public class Connector
 		//c.printAisle(aisles[4]);
 		//c.printAisle(aisles[5]);
 		
-		c.clearOrders();
-		c.emptyCart(1);
-		c.purgeLogins();
-		c.signUp(1, "user1", "first", "last", "foo@bar.com", "18000000000");
+		//c.clearOrders();
+		//c.emptyCart(1);
+		//c.purgeLogins();
+		//c.signUp(1, "user1", "first", "last", "foo@bar.com", "18000000000");
 		//c.printCart(1);
-		c.addToCart(1, "ALC01", 2);
+		//c.addToCart(1, "ALC01", 2);
 		//c.printCart(1);
-		c.updateCart(1, "ALC01", 5);
+		//c.updateCart(1, "ALC01", 5);
 		//c.printCart(1);
-		c.addToCart(1, "ALC02", 2);
-		c.addToCart(1, "ALC03", 1);
+		//c.addToCart(1, "ALC02", 2);
+		//c.addToCart(1, "ALC03", 1);
 		//c.printCart(1);
         //c.CONFIRM_ORDER(1);
         //c.placeOrder(1, 10.00, 5.4544, 93.3744); //rounds off the last two decimals
@@ -254,10 +254,11 @@ public class Connector
 			else if (tableView.equals("cart")) //display a user's cart
 			{
 				query = "select * from cart WHERE CUSTOMER_ID_CART= ?";
-				query = "SELECT c.PRODUCT_ID, c.QUANTITY_ORDERED, c.TOTAL_COST, cust.USERNAME FROM cart c LEFT JOIN customer cust ON c.CUSTOMER_ID_CART = cust.CUSTOMER_ID WHERE CUSTOMER_ID_CART=?";
+				query = "SELECT c.PRODUCT_ID, c.QUANTITY_ORDERED, c.TOTAL_COST, cust.USERNAME FROM cart c LEFT JOIN customer cust ON c.CUSTOMER_ID_CART = cust.CUSTOMER_ID WHERE CUSTOMER_ID_CART=? AND CUSTOMER_ID_CART=?";
 
 				PreparedStatement myStmt = myConn.prepareStatement(query);
 				myStmt.setInt(1, 1); //1-indexed
+				myStmt.setInt(2, 1); //1-indexed
 				ResultSet myRs = myStmt.executeQuery();
 			
 				if(!myRs.next() ) //false if the list is empty

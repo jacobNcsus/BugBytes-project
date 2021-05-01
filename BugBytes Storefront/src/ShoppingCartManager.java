@@ -3,23 +3,29 @@ import java.util.Scanner;
  * Implements a menu to manipulate a shopping cart via console input
  *
  * @author Jacob Normington
- * @version 2/13/2020 
+ * @version 4/30/2020 
  */
 public class ShoppingCartManager
 {
-   /**
+   private static Scanner in;
+   private static Connector c; 
+   private static ShoppingCart cart;
+	
+	/**
     * Begins the manager to create your shopping cart by system input
     */
    public static void main(String args[])
    {
-        Scanner in = new Scanner(System.in);
+        in = new Scanner(System.in);
+        c = Connector.getCon();
+        
         System.out.println("Shopping Cart Manager");
         System.out.println("...");
         System.out.println("Please enter your name.");
         String name = in.nextLine();
         System.out.println("Customer Name: " + name);
         System.out.println("...");
-        ShoppingCart cart = new ShoppingCart(name);
+        cart = new ShoppingCart(1);
         printMenu(cart);
         
         in.close();
@@ -34,7 +40,6 @@ public class ShoppingCartManager
     */
    private static void printMenu(ShoppingCart cart)
    {
-      Scanner in = new Scanner(System.in);
       System.out.println();
       System.out.println("MENU");
       System.out.println("a - Add item to cart");
@@ -81,7 +86,7 @@ public class ShoppingCartManager
          if(next.equals("i")) //outputs item's descriptions
          {
             System.out.println("OUTPUT ITEM'S DESCRIPTIONS");
-            cart.printDescription();
+            //cart.printDescription();
          }
          if(next.equals("o")) //outputs shopping cart
          {
@@ -94,46 +99,40 @@ public class ShoppingCartManager
       in.close();
    }
    
-   /*public static void select() {
-		
-		Scanner s = new Scanner(System.in);
-
+   /*private static void select() 
+    {
 		System.out.printf("\nPlease select a product to add to cart: ");
-		String selection = s.nextLine();
+		String selection = in.nextLine();
 		
 		//if (selection == )
 		
 	}
 	
-	public static void menu() {
-		
-		Connector c = new Connector();
+	private static void menu() 
+	{
 		c.read("products");
-		
 	}
 
 	
 	// customer logins in with email and password
-	public static void login() {
-		
-		Scanner s = new Scanner(System.in);
-		
+	private static void login() 
+	{
 		System.out.printf("Please fill in the following information to create an account:\n\n");
 
 		System.out.printf("First Name: ");
-		String first = s.nextLine();
+		String first = in.nextLine();
 		
 		System.out.printf("\nLast Name: ");
-		String last = s.nextLine();
+		String last = in.nextLine();
 		
 		System.out.printf("\nEmail: ");
-		String email = s.nextLine();
+		String email = in.nextLine();
 		
 		System.out.printf("\nPhone Number: ");
-		String phone = s.nextLine();
+		String phone = in.nextLine();
 		
 		System.out.printf("\nPreferred Username: ");
-		String username = s.nextLine();
+		String username = in.nextLine();
 
 		System.out.printf("\n\tWelcome %s %s to the BugBytes Shopping Center\n\n "+
 						    "\tPlease look around for anything that interests you!\n\n", first,last);

@@ -3,7 +3,7 @@
  * functionality similar to that used in virtual storefronts.
  *
  * @author Jacob Normington
- * @version 3/22/2021
+ * @version 4/30/2021
  */
 public class ShoppingCart
 {
@@ -31,9 +31,10 @@ public class ShoppingCart
       size = 0; 
    }
    
-   public ShoppingCart(String name)
+   public ShoppingCart(int custID)
    {
-      customerName = name;
+      id = custID;
+      
       head = null;  
       tail = head; 
       size = 0;
@@ -357,7 +358,7 @@ public class ShoppingCart
    /**
     * Outputs each item's description
     */
-   public void printDescription()
+   private void printDescription()
    {
       if(size == 0)
       {
