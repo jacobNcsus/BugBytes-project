@@ -86,6 +86,8 @@ public class Connector
 		//c.printAisle(aisles[0]);
 		//c.printAll();
 		
+		c.read("products");
+		
 		c.close();
 	}
 	
@@ -196,18 +198,25 @@ public class Connector
 		}
 	} 
 	
-	public void read(String variable) 
+	/**
+	 * Prints to console some section of the database in structured text. 
+	 * 
+	 * @param	tableView	a String describing the table to be read
+	 */
+	public void read(String tableView) 
 	{
 		try
 		{
-			if (variable == "products") {
+			if (tableView.equals("products")) 
+			{
 				query = "select * from products";
 
 			Statement myStmt = myConn.createStatement();
 			ResultSet myRs = myStmt.executeQuery(query);
 			
-			String output = "";
-			
+			System.out.printf("%15s%21s%16s\n"
+					+ "-------------------------------------------------------\n"
+					,"Product","Price","Quantity");
 				while(myRs.next())
 				{ 
 						System.out.printf("%-29s$ %6s%12s",myRs.getString(3),myRs.getDouble(4),myRs.getInt(5));
@@ -217,7 +226,8 @@ public class Connector
 
 			}
 			
-			if (variable == "customer") {
+			else if (tableView.equals("customer")) 
+			{
 				query = "select * from customer";
 
 			Statement myStmt = myConn.createStatement();
