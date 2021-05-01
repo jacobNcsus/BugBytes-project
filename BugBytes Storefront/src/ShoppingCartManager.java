@@ -37,6 +37,7 @@ public class ShoppingCartManager
       Scanner in = new Scanner(System.in);
       System.out.println();
       System.out.println("MENU");
+      System.out.println("s - View/Edit shop's inventory");
       System.out.println("a - Add item to cart");
       System.out.println("d - Remove item from cart");
       System.out.println("c - Change item quantity");
@@ -51,9 +52,9 @@ public class ShoppingCartManager
       {
     	  if(next.equals("v")) //add an item to cart
           {
-     		 Connector database = Connector.getCon();
-     		 System.out.println("Viewing:");
-     		 System.out.println("a - View all Inventory");
+     		  Connector database = Connector.getCon();
+     		  System.out.println("Viewing:");
+     		  System.out.println("a - View all Inventory");
               System.out.println("w - View alcohol Inventory");
               System.out.println("b - View bakery Inventory");
               System.out.println("f - View breakfast Inventory");
@@ -105,7 +106,7 @@ public class ShoppingCartManager
               }
               
               
-              if(nextInv.equals("i")) 
+              if(nextInv.equals("i"))  //Inserts a product into database
               {
              	 System.out.println("Insert Product ID Number: Ex(ALC00, BAKE00, BREAK00, DIAR00, MEA00, PROD00)");
              	 String s1 = in.nextLine();
@@ -121,7 +122,7 @@ public class ShoppingCartManager
              	 
              	 database.insert(s1,s2,s3,d1,i1,5);
               }
-              if(nextInv.equals("r")) 
+              if(nextInv.equals("r")) //removes a item from the database. Relies on Product ID Number
               {
              	 System.out.println("Insert Product ID Number: Ex(ALC00, BAKE00, BREAK00, DIAR00, MEA00, PROD00)");
              	 String productID = in.nextLine();
