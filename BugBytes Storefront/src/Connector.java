@@ -148,7 +148,7 @@ public class Connector
 			// 2. Create a statement
 			Statement myStmt = myConn.createStatement();
 			// 3. Execute a SQL query
-			ResultSet myRs = myStmt.executeQuery("select * from " + aisle);
+			ResultSet myRs = myStmt.executeQuery("select * from products where PRODUCT_TYPE=" + aisle);
 			// 4. Process the result set 
 			while(myRs.next())
 			{
@@ -170,7 +170,26 @@ public class Connector
 	 */
 	public void printAll() 
 	{
-		printAisle("products");
+		try
+		{
+			// 2. Create a statement
+			Statement myStmt = myConn.createStatement();
+			// 3. Execute a SQL query
+			ResultSet myRs = myStmt.executeQuery("select * from products");
+			// 4. Process the result set 
+			while(myRs.next())
+			{
+				System.out.println(myRs.getString("PRODUCT_ID") + ", " + myRs.getString("PRODUCT_TYPE") + ", " + myRs.getString("PRODUCT_NAME") + ", " 
+			+ myRs.getString("PRICE") + ", " + myRs.getString("QUANTITY_IN_STOCK") + ", " + myRs.getString("REORDER"));
+			}
+			
+			myStmt.close(); 
+			System.out.println();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace(); 
+		}
 	}
 	
 	public void read(String variable) 
@@ -243,12 +262,12 @@ public class Connector
 			throw new IllegalArgumentException("Product type invalid, please choose 'Alcohol', 'Bakery', 'Dairy', 'Meat_seafood', or 'Produce'.");
 		}
 		
-		if ( !(PRICE <= 0) ) //if price is non-positive
+		if (PRICE <= 0) //if price is non-positive
 		{
 			throw new IllegalArgumentException("Price invalid, please enter a price greater than zero.");
 		}
 		
-		if ( !(QUANTITY_IN_STOCK <= 0) ) //if quantity is non-positive
+		if (QUANTITY_IN_STOCK <= 0) //if quantity is non-positive
 		{
 			throw new IllegalArgumentException("Quantity invalid, please enter a quantity greater than zero.");
 		}
@@ -271,7 +290,8 @@ public class Connector
 			myStmt.setInt(6, REORDER);
 			// 4. Execute a SQL query
 			int rows = myStmt.executeUpdate(); 
-			// 5. Process result set
+			
+			
 			System.out.println("Insert complete. \n Rows affected " + rows); 
 		
 			myStmt.close(); 
