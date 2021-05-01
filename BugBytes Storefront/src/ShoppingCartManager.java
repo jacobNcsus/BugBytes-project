@@ -49,7 +49,86 @@ public class ShoppingCartManager
       
       if(!next.equals( "q")) //quit
       {
-         if(next.equals("a")) //add an item to cart
+    	  if(next.equals("v")) //add an item to cart
+          {
+     		 Connector database = Connector.getCon();
+     		 System.out.println("Viewing:");
+     		 System.out.println("a - View all Inventory");
+              System.out.println("w - View alcohol Inventory");
+              System.out.println("b - View bakery Inventory");
+              System.out.println("f - View breakfast Inventory");
+              System.out.println("d - View dairy Inventory");
+              System.out.println("m - View meat/seafood Inventory");
+              System.out.println("p - View produce Inventory");
+              System.out.println("");
+              System.out.println("Editing:");
+              System.out.println("i - Add Item to Inventory");
+              System.out.println("r - Remove Item from Inventory");
+              System.out.println("Choose an option: ");
+              String nextInv = in.nextLine();
+              
+           
+              if(nextInv.equals("a")) 
+              {
+             	 System.out.println("ID      Type   Name    Price    Stock");  //replace with format method SIK had
+             	 database.printAll();
+              }
+              if(nextInv.equals("w")) 
+              {
+             	 System.out.println("ID      Type   Name    Price    Stock");  
+             	 database.printAisle("alcohol");
+              }
+              if(nextInv.equals("b")) 
+              {
+             	 System.out.println("ID      Type   Name    Price    Stock");  
+             	 database.printAisle("bakery");
+              }
+              if(nextInv.equals("f")) 
+              {
+             	 System.out.println("ID      Type   Name    Price    Stock"); 
+             	 database.printAisle("breakfast");
+              }
+              if(nextInv.equals("d")) 
+              {
+             	 System.out.println("ID      Type   Name    Price    Stock"); 
+             	 database.printAisle("dairy");
+              }
+              if(nextInv.equals("m")) 
+              {
+             	 System.out.println("ID      Type   Name    Price    Stock");  
+             	 database.printAisle("meat_seafood");
+              }
+              if(nextInv.equals("p")) 
+              {
+             	 System.out.println("ID      Type   Name    Price    Stock");  
+             	 database.printAisle("produce");
+              }
+              
+              
+              if(nextInv.equals("i")) 
+              {
+             	 System.out.println("Insert Product ID Number: Ex(ALC00, BAKE00, BREAK00, DIAR00, MEA00, PROD00)");
+             	 String s1 = in.nextLine();
+             	 System.out.println("Insert the type of product: Ex(Alcohol,Bakery,Breakfast,Dairy,Meat_seafood,Produce)");
+             	 String s2 = in.nextLine();
+             	 		s2 = "'" +s2+ "'";
+             	 System.out.println("Insert name of Product");
+             	 String s3 = in.nextLine(); 
+             	 System.out.println("Insert price of Product");
+             	 double d1 = in.nextDouble();
+             	 System.out.println("Insert quantity of Prodcut");
+             	 int 	i1 = in.nextInt();
+             	 
+             	 database.insert(s1,s2,s3,d1,i1,5);
+              }
+              if(nextInv.equals("r")) 
+              {
+             	 System.out.println("Insert Product ID Number: Ex(ALC00, BAKE00, BREAK00, DIAR00, MEA00, PROD00)");
+             	 String productID = in.nextLine();
+             	 database.delete(productID);
+              }
+            
+    	  if(next.equals("a")) //add an item to cart
          {
             System.out.println("ADD ITEM TO CART");
             System.out.println("Enter the item name:");
