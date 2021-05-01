@@ -3,7 +3,7 @@ import java.util.Scanner;
  * Implements a menu to manipulate a shopping cart via console input
  *
  * @author Jacob Normington
- * @version 2/13/2020 
+ * @version 2/13/2020
  */
 public class ShoppingCartManager
 {
@@ -19,7 +19,11 @@ public class ShoppingCartManager
         String name = in.nextLine();
         System.out.println("Customer Name: " + name);
         System.out.println("...");
-        ShoppingCart cart = new ShoppingCart(name);
+        System.out.println("Please enter today's date.");
+        String date = in.nextLine();
+        System.out.println("Current Date: " + date);
+        System.out.println("...");
+        ShoppingCart cart = new ShoppingCart(name, date);
         printMenu(cart);
         
         in.close();
@@ -32,7 +36,7 @@ public class ShoppingCartManager
     * @param   cart  the shopping cart to be modified
     * @return        none
     */
-   private static void printMenu(ShoppingCart cart)
+   public static void printMenu(ShoppingCart cart)
    {
       Scanner in = new Scanner(System.in);
       System.out.println();
@@ -60,13 +64,13 @@ public class ShoppingCartManager
             int price = java.lang.Integer.parseInt(in.next());
             System.out.println("Enter the item quantity:");
             int quantity = java.lang.Integer.parseInt(in.next());
-            //cart.addItem(new Item(name, description, price, quantity));
+            cart.addItem(new Item(name, description, price, quantity));
          }
          if(next.equals("d")) //remove an item from cart
          {
             System.out.println("REMOVE ITEM FROM CART");
             System.out.println("Enter name of item to remove:");
-            //cart.removeItem(in.nextLine());
+            cart.removeItem(in.nextLine());
          }
          if(next.equals("c")) //change item quantity
          {
@@ -76,7 +80,7 @@ public class ShoppingCartManager
             item.setName(in.nextLine());
             System.out.println("Enter the new quantity:");
             item.setQuantity(in.nextInt());
-            //cart.modifyItem(item);
+            cart.modifyItem(item);
          }
          if(next.equals("i")) //outputs item's descriptions
          {
@@ -95,52 +99,52 @@ public class ShoppingCartManager
    }
    
    /*public static void select() {
-		
-		Scanner s = new Scanner(System.in);
-
-		System.out.printf("\nPlease select a product to add to cart: ");
-		String selection = s.nextLine();
-		
-		//if (selection == )
-		
-	}
 	
-	public static void menu() {
-		
-		Connector c = new Connector();
-		System.out.printf("%15s%21s%16s\n"
-				+ "-------------------------------------------------------\n"
-						 ,"Product","Price","Quantity");
-		c.read("products");
-		
-	}
+	Scanner s = new Scanner(System.in);
 
+	System.out.printf("\nPlease select a product to add to cart: ");
+	String selection = s.nextLine();
 	
-	// customer logins in with email and password
-	public static void login() {
-		
-		Scanner s = new Scanner(System.in);
-		
-		System.out.printf("Please fill in the following information to create an account:\n\n");
+	//if (selection == )
+	
+}
 
-		System.out.printf("First Name: ");
-		String first = s.nextLine();
-		
-		System.out.printf("\nLast Name: ");
-		String last = s.nextLine();
-		
-		System.out.printf("\nEmail: ");
-		String email = s.nextLine();
-		
-		System.out.printf("\nPhone Number: ");
-		String phone = s.nextLine();
-		
-		System.out.printf("\nPreferred Username: ");
-		String username = s.nextLine();
+public static void menu() {
+	
+	Connector c = new Connector();
+	System.out.printf("%15s%21s%16s\n"
+			+ "-------------------------------------------------------\n"
+					 ,"Product","Price","Quantity");
+	c.read("products");
+	
+}
 
-		System.out.printf("\n\tWelcome %s %s to the BugBytes Shopping Center\n\n "+
-						    "\tPlease look around for anything that interests you!\n\n", first,last);
-		
-	}
-	*/
+
+// customer logins in with email and password
+public static void login() {
+	
+	Scanner s = new Scanner(System.in);
+	
+	System.out.printf("Please fill in the following information to create an account:\n\n");
+
+	System.out.printf("First Name: ");
+	String first = s.nextLine();
+	
+	System.out.printf("\nLast Name: ");
+	String last = s.nextLine();
+	
+	System.out.printf("\nEmail: ");
+	String email = s.nextLine();
+	
+	System.out.printf("\nPhone Number: ");
+	String phone = s.nextLine();
+	
+	System.out.printf("\nPreferred Username: ");
+	String username = s.nextLine();
+
+	System.out.printf("\n\tWelcome %s %s to the BugBytes Shopping Center\n\n "+
+					    "\tPlease look around for anything that interests you!\n\n", first,last);
+	
+}
+*/
 }

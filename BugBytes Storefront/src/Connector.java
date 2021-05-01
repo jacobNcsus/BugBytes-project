@@ -196,6 +196,55 @@ public class Connector
 		}
 	} 
 	
+	public void read(String variable) 
+	{
+		try
+		{
+			if (variable == "products") {
+				query = "select * from products";
+
+			Statement myStmt = myConn.createStatement();
+			ResultSet myRs = myStmt.executeQuery(query);
+			
+			String output = "";
+			
+				while(myRs.next())
+				{ 
+						System.out.printf("%-29s$ %6s%12s",myRs.getString(3),myRs.getDouble(4),myRs.getInt(5));
+						System.out.println();
+				}	
+				myStmt.close(); 
+
+			}
+			
+			if (variable == "customer") {
+				query = "select * from customer";
+
+			Statement myStmt = myConn.createStatement();
+			ResultSet myRs = myStmt.executeQuery(query);
+			
+			String output = "";
+			
+				while(myRs.next())
+				{ 
+						output = myRs.getInt(1) + " " +
+								 myRs.getString(2) + " " +	
+								 myRs.getString(3) + " " +
+								 myRs.getDouble(4) + " " +
+								 myRs.getString(5) + " " +
+								 myRs.getString(6);
+						System.out.println(output);
+				}	
+				myStmt.close(); 
+
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace(); 
+		}
+	}
+
 	/**
 	 * Adds a new item to inventory
 	 *
