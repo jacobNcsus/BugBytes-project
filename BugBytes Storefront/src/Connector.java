@@ -175,7 +175,7 @@ public class Connector
 	public void printAll() 
 	{
 		try
-		{ 
+		{  
 			// 2. Create a statement
 			Statement myStmt = myConn.createStatement();
 			// 3. Execute a SQL query

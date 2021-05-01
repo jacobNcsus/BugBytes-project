@@ -3,7 +3,7 @@ import java.util.Scanner;
  * Implements a menu to manipulate a shopping cart via console input
  *
  * @author Jacob Normington
- * @version 2/13/2020
+ * @version 2/13/2020 
  */
 public class ShoppingCartManager
 {
