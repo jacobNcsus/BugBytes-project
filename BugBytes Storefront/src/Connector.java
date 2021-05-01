@@ -80,7 +80,11 @@ public class Connector
         //c.emptyCart(1); 
         //c.printCart(1); //checks that cart is now empty
 		
-		Connector.showShop();
+		//Connector.showShop();
+		
+		//c.insert("ALC07", aisles[0], "Hennesy", 20.00, 10, 5); 
+		//c.printAisle(aisles[0]);
+		//c.printAll();
 		
 		c.close();
 	}
@@ -148,7 +152,7 @@ public class Connector
 			// 2. Create a statement
 			Statement myStmt = myConn.createStatement();
 			// 3. Execute a SQL query
-			ResultSet myRs = myStmt.executeQuery("select * from products where PRODUCT_TYPE=" + aisle);
+			ResultSet myRs = myStmt.executeQuery("select * from products where PRODUCT_TYPE='" + aisle + "'");
 			// 4. Process the result set 
 			while(myRs.next())
 			{
@@ -190,7 +194,7 @@ public class Connector
 		{
 			e.printStackTrace(); 
 		}
-	}
+	} 
 	
 	/**
 	 * Adds a new item to inventory
@@ -243,7 +247,7 @@ public class Connector
 			int rows = myStmt.executeUpdate(); 
 			
 			
-			System.out.println("Insert complete. \n Rows affected " + rows); 
+			System.out.println("Insert complete. \n"); 
 		
 			myStmt.close(); 
 			return rows; 
