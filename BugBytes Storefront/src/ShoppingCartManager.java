@@ -108,9 +108,6 @@ public class ShoppingCartManager
 	public static void menu() {
 		
 		Connector c = new Connector();
-		System.out.printf("%15s%21s%16s\n"
-				+ "-------------------------------------------------------\n"
-						 ,"Product","Price","Quantity");
 		c.read("products");
 		
 	}

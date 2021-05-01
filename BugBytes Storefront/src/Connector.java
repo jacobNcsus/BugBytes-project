@@ -44,39 +44,26 @@ public class Connector
 	public static void main(String[] args)
 	{
 		Connector c = Connector.getCon();
-	
-		/*
+
+		//c.printAll();
+		//c.printAisle(aisles[0]);
+		//c.printAisle(aisles[1]);
+		//c.printAisle(aisles[2]);
+		//c.printAisle(aisles[3]);
+		//c.printAisle(aisles[4]);
+		//c.printAisle(aisles[5]);
+		
 		c.clearOrders();
+		c.emptyCart(1);
 		c.purgeLogins();
 		c.signUp(1, "user1", "first", "last", "foo@bar.com", "18000000000");
-		c.printCart(1);
+		//c.printCart(1);
 		c.addToCart(1, "ALC01", 2);
-		c.printCart(1);
+		//c.printCart(1);
 		c.updateCart(1, "ALC01", 5);
-		c.printCart(1);
+		//c.printCart(1);
 		c.addToCart(1, "ALC02", 2);
 		c.addToCart(1, "ALC03", 1);
-		c.printCart(1);
-        c.CONFIRM_ORDER(1);
-        c.placeOrder(1, 10.00, 5.4544, 93.3744); //rounds off the last two decimals
-        c.addToOrder(1, 1, "ALC01", 5, 10.9913);
-        c.addToOrder(1, 2, "ALC02", 2, 5.991);
-        c.addToOrder(1, 3, "ALC03", 1, 10.991);
-        c.emptyCart(1);
-        c.printCart(1);
-		*/
-
-		
-		//c.clearOrders();
-		//c.purgeLogins();
-		//c.signUp(1, "user1", "first", "last", "foo@bar.com", "18000000000");
-		//c.printCart(1);
-		//c.addToCart(1, "ALC01", 2);
-		//c.printCart(1);
-		//c.updateCart(1, "ALC01", 5);
-		//c.printCart(1);
-		//c.addToCart(1, "ALC02", 2);
-		//c.addToCart(1, "ALC03", 1);
 		//c.printCart(1);
         //c.CONFIRM_ORDER(1);
         //c.placeOrder(1, 10.00, 5.4544, 93.3744); //rounds off the last two decimals
@@ -94,7 +81,12 @@ public class Connector
 		//c.printAll();
 		
 		c.read("products");
-		
+		c.read("Alcohol");
+		c.read("Meat_seafood");
+		c.read("cart");
+		c.read("customer");
+		c.read("order");
+		c.read("order_details");
 
 		c.close();
 	}
@@ -209,53 +201,150 @@ public class Connector
 	/**
 	 * Prints to console some section of the database in structured text. 
 	 * 
+	 * @throws	IllegalArgumentException	if tableView does not represent a valid table (products, cart, customer, some aisle, etc.)
 	 * @param	tableView	a String describing the table to be read
 	 */
 	public void read(String tableView) 
 	{
 		try
 		{
-			if (tableView.equals("products")) 
+			if (tableView.equals("products")) //display entire inventory
 			{
 				query = "select * from products";
 
-			Statement myStmt = myConn.createStatement();
-			ResultSet myRs = myStmt.executeQuery(query);
+				Statement myStmt = myConn.createStatement();
+				ResultSet myRs = myStmt.executeQuery(query);
 			
-			System.out.printf("%15s%21s%16s\n"
+				System.out.println("Store Inventory:");
+				System.out.printf("%15s%21s%16s\n"
 					+ "-------------------------------------------------------\n"
 					,"Product","Price","Quantity");
 				while(myRs.next())
 				{ 
-						System.out.printf("%-29s$ %6s%12s",myRs.getString(3),myRs.getDouble(4),myRs.getInt(5));
+						System.out.printf("%-29s$ %6.2f%12s", 
+								myRs.getString("PRODUCT_NAME"), myRs.getDouble("PRICE"), myRs.getInt("QUANTITY_IN_STOCK"));
 						System.out.println();
-				}	
+				}
+				System.out.println();
 				myStmt.close(); 
-
 			}
 			
-			else if (tableView.equals("customer")) 
+			else if (isAisle(tableView)) //display an aisle of the shop
+			{
+				query = "select * from products WHERE PRODUCT_TYPE= ?";
+
+				PreparedStatement myStmt = myConn.prepareStatement(query);
+				myStmt.setString(1, tableView); //1-indexed
+				ResultSet myRs = myStmt.executeQuery();
+			
+				System.out.println(tableView + " Aisle:");
+				System.out.printf("%15s%21s%16s\n"
+					+ "-------------------------------------------------------\n"
+					,"Product","Price","Quantity");
+				while(myRs.next())
+				{ 
+						System.out.printf("%-29s$ %6.2f%12s", 
+								myRs.getString("PRODUCT_NAME"), myRs.getDouble("PRICE"), myRs.getInt("QUANTITY_IN_STOCK"));
+						System.out.println();
+				} 
+				System.out.println();
+				myStmt.close(); 
+			}
+			
+			else if (tableView.equals("cart")) //display a user's cart
+			{
+				query = "select * from cart WHERE CUSTOMER_ID_CART= ?";
+				query = "SELECT c.PRODUCT_ID, c.QUANTITY_ORDERED, c.TOTAL_COST, cust.USERNAME FROM cart c LEFT JOIN customer cust ON c.CUSTOMER_ID_CART = cust.CUSTOMER_ID WHERE CUSTOMER_ID_CART=?";
+
+				PreparedStatement myStmt = myConn.prepareStatement(query);
+				myStmt.setInt(1, 1); //1-indexed
+				ResultSet myRs = myStmt.executeQuery();
+			
+				if(!myRs.next() ) //false if the list is empty
+				{
+					System.out.println("Cart is empty \n");
+				}
+				else //your cart is not empty
+				{
+					System.out.println(myRs.getString("USERNAME") + "'s Shopping Cart:");
+					System.out.printf("%15s%21s%16s\n"
+						+ "-------------------------------------------------------\n"
+						,"Product","Quantity","Total Cost");
+					do
+					{ 
+							System.out.printf("%-31s%-13s$ %6.2f", 
+									myRs.getString("PRODUCT_ID"), myRs.getInt("QUANTITY_ORDERED"), myRs.getDouble("TOTAL_COST"));
+							System.out.println();
+					} while(myRs.next());
+					System.out.println();
+				}
+				myStmt.close(); 
+			}
+			
+			else if (tableView.equals("customer")) //displays the list of customers
 			{
 				query = "select * from customer";
 
-			Statement myStmt = myConn.createStatement();
-			ResultSet myRs = myStmt.executeQuery(query);
+				Statement myStmt = myConn.createStatement();
+				ResultSet myRs = myStmt.executeQuery(query);
 			
-			String output = "";
-			
-				while(myRs.next())
-				{ 
-						output = myRs.getInt(1) + " " +
-								 myRs.getString(2) + " " +	
-								 myRs.getString(3) + " " +
-								 myRs.getDouble(4) + " " +
-								 myRs.getString(5) + " " +
-								 myRs.getString(6);
-						System.out.println(output);
-				}	
+				if(!myRs.next() ) //false if the list is empty
+				{
+					System.out.println("There are no customers \n");
+				}
+				else //list is not empty
+				{
+					System.out.println("Customer List: ");
+					System.out.printf("%-3s%-15s%-15s%-15s%-20s%-15s \n"
+							+ "----------------------------------------------------------------------------------\n"
+							,"ID","Username","First Name","Last Name","Email","Phone Number");
+					do
+					{ 
+							System.out.printf("%-3s%-15s%-15s%-15s%-20s%-15s", 
+									myRs.getString("CUSTOMER_ID"), myRs.getString("USERNAME"), myRs.getString("FIRST_NAME"), myRs.getString("LAST_NAME"), myRs.getString("EMAIL"), myRs.getString("PHONE"));
+							System.out.println();
+					} while(myRs.next());
+					System.out.println();
+				}
 				myStmt.close(); 
-
 			}
+			
+			else if (tableView.equals("order")) //display the list of orders
+			{
+				query = "select * from shop_test.order";
+
+				Statement myStmt = myConn.createStatement();
+				ResultSet myRs = myStmt.executeQuery(query);
+			
+				String output = "";
+				
+				if(!myRs.next() ) //false if the list is empty
+				{
+					System.out.println("There are no orders \n");
+				}
+				else //only if the list has entries
+				{
+					do
+					{ 
+							output = myRs.getInt("ORDER_ID") + " " +
+									 myRs.getInt("CUSTOMER_ID") + " " +	
+									 myRs.getString("ORDER_DATE") + " " +
+									 myRs.getDouble("SHIPPING_COST") + " " +
+									 myRs.getDouble("TAX") + " " +
+									 myRs.getDouble("TOTAL_COST");
+							System.out.println(output + "\n");
+					} while(myRs.next());
+				}
+				myStmt.close(); 
+			}
+			
+			else if (tableView.equals("order_details")) //display the order details associated with an order
+			{
+				System.out.println("Not finished");
+			}
+			
+			else 
+				throw new IllegalArgumentException("Invalid table choice.");
 		}
 		catch (Exception e)
 		{
@@ -625,8 +714,8 @@ public class Connector
         try 
         {
             Statement myStmt = myConn.createStatement();
-            String statementText = "SELECT c.PRODUCT_ID, p.PRODUCT_NAME, c.QUANTITY_ORDERED, p.QUANTITY_IN_STOCK AS stockRemaining FROM cart c LEFT JOIN products p ON c.PRODUCT_ID = p.PRODUCT_ID WHERE CUSTOMER_ID_CART=\"" + custID+ "\"";
-            ResultSet myRs = myStmt.executeQuery(statementText);
+            query = "SELECT c.PRODUCT_ID, p.PRODUCT_NAME, c.QUANTITY_ORDERED, p.QUANTITY_IN_STOCK AS stockRemaining FROM cart c LEFT JOIN products p ON c.PRODUCT_ID = p.PRODUCT_ID WHERE CUSTOMER_ID_CART=\"" + custID+ "\"";
+            ResultSet myRs = myStmt.executeQuery(query);
             while(myRs.next()) 
             {
                 //System.out.println("Inside the while loop");
