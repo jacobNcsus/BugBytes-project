@@ -3,7 +3,7 @@
  * functionality similar to that used in virtual storefronts.
  *
  * @author Jacob Normington
- * @version 4/30/2021
+ * @version 5/3/2021
  */
 public class ShoppingCart
 {
@@ -16,6 +16,7 @@ public class ShoppingCart
    
 	private CartNode head; //beginning of list
 	private CartNode tail; //end of list
+	private CartNode current; //an iterator
 	private int size; //the total number of items in the cart
 
    /**
@@ -26,23 +27,19 @@ public class ShoppingCart
 	   customerName = "default";
 	   id = 1; 
 	   c=Connector.getCon();
+	   c.emptyCart(1);
       
 	   head = null;  
 	   tail = head; 
 	   size = 0; 
    }
    
-   private ShoppingCart(int custID)
-   {
-	   customerName = "default";
-	   id = custID; 
-	   c=Connector.getCon();
-      
-	   head = null;  
-	   tail = head; 
-	   size = 0;
-   }
-   
+   /**
+    * 	Constructor of a shopping cart matching a specified user
+    * 
+    * 	@param custID	the user's customer id number
+    * 	@param name		the user's first and last name
+    */
    public ShoppingCart(int custID, String name)
    {
 	   customerName = name;
@@ -239,6 +236,18 @@ public class ShoppingCart
    }
    
    /**
+    * Removes from the cart all items. 
+    */
+   public void clearCart()
+   {
+	   c.emptyCart(id); //clears database
+	   
+	   head.getNext().setPrevious(null); //remove reference from second
+	   head = null; //remove reference from head
+	   //garbage collector will delete all the stray nodes in frontend cart
+   }
+   
+   /**
     * Searches through the database for changes which need to be made to the cart.
     */
    public void update()
@@ -309,7 +318,6 @@ public class ShoppingCart
       else
       {
     	  System.out.println(customerName + "'s Shopping Cart");
-          System.out.println();
           System.out.println("Number of Items: " + getCartSize());
           System.out.println();
           CartNode node = head; 
@@ -324,6 +332,38 @@ public class ShoppingCart
           total += tail.getValue().getTotalCost(); 
           System.out.println("Total: $" + total);
       }
+   }
+   
+   /**
+    * Moves cursor to reference the first item in the cart.
+    * 
+    * @return	the first item
+    */
+   public Item first()
+   {
+	   current = head;
+	   return current.getValue();
+   }
+   
+   /**
+    * Moves cursor to reference the next item in the cart.
+    * 
+    * @return	the next item
+    */
+   public Item next()
+   {
+	   current = current.getNext();
+	   return current.getValue();
+   }
+   
+   /**
+    * Determines whether there are more items in the cart not yet read. 
+    * 
+    * @return	true, if there are one or more items in the cart after the cursor, false otherwise
+    */
+   public boolean hasNext()
+   {
+	   return current.hasNext();
    }
 }
 

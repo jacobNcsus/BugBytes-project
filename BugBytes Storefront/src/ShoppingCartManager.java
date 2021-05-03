@@ -4,7 +4,7 @@ import java.util.Scanner;
  * Implements a menu to interact with the virtual store via console input
  *
  * @author Alexander Gunby, Sikander Ghafary, Jacob Normington
- * @version 5/2/2021
+ * @version 5/3/2021
  */
 public class ShoppingCartManager
 {
@@ -25,7 +25,7 @@ public class ShoppingCartManager
         
         //arrive here only when the user has quit
         String fairwell = "Thank you for shopping with us today";
-        if (!cart.getCustomerName().equals("default"))
+        if (loggedIn)
         {
         	fairwell += ", " + cart.getCustomerName(); 
         }
@@ -75,23 +75,24 @@ public class ShoppingCartManager
         	}
         }
         //user has quit
-        System.out.println("quit from welcome");
+        //System.out.println("quit from welcome");
 	}
 	
 	private static void login()
 	{
 		System.out.println("Please fill in the following information to log into your account:");
-		System.out.println("Username: ");
+		System.out.print("Username: ");
 		String username = in.nextLine();
-		System.out.println("First Name: ");
+		System.out.print("First Name: ");
 		String first = in.nextLine();
-		System.out.println("Last Name: ");
+		System.out.print("Last Name: ");
 		String last = in.nextLine();
 		System.out.println(); //spacing
 		
 		int custID = store.login(username, first, last);
 		if (custID < 1) //account does not exist
 		{
+			System.out.println("No such account exists.");
 			if (retry())
 				login();
 			else
@@ -99,23 +100,28 @@ public class ShoppingCartManager
 		}
 		cart = new ShoppingCart(custID, first + " " + last);
 		loggedIn = true;
-		System.out.printf("\n\tWelcome %s %s to the BugBytes Shopping Center\n\n "+
-			    "\tPlease look around for anything that interests you!\n\n", first,last);
+		if (first.equalsIgnoreCase("Sai") && last.equalsIgnoreCase("Suresh"))
+		{
+			store.requestAuthorization("shopMgr", "csc131");
+			System.out.println("user4 has been granted store admin privileges.");
+		}
+		System.out.printf("\n\tWelcome %s %s to the BugBytes Shopping Center\n\n"+
+			    "Please look around for anything that interests you!\n\n", first,last);
 		printMenu();
 	}
 	
 	private static void signUp() 
 	{
 		System.out.println("Please fill in the following information to create an account:");
-		System.out.println("First Name: ");
+		System.out.print("First Name: ");
 		String first = in.nextLine();
-		System.out.println("Last Name: ");
+		System.out.print("Last Name: ");
 		String last = in.nextLine();
-		System.out.println("Email: ");
+		System.out.print("Email: ");
 		String email = in.nextLine();
-		System.out.println("Phone Number: ");
+		System.out.print("Phone Number: ");
 		String phone = in.nextLine();
-		System.out.println("Preferred Username: ");
+		System.out.print("Preferred Username: ");
 		String username = in.nextLine();
 		
 		try
@@ -124,8 +130,8 @@ public class ShoppingCartManager
 			int custID = store.login(username, first, last);
 			cart = new ShoppingCart(custID, first + " " + last);
 			loggedIn = true;
-			System.out.printf("\n\tWelcome %s %s to the BugBytes Shopping Center\n\n "+
-				    "\tPlease look around for anything that interests you!\n\n", first,last);
+			System.out.printf("\n\tWelcome %s %s to the BugBytes Shopping Center\n\n"+
+				    "Please look around for anything that interests you!\n\n", first,last);
 			printMenu();
 		}
 		catch (Exception e)
@@ -157,10 +163,15 @@ public class ShoppingCartManager
      		System.out.println("");
          	System.out.println("l - return to login screen");
      	}
+     	else
+     	{
+     		System.out.println("");
+         	System.out.println("s - sign out");
+     	}
      	if(store.isAdmin())
      	{
      		System.out.println("");
-         	System.out.println("Editing:");
+         	System.out.println("Administration:");
          	System.out.println("i - Add Item to Inventory");
          	System.out.println("r - Remove Item from Inventory");
      	}
@@ -220,6 +231,12 @@ public class ShoppingCartManager
       			welcome();
       			break;
       		}
+      		case "s":
+      		{
+      			loggedIn = false;
+      			welcome();
+      			break;
+      		}
       		case "i":
       		{
       			System.out.println("Insert the type of Product: Ex(Alcohol,Bakery,Breakfast,Dairy,Meat_seafood,Produce)");
@@ -232,14 +249,15 @@ public class ShoppingCartManager
             	int 	i1 = in.nextInt();
             	System.out.println("Insert quantity at which the Product should be restocked");
            	 	int 	i2 = in.nextInt();
-            	 
-            	 store.addInventory(new Item(s1, s2, d1), i1, i2);
+           	 	store.addInventory(new Item(s1, s2, d1), i1, i2);
+    	 		printMenu(); //goes back to main menu
       		}
       		case "r":
       		{
       			System.out.println("Insert name of Product to be removed");
-            	 String name = in.nextLine();
-            	 store.removeInventory(name);
+            	String name = in.nextLine();
+            	store.removeInventory(name);
+            	printMenu(); //goes back to main menu
       		}
       		default: 
       		{
@@ -248,7 +266,7 @@ public class ShoppingCartManager
       		}
       	}
      	//user has quit
-     	System.out.println("quit from printMenu");
+     	//System.out.println("quit from printMenu");
    	}
     
    	private static boolean retry()
@@ -287,46 +305,3 @@ public class ShoppingCartManager
    		return in.nextLine();
    	}
 }
-   
-   /*private static void select() 
-    {
-		System.out.printf("\nPlease select a product to add to cart: ");
-		String selection = in.nextLine();
-		
-		//if (selection == )
-		
-	}
-	
-	private static void menu() 
-	{
-		c.read("products");
-	}
-
-	
-	// customer logins in with email and password
-	private static void login() 
-	{
-		System.out.printf("Please fill in the following information to create an account:\n\n");
-
-		System.out.printf("First Name: ");
-		String first = in.nextLine();
-		
-		System.out.printf("\nLast Name: ");
-		String last = in.nextLine();
-		
-		System.out.printf("\nEmail: ");
-		String email = in.nextLine();
-		
-		System.out.printf("\nPhone Number: ");
-		String phone = in.nextLine();
-		
-		System.out.printf("\nPreferred Username: ");
-		String username = in.nextLine();
-
-		System.out.printf("\n\tWelcome %s %s to the BugBytes Shopping Center\n\n "+
-						    "\tPlease look around for anything that interests you!\n\n", first,last);
-		
-	}
-	*/
-
-

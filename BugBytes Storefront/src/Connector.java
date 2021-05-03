@@ -4,7 +4,7 @@ import java.sql.*;
  * Creates a connection to the shopping
  *
  * @author Jacob Normington, Daniel Beauchamp, Youser Alalusi
- * @version 4/30/2021
+ * @version 5/3/2021
  */
 public class Connector 
 {
@@ -42,17 +42,26 @@ public class Connector
 		return singleton;
 	}
 	
+	/**
+	 * Closes the connection to the database once it is no longer needed. 
+	 */
+	public void close()
+	{
+		try
+		{
+			myConn.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace(); 
+		}
+	}
+	
 	public static void main(String[] args)
 	{
 		Connector c = Connector.getCon();
-
-		//c.printAll();
-		//c.printAisle(aisles[0]);
-		//c.printAisle(aisles[1]);
-		//c.printAisle(aisles[2]);
-		//c.printAisle(aisles[3]);
-		//c.printAisle(aisles[4]);
-		//c.printAisle(aisles[5]);
+		c.authorize(username, password);
+		//Connector.showShop();
 		
 		//c.clearOrders();
 		//c.emptyCart(1);
@@ -71,42 +80,26 @@ public class Connector
         //c.addToOrder(1, 1, "ALC01", 5, 10.9913);
         //c.addToOrder(1, 2, "ALC02", 2, 5.991);
         //c.addToOrder(1, 3, "ALC03", 1, 10.991);
-        //System.out.println();
+        //System.out.println(); //has to be done manually
         //c.emptyCart(1); 
         //c.printCart(1); //checks that cart is now empty
-		
-		//Connector.showShop();
 		
 		//c.insert("ALC07", aisles[0], "Hennesy", 20.00, 10, 5); 
 		//c.printAisle(aisles[0]);
 		//c.printAll();
 		
-		c.read("products", -1);
-		c.read("Alcohol", -1);
-		c.read("Meat_seafood", -1);
-		c.read("cart", 1);
+		//c.read("products", -1);
+		//c.read("Alcohol", -1);
+		//c.read("Meat_seafood", -1);
+		//c.read("cart", -1);
 		c.read("customer", -1);
-		c.read("order", 1);
-		c.read("order_details", 1);
-
+		//c.read("order", -1);
+		//c.read("order_details", -1);
+		
+		System.out.println("Done.");
 		c.close();
 	}
-	
-	/**
-	 * Closes the connection to the database once it is no longer needed. 
-	 */
-	public void close()
-	{
-		try
-		{
-			myConn.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace(); 
-		}
-	}
-	
+
 	/**
 	 * Reads an item from the inventory
 	 *
@@ -136,69 +129,282 @@ public class Connector
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Prints out an aisle/category from the shop database. 
-	 *
-	 * @throws	IllegalArgumentException	if aisle is not one of the valid aisles
-	 * @param	aisle	a String object of the aisle to be displayed, either 'Alcohol', 'Bakery', 'Breakfast', 'Dairy', 'Meat_seafood', or 'Produce'
+	 * Prints to console some section of the database in structured text. 
+	 * 
+	 * @throws	IllegalArgumentException	if tableView does not represent a valid table (products, cart, customer, some aisle, etc.)
+	 * @throws	SecurityException			if this connection does not have admin privileges and read is used for a restricted function
+	 * @param	tableView	a String describing the table to be read
+	 * @param	id			an optional parameter for either a user or order id, negative to print all 
 	 */
-	public void printAisle(String aisle) 
+	public void read(String tableView, int id) 
 	{
-		if (!isAisle(aisle))
-		{
-			throw new IllegalArgumentException("Product type invalid, please choose 'Alcohol', 'Bakery', 'Dairy', 'Meat_seafood', or 'Produce'.");
-		}
-		
 		try
 		{
-			// 2. Create a statement
-			Statement myStmt = myConn.createStatement();
-			// 3. Execute a SQL query
-			ResultSet myRs = myStmt.executeQuery("select * from products where PRODUCT_TYPE='" + aisle + "'");
-			// 4. Process the result set 
-			while(myRs.next())
+			if (tableView.equalsIgnoreCase("products")) //display entire inventory
 			{
-				System.out.println(myRs.getString("PRODUCT_ID") + ", " + myRs.getString("PRODUCT_TYPE") + ", " + myRs.getString("PRODUCT_NAME") + ", " 
-			+ myRs.getString("PRICE") + ", " + myRs.getString("QUANTITY_IN_STOCK") + ", " + myRs.getString("REORDER"));
+				query = "select * from products";
+
+				Statement myStmt = myConn.createStatement();
+				ResultSet myRs = myStmt.executeQuery(query);
+			
+				System.out.println("\tStore Inventory:");
+				System.out.printf("%6s%30s%16s\n"
+					+ "-------------------------------------------------------\n"
+					,"Product","Price","Quantity");
+				while(myRs.next())
+				{ 
+						System.out.printf("%-29s$ %6.2f%12s", 
+								myRs.getString("PRODUCT_NAME"), myRs.getDouble("PRICE"), myRs.getInt("QUANTITY_IN_STOCK"));
+						System.out.println();
+				}
+				System.out.println("\n"); //spacing, two lines
+				myStmt.close(); 
 			}
 			
-			myStmt.close(); 
-			System.out.println();
+			else if (isAisle(tableView)) //display an aisle of the shop
+			{
+				query = "select * from products WHERE PRODUCT_TYPE= ?";
+
+				PreparedStatement myStmt = myConn.prepareStatement(query);
+				myStmt.setString(1, tableView); //1-indexed
+				ResultSet myRs = myStmt.executeQuery();
+			
+				System.out.println("\t" + tableView + " Aisle:");
+				System.out.printf("%6s%30s%16s\n"
+					+ "-------------------------------------------------------\n"
+					,"Product","Price","Quantity");
+				while(myRs.next())
+				{ 
+						System.out.printf("%-29s$ %6.2f%12s", 
+								myRs.getString("PRODUCT_NAME"), myRs.getDouble("PRICE"), myRs.getInt("QUANTITY_IN_STOCK"));
+						System.out.println();
+				} 
+				System.out.println("\n"); //spacing, two lines
+				myStmt.close(); 
+			}
+			
+			else if (tableView.equalsIgnoreCase("cart")) //display a user's cart
+			{
+				if (id <= 0) //in this case customer id
+				{
+					if (!admin)
+					{
+						throw new SecurityException("Ordinary customers are not allowed to access other customers' carts.");
+					}
+					
+					query = "SELECT c.*, p.PRODUCT_NAME, cust.FIRST_NAME "
+							+ "FROM cart c "
+							+ "LEFT JOIN customer cust ON c.CUSTOMER_ID_CART = cust.CUSTOMER_ID "
+							+ "LEFT JOIN products p ON c.PRODUCT_ID = p.PRODUCT_ID ";
+					System.out.println("\tAll User's Carts: ");
+				}
+				else 
+				{
+					query = "SELECT c.*, p.PRODUCT_NAME, cust.FIRST_NAME "
+							+ "FROM cart c "
+							+ "LEFT JOIN customer cust ON c.CUSTOMER_ID_CART = cust.CUSTOMER_ID "
+							+ "LEFT JOIN products p ON p.PRODUCT_ID = p.PRODUCT_ID "
+							+ "WHERE CUSTOMER_ID_CART=? AND CUSTOMER_ID_CART=?";
+				}
+
+				PreparedStatement myStmt = myConn.prepareStatement(query);
+				if (id > 0)
+				{
+					myStmt.setInt(1, id); //1-indexed
+					myStmt.setInt(2, id);
+				}
+				ResultSet myRs = myStmt.executeQuery();
+			
+				if(!myRs.next() ) //false if the list is empty
+				{
+					System.out.println("Cart is empty \n");
+				}
+				else //your cart is not empty
+				{
+					if (id > 0)
+						System.out.println("\t" + myRs.getString("FIRST_NAME") + "'s Shopping Cart:");
+					
+					System.out.printf("%-8s%10s%21s%13s\n"
+						+ "-------------------------------------------------------\n"
+						,"Customer", "Product","Quantity","Total Cost");
+					do
+					{ 
+							System.out.printf("%-11s%-21s%-13s$ %6.2f", 
+									"user" + myRs.getString("CUSTOMER_ID_CART"), myRs.getString("PRODUCT_NAME"), myRs.getInt("QUANTITY_ORDERED"), myRs.getDouble("TOTAL_COST"));
+							System.out.println();
+					} while(myRs.next());
+					System.out.println("\n"); //spacing, two lines
+				}
+				myStmt.close(); 
+			}
+			
+			else if (tableView.equalsIgnoreCase("customer")) //displays the list of customers
+			{
+				if (id <= 0) //in this case customer id
+				{
+					if (!admin)
+					{
+						throw new SecurityException("Ordinary customers are not allowed to access other customers' information.");
+					}
+					
+					query = "select * from customer";
+					System.out.println("\tCustomer List: ");
+				}
+				else 
+				{
+					query = "select * from customer WHERE CUSTOMER_ID='" + id + "'";
+					System.out.println("\tYour Account Information: ");
+				}
+
+				Statement myStmt = myConn.createStatement();
+				ResultSet myRs = myStmt.executeQuery(query);
+			
+				if(!myRs.next() ) //false if the list is empty
+				{
+					System.out.println("There are no customers \n");
+				}
+				else //list is not empty
+				{
+					System.out.printf("%-3s%-15s%-15s%-15s%-20s%-15s \n"
+							+ "----------------------------------------------------------------------------------\n"
+							,"ID","Username","First Name","Last Name","Email","Phone Number");
+					do
+					{ 
+							System.out.printf("%-3s%-15s%-15s%-15s%-20s%-15s \n", 
+									myRs.getString("CUSTOMER_ID"), myRs.getString("USERNAME"), myRs.getString("FIRST_NAME"), myRs.getString("LAST_NAME"), myRs.getString("EMAIL"), myRs.getString("PHONE"));
+					} while(myRs.next());
+					System.out.println("\n"); //spacing, two lines
+				}
+				myStmt.close(); 
+			}
+			
+			else if (tableView.equalsIgnoreCase("order")) //display the list of orders
+			{
+				if (id <= 0) //in this case customer id
+				{
+					if (!admin)
+					{
+						throw new SecurityException("Ordinary customers are not allowed to access other customers' orders.");
+					}
+					
+					query = "select * from shop_test.order";
+					System.out.println("\tOrder List: ");
+				}
+				else 
+				{
+					query = "select * from shop_test.order WHERE CUSTOMER_ID='" + id + "'";
+					System.out.println("\tYour Orders: ");
+				}
+				Statement myStmt = myConn.createStatement();
+				ResultSet myRs = myStmt.executeQuery(query);
+				
+				if(!myRs.next() ) //false if the list is empty
+				{
+					System.out.println("There are no orders. \n");
+				}
+				else //only if the list has entries
+				{
+					System.out.printf("%-10s%-15s%-15s%-12s%-8s%-15s \n"
+							+ "------------------------------------------------------------------------\n"
+							,"Order ID","Customer ID","Date Issued","Shipping","Tax","Total Cost");
+					do
+					{ 
+						String date = myRs.getString("ORDER_DATE").substring(0,11); //only the date, not time issued
+						System.out.printf("%-10s%-15s%-15s%-12s%-8s%-15s \n", 
+								myRs.getString("ORDER_ID"), myRs.getString("CUSTOMER_ID"), date, myRs.getString("SHIPPING_COST"), myRs.getString("TAX"), myRs.getString("TOTAL_COST"));
+					} while(myRs.next());
+					System.out.println("\n"); //spacing, two lines
+				}
+				myStmt.close(); 
+			}
+			
+			else if (tableView.equalsIgnoreCase("order_details")) //display the order details associated with an order
+			{
+				if (id <= 0) //only this time is it order id
+				{
+					if (!admin)
+					{
+						throw new SecurityException("Ordinary customers are not allowed to access more than one order.");
+					}
+					System.out.println("\tAll Orders ");
+					query = "select * from shop_test.order";
+					Statement myStmt = myConn.createStatement();
+					ResultSet myRs = myStmt.executeQuery(query);
+					if(!myRs.next()) //no order matching
+					{
+						System.out.println("There are no orders in the database. \n");
+						myStmt.close();
+						return;
+					}
+					else
+					{
+						System.out.printf("%-10s%-15s%-15s%-12s%-8s%-15s \n"
+								+ "------------------------------------------------------------------------\n"
+								,"Order ID","Customer ID","Date Issued","Shipping","Tax","Total Cost");
+						String date = myRs.getString("ORDER_DATE").substring(0,11); //only the date, not time issued
+						System.out.printf("%-10s%-15s%-15s%-12s%-8s%-15s \n", 
+								myRs.getString("ORDER_ID"), myRs.getString("CUSTOMER_ID"), date, myRs.getString("SHIPPING_COST"), myRs.getString("TAX"), myRs.getString("TOTAL_COST"));
+					}
+					System.out.println("\tAll Order Contents: ");
+					query = "select * from order_details";
+				}
+				else 
+				{
+					System.out.println("\tOrder " + id);
+					query = "select * from shop_test.order WHERE ORDER_ID ='" + id + "'";
+					Statement myStmt = myConn.createStatement();
+					ResultSet myRs = myStmt.executeQuery(query);
+					if(!myRs.next()) //no order matching
+					{
+						System.out.println("There are no orders matching search parameters. \n");
+						myStmt.close();
+						return;
+					}
+					else
+					{
+						System.out.printf("%-10s%-15s%-15s%-12s%-8s%-15s \n"
+								+ "------------------------------------------------------------------------\n"
+								,"Order ID","Customer ID","Date Issued","Shipping","Tax","Total Cost");
+						String date = myRs.getString("ORDER_DATE").substring(0,11); //only the date, not time issued
+						System.out.printf("%-10s%-15s%-15s%-12s%-8s%-15s \n", 
+								myRs.getString("ORDER_ID"), myRs.getString("CUSTOMER_ID"), date, myRs.getString("SHIPPING_COST"), myRs.getString("TAX"), myRs.getString("TOTAL_COST"));
+					}
+					System.out.println("\tContents of order " + id + ": ");
+					query = "select * from order_details WHERE ORDER_ID='" + id + "'";
+				}
+				Statement myStmt = myConn.createStatement();
+				ResultSet myRs = myStmt.executeQuery(query);
+				
+				if(!myRs.next()) //false if the list is empty
+				{
+					System.out.println("There are no orders matching search parameters. \n"); //this should be impossible?
+				}
+				else //only if the list has entries
+				{
+					System.out.printf("%-10s%-15s%-10s%-12s \n"
+							+ "-------------------------------------------\n"
+							,"Order ID","Product ID","Quantity","Price");
+					do
+					{
+						System.out.printf("%-10s%-15s%-10s%-12s \n", 
+								myRs.getString("ORDER_ID"), myRs.getString("PRODUCT_ID"), myRs.getString("ORDERED_QUANTITY"), myRs.getString("PRICE"));
+					} while(myRs.next());
+					System.out.println("\n"); //spacing, two lines
+				}
+				myStmt.close(); 
+			}
+			
+			else 
+				throw new IllegalArgumentException("Invalid table choice.");
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace(); 
 		}
 	}
-	
-	/**
-	 * Prints to console every product in the inventory. 
-	 */
-	public void printAll() 
-	{
-		try
-		{  
-			// 2. Create a statement
-			Statement myStmt = myConn.createStatement();
-			// 3. Execute a SQL query
-			ResultSet myRs = myStmt.executeQuery("select * from products");
-			// 4. Process the result set 
-			while(myRs.next())
-			{
-				System.out.println(myRs.getString("PRODUCT_ID") + ", " + myRs.getString("PRODUCT_TYPE") + ", " + myRs.getString("PRODUCT_NAME") + ", " 
-			+ myRs.getString("PRICE") + ", " + myRs.getString("QUANTITY_IN_STOCK") + ", " + myRs.getString("REORDER"));
-			}
-			
-			myStmt.close(); 
-			System.out.println();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace(); 
-		}
-	} 
-	
+
 	/**
 	 * Finds the highest product number issued to any item in a given category. 
 	 * 
@@ -225,7 +431,9 @@ public class Connector
 			{
 				String prodID = myRs.getString("PRODUCT_ID");
 				//System.out.println(prodID.substring(prodID.length()-2));
-				num = Integer.parseInt(prodID.substring(prodID.length()-2)); //the last two digits
+				int id = Integer.parseInt(prodID.substring(prodID.length()-2)); //the last two digits
+				if (id > num)
+					num = id;
 			}
 			myStmt.close();
 			return num; //will be the last number
@@ -237,238 +445,6 @@ public class Connector
 		return 0; //failure
 	}
 	
-	/**
-	 * Prints to console some section of the database in structured text. 
-	 * 
-	 * @throws	IllegalArgumentException	if tableView does not represent a valid table (products, cart, customer, some aisle, etc.)
-	 * @throws	SecurityException			if this connection does not have admin privileges and read is used for a restricted function
-	 * @param	tableView	a String describing the table to be read
-	 * @param	id			an optional parameter for either a user or order id, negative to print all 
-	 */
-	public void read(String tableView, int id) 
-	{
-		try
-		{
-			if (tableView.equalsIgnoreCase("products")) //display entire inventory
-			{
-				query = "select * from products";
-
-				Statement myStmt = myConn.createStatement();
-				ResultSet myRs = myStmt.executeQuery(query);
-			
-				System.out.println("Store Inventory:");
-				System.out.printf("%15s%21s%16s\n"
-					+ "-------------------------------------------------------\n"
-					,"Product","Price","Quantity");
-				while(myRs.next())
-				{ 
-						System.out.printf("%-29s$ %6.2f%12s", 
-								myRs.getString("PRODUCT_NAME"), myRs.getDouble("PRICE"), myRs.getInt("QUANTITY_IN_STOCK"));
-						System.out.println();
-				}
-				System.out.println();
-				myStmt.close(); 
-			}
-			
-			else if (isAisle(tableView)) //display an aisle of the shop
-			{
-				query = "select * from products WHERE PRODUCT_TYPE= ?";
-
-				PreparedStatement myStmt = myConn.prepareStatement(query);
-				myStmt.setString(1, tableView); //1-indexed
-				ResultSet myRs = myStmt.executeQuery();
-			
-				System.out.println(tableView + " Aisle:");
-				System.out.printf("%15s%21s%16s\n"
-					+ "-------------------------------------------------------\n"
-					,"Product","Price","Quantity");
-				while(myRs.next())
-				{ 
-						System.out.printf("%-29s$ %6.2f%12s", 
-								myRs.getString("PRODUCT_NAME"), myRs.getDouble("PRICE"), myRs.getInt("QUANTITY_IN_STOCK"));
-						System.out.println();
-				} 
-				System.out.println();
-				myStmt.close(); 
-			}
-			
-			else if (tableView.equalsIgnoreCase("cart")) //display a user's cart
-			{
-				if (id <= 0) //in this case customer id
-				{
-					if (!admin)
-					{
-						throw new SecurityException("Ordinary customers are not allowed to access other customers' carts.");
-					}
-					
-					query = "SELECT c.PRODUCT_ID, c.QUANTITY_ORDERED, c.TOTAL_COST, cust.FIRST_NAME FROM cart c LEFT JOIN customer cust ON c.CUSTOMER_ID_CART = cust.CUSTOMER_ID";
-				}
-				else 
-				{
-					query = "SELECT c.PRODUCT_ID, c.QUANTITY_ORDERED, c.TOTAL_COST, cust.FIRST_NAME FROM cart c LEFT JOIN customer cust ON c.CUSTOMER_ID_CART = cust.CUSTOMER_ID WHERE CUSTOMER_ID_CART=? AND CUSTOMER_ID_CART=?";
-				}
-
-				PreparedStatement myStmt = myConn.prepareStatement(query);
-				if (id > 0)
-				{
-					myStmt.setInt(1, id); //1-indexed
-					myStmt.setInt(2, id);
-				}
-				ResultSet myRs = myStmt.executeQuery();
-			
-				if(!myRs.next() ) //false if the list is empty
-				{
-					System.out.println("Cart is empty \n");
-				}
-				else //your cart is not empty
-				{
-					System.out.println(myRs.getString("FIRST_NAME") + "'s Shopping Cart:");
-					System.out.printf("%15s%21s%16s\n"
-						+ "-------------------------------------------------------\n"
-						,"Product","Quantity","Total Cost");
-					do
-					{ 
-							System.out.printf("%-31s%-13s$ %6.2f", 
-									myRs.getString("PRODUCT_ID"), myRs.getInt("QUANTITY_ORDERED"), myRs.getDouble("TOTAL_COST"));
-							System.out.println();
-					} while(myRs.next());
-					System.out.println();
-				}
-				myStmt.close(); 
-			}
-			
-			else if (tableView.equalsIgnoreCase("customer")) //displays the list of customers
-			{
-				if (id <= 0) //in this case customer id
-				{
-					if (!admin)
-					{
-						throw new SecurityException("Ordinary customers are not allowed to access other customers' information.");
-					}
-					
-					query = "select * from customer";
-				}
-				else 
-				{
-					query = "select * from customer WHERE CUSTOMER_ID='" + id + "'";
-				}
-
-				Statement myStmt = myConn.createStatement();
-				ResultSet myRs = myStmt.executeQuery(query);
-			
-				if(!myRs.next() ) //false if the list is empty
-				{
-					System.out.println("There are no customers \n");
-				}
-				else //list is not empty
-				{
-					System.out.println("Customer List: ");
-					System.out.printf("%-3s%-15s%-15s%-15s%-20s%-15s \n"
-							+ "----------------------------------------------------------------------------------\n"
-							,"ID","Username","First Name","Last Name","Email","Phone Number");
-					do
-					{ 
-							System.out.printf("%-3s%-15s%-15s%-15s%-20s%-15s", 
-									myRs.getString("CUSTOMER_ID"), myRs.getString("USERNAME"), myRs.getString("FIRST_NAME"), myRs.getString("LAST_NAME"), myRs.getString("EMAIL"), myRs.getString("PHONE"));
-							System.out.println();
-					} while(myRs.next());
-					System.out.println();
-				}
-				myStmt.close(); 
-			}
-			
-			else if (tableView.equalsIgnoreCase("order")) //display the list of orders
-			{
-				if (id <= 0) //in this case customer id
-				{
-					if (!admin)
-					{
-						throw new SecurityException("Ordinary customers are not allowed to access other customers' orders.");
-					}
-					
-					query = "select * from shop_test.order";
-				}
-				else 
-				{
-					query = "select * from shop_test.order WHERE CUSTOMER_ID='" + id + "'";
-				}
-				Statement myStmt = myConn.createStatement();
-				ResultSet myRs = myStmt.executeQuery(query);
-			
-				String output = "";
-				
-				if(!myRs.next() ) //false if the list is empty
-				{
-					System.out.println("There are no orders \n");
-				}
-				else //only if the list has entries
-				{
-					do
-					{ 
-							output = myRs.getInt("ORDER_ID") + " " +
-									 myRs.getInt("CUSTOMER_ID") + " " +	
-									 myRs.getString("ORDER_DATE") + " " +
-									 myRs.getDouble("SHIPPING_COST") + " " +
-									 myRs.getDouble("TAX") + " " +
-									 myRs.getDouble("TOTAL_COST");
-							System.out.println(output + "\n");
-					} while(myRs.next());
-				}
-				myStmt.close(); 
-				
-				System.out.println("Not finished");
-			}
-			
-			else if (tableView.equalsIgnoreCase("order_details")) //display the order details associated with an order
-			{
-				if (id <= 0) //only this time is it order id
-				{
-					if (!admin)
-					{
-						throw new SecurityException("Ordinary customers are not allowed to access more than one order.");
-					}
-					
-					query = "select * from order_detail";
-				}
-				else 
-				{
-					query = "select * from order_detail WHERE ORDER_ID='" + id + "'";
-				}
-				Statement myStmt = myConn.createStatement();
-				ResultSet myRs = myStmt.executeQuery(query);
-			
-				String output = "";
-				
-				if(!myRs.next() ) //false if the list is empty
-				{
-					System.out.println("There are no orders \n");
-				}
-				else //only if the list has entries
-				{
-					do
-					{ 
-							output = myRs.getInt("ORDER_ID") + " " +
-									 myRs.getInt("CUSTOMER_LINE_NUMBER") + " " +	
-									 myRs.getString("PRODUCT_ID") + " " +
-									 myRs.getInt("ORDERED_QUANTITY") + " " +
-									 myRs.getDouble("PRICE");
-							System.out.println(output + "\n");
-					} while(myRs.next());
-				}
-				myStmt.close(); 
-				
-				System.out.println("Not finished");
-			}
-			
-			else 
-				throw new IllegalArgumentException("Invalid table choice.");
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace(); 
-		}
-	}
-
 	/**
 	 * Adds a new item to inventory. Requires authorization. 
 	 *
@@ -537,42 +513,80 @@ public class Connector
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace(); 
+			System.out.println("Error. Item could not be added. Please try again later. \n");
+			return 0;
 		}
-		return 0; 
 	}
 	
 	/**
 	 * 	Updates an item in the inventory. Requires authorization.
 	 * 
-	 * @throws	SecurityException	if this connection does not have admin privileges
+	 * 	@throws		IllegalArgumentException	if column is invalid
+	 * 				SecurityException			if this connection does not have admin privileges
+	 * 	@param 		name		the name of the item to be changed
+	 * 				column		the field you wish to change, either aisle, name, price, or reorder
+	 * 				value		the new value proposed for this field
 	 */
-	private void update() //demo
+	public void update(String name, String column, String value)
 	{
+		if (column.equalsIgnoreCase("a") || column.equalsIgnoreCase("aisle") || column.equalsIgnoreCase("'aisle'")
+    			||column.equalsIgnoreCase("t") || column.equalsIgnoreCase("type") || column.equalsIgnoreCase("'type'")
+    			||column.equalsIgnoreCase("c") || column.equalsIgnoreCase("category") || column.equalsIgnoreCase("'category'"))
+    	{
+    		query = "UPDATE products SET PRODUCT_TYPE=? WHERE PRODUCT_NAME=?";
+    		System.out.println("Changing product type to " + value);
+    	}
+    	else if (column.equalsIgnoreCase("n") || column.equalsIgnoreCase("name") || column.equalsIgnoreCase("'name'")
+    			||column.equalsIgnoreCase("product name") || column.equalsIgnoreCase("'product name'"))
+    	{
+    		query = "UPDATE products SET PRODUCT_NAME=? WHERE PRODUCT_NAME=?";
+    		System.out.println("Changing product name to " + value);
+    	}
+    	else if (column.equalsIgnoreCase("p") || column.equalsIgnoreCase("price") || column.equalsIgnoreCase("'price'")
+    			||column.equalsIgnoreCase("unit price") || column.equalsIgnoreCase("'unit price'"))
+    	{
+    		query = "UPDATE products SET PRODUCT_TYPE=? WHERE PRODUCT_NAME=?";
+    		System.out.println("Changing product's unit price to " + value);
+    	}
+    	else if (column.equalsIgnoreCase("r") || column.equalsIgnoreCase("reorder") || column.equalsIgnoreCase("'reorder'"))
+    	{
+    		query = "UPDATE products SET PRODUCT_TYPE=? WHERE PRODUCT_NAME=?";
+    		System.out.println("Changing product's reorder value to " + value);
+    	}
+    	else
+    	{
+    		throw new IllegalArgumentException("Invalid position. Please choose either 'aisle', 'name', 'price', or 'reorder'.");
+    	}
+		
 		if (!admin)
 		{
 			throw new SecurityException("Ordinary customers are not permitted to alter the store's inventory.");
 		}
 		
 		try
-		{
-			// 2. Create a statement
-			Statement myStmt = myConn.createStatement();
-			// 3. Execute a SQL query
-			query = "update employees "
-					+ " set email='demo@luv2code.com'"
-					+ " where id=9"; 
-			myStmt.executeUpdate(query); 
-			
-			System.out.println("Update complete."); 
-
-			myStmt.close(); 
-
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace(); 
-		}
+    	{
+    		PreparedStatement myStmt = myConn.prepareStatement(query);
+    		myStmt.setString(1, value);
+    		myStmt.setString(2, name);
+    		int rows = myStmt.executeUpdate(); 
+    		if (rows == 1)
+    		{
+    			System.out.println("Update complete. \n");
+    		}
+    		else if (rows <=0)
+    		{
+    			System.out.println("Error. Could not complete update. Please try again later. \n");
+    		}
+    		else
+    		{
+    			//error, somehow edited more than one entry
+    			System.out.println("Update complete. \n");
+    		}
+    	}
+    	catch (Exception e)
+    	{
+    		e.printStackTrace();
+    	}
 	}
 	
 	/**
@@ -595,67 +609,13 @@ public class Connector
 			// 3. Execute a SQL query
 			query = "delete from products where PRODUCT_NAME ='"+ name + "'"; 
 			int rowsAffected = myStmt.executeUpdate(query); 
-			
-			System.out.println("Item " + name + "removed \n");
+			if (rowsAffected < 1)
+				System.out.println("No matching item was found. Nothing removed.");
+			else
+				System.out.println("Item " + name + " removed \n");
 
 			myStmt.close(); 
 
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace(); 
-		}
-	}
-	
-	/**
-	 * Reads an item from a user's shopping cart. 
-	 *
-	 * @param	name	the product id of the item 
-	 * 			column 	the quantity you want to find
-	 * @return        	a String representation of the column value
-	 */
-	public String readCart(String id, String column) 
-	{
-		return readItem(id, column); 
-	}
-	
-	/**
-	 * Reads an item from a user's shopping cart. 
-	 *
-	 * @throws	IllegalArgumentException	if custID is non-positive
-	 * @param	custID	a positive integer, the id number of the customer
-	 */
-	public void printCart(int custID) 
-	{
-		if (custID < 1)
-        {
-        	throw new IllegalArgumentException("Invalid customer id. Please use an customer id greater than zero.");
-        }
-		
-		System.out.println("User " + custID + "'s cart: ");
-		
-		try
-		{
-			// 2. Create a statement
-			Statement myStmt = myConn.createStatement();
-			// 3. Execute a SQL query
-			ResultSet myRs = myStmt.executeQuery("select * from cart WHERE CUSTOMER_ID_CART='" + custID +"';");
-			// 4. Process the result set 
-			if (myRs.next() == false) 
-			{ 
-				System.out.println("Cart is empty"); 
-			} 
-			else 
-			{ 
-				do 
-				{ 
-					System.out.println(myRs.getString("CUSTOMER_ID_CART") + ", " + myRs.getString("PRODUCT_ID") + ", " + myRs.getString("QUANTITY_ORDERED") + ", " 
-							+ myRs.getString("TOTAL_COST"));
-				} while (myRs.next()); 
-			}
-			
-			myStmt.close(); 
-			System.out.println();
 		}
 		catch (Exception e)
 		{
@@ -876,6 +836,37 @@ public class Connector
     }
     
     /**
+	 * Finds the highest id number of any order issued. 
+	 * 
+	 * @return	the highest recorded order id number
+	 */
+	public int getHighestOrderID()
+	{
+		try
+		{
+			// 2. Create a statement
+			Statement myStmt = myConn.createStatement();
+			// 3. Execute a SQL query
+			ResultSet myRs = myStmt.executeQuery("select * from shop_test.order");
+			// 4. Process the result set 
+			int num = 0;
+			while(myRs.next())
+			{
+				int id = myRs.getInt("ORDER_ID");
+				if (id > num)
+					num = id;
+			}
+			myStmt.close();
+			return num; //will be the last number
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace(); 
+		}
+		return 0; //failure
+	}
+    
+    /**
 	 * Issues an order to the database. 
 	 *
 	 * @throws	IllegalArgumentException	if custID is non-positive
@@ -886,8 +877,9 @@ public class Connector
 	 * 			shipping	a double value representing the shipping price to be collected, rounded to two decimal places
 	 * 			tax			a double value representing the tax to be collected, rounded to two decimal places
 	 * 			total		a double value representing the total price to be charged for the order, rounded to two decimal places
+	 * 	@return			the order id generated for this new order
 	 */
-    public void placeOrder(int custID, double shipping, double tax, double total) 
+    public int placeOrder(int custID, double shipping, double tax, double total) 
     {
     	if (custID < 1)
         {
@@ -911,7 +903,8 @@ public class Connector
         	query = "INSERT INTO shop_test.order (ORDER_ID, CUSTOMER_ID, ORDER_DATE, SHIPPING_COST, TAX, TOTAL_COST) VALUES (?,?,?,?,?,?)";
         	PreparedStatement myStmt = myConn.prepareStatement(query);
         	
-        	myStmt.setInt(1, 1); //does not account for multiple orders
+        	int orderID = getHighestOrderID()+1; //does not account for multiple orders
+        	myStmt.setInt(1, orderID); 
         	myStmt.setInt(2, custID);
         	myStmt.setDate(3, new java.sql.Date(System.currentTimeMillis())); //order date is now
         	myStmt.setDouble(4, round(shipping, 2));
@@ -921,11 +914,13 @@ public class Connector
             myStmt.executeUpdate();
             System.out.println("Order placed");
             myStmt.close(); 
+            return orderID;
         } 
         catch (Exception e) 
         {
             e.printStackTrace();
         }
+    	return 0; //failure
     }
     
     /**
@@ -983,11 +978,62 @@ public class Connector
     }
     
     /**
-	 * Removes all orders from the store database. 
-	 */
-    private void clearOrders() 
+     * 	Cancels an order previously made and removes it from the database.
+     * 
+     * 	@throws 	IllegalArgumentException	if orderID is non-positive
+     * 	@param 		orderID		a positive integer identifier of the order to be removed
+     */
+    public void cancelOrder(int orderID)
     {
-        
+    	if (orderID < 1)
+    	{
+    		throw new IllegalArgumentException("Invalid order id. Please use a positive order id.");
+    	}
+    	
+    	try 
+        {
+            //delete from order_details
+            query = "DELETE FROM order_details WHERE ORDER_ID=?";
+            PreparedStatement myStmt = myConn.prepareStatement(query);
+            myStmt.setInt(1, orderID); //1-indexed
+            int orderSize = myStmt.executeUpdate();
+            //System.out.println("Item successfully removed from cart.\n");
+            
+            //delete from order
+            query = "DELETE FROM shop_test.order WHERE ORDER_ID=?";
+            myStmt = myConn.prepareStatement(query);
+            myStmt.setInt(1, orderID); //1-indexed
+            int rows = myStmt.executeUpdate();
+            
+            if (rows < 1 || orderSize < 1)
+            {
+            	System.out.println("Error in cancellation. Please try again later.");
+            }
+            else
+            {
+            	System.out.println("Order cancelled.\n");
+            }
+            
+            myStmt.close(); 
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace(); 
+        }
+    }
+    
+    /**
+	 * Removes all orders from the store database. 
+	 * 
+	 * @throws	SecurityException	if this connection does not have admin privileges
+	 */
+	public void clearOrders() 
+    {
+        if(!admin)
+        {
+        	throw new SecurityException("Ordinary customers are not allowed to purge the order list.");
+        }
+		
         try 
         {
         	Statement myStmt = myConn.createStatement();
@@ -1068,6 +1114,97 @@ public class Connector
     }
     
     /**
+     * 	Changes the email address or phone number registered to a user's account. 
+     * 
+     * 	@throws	IllegalArgumentException	if column is invalid
+     * 	@param 	custID	a positive integer identifier of the account to be removed
+     * 			column	the quantity to be changed, either email or phone
+     * 			value	the value to be assigned in that position
+     */
+    public void changeAccount(int custID, String column, String value)
+    {
+    	if (column.equalsIgnoreCase("e") || column.equalsIgnoreCase("email") || column.equalsIgnoreCase("'email'")
+    			||column.equalsIgnoreCase("email address") || column.equalsIgnoreCase("'email address'"))
+    	{
+    		query = "UPDATE customer SET EMAIL=? WHERE CUSTOMER_ID=?";
+    		System.out.println("Changing email address to " + value);
+    	}
+    	else if (column.equalsIgnoreCase("p") || column.equalsIgnoreCase("phone") || column.equalsIgnoreCase("'phone'")
+    			||column.equalsIgnoreCase("phone number") || column.equalsIgnoreCase("'phone number'"))
+    	{
+    		query = "UPDATE customer SET PHONE=? WHERE CUSTOMER_ID=?";
+    		System.out.println("Changing phone number to " + value);
+    	}
+    	else
+    	{
+    		throw new IllegalArgumentException("Invalid position. Please choose either 'email' or 'phone'.");
+    	}
+    	
+    	try
+    	{
+    		PreparedStatement myStmt = myConn.prepareStatement(query);
+    		myStmt.setString(1, value);
+    		myStmt.setInt(2, custID);
+    		int rows = myStmt.executeUpdate(); 
+    		if (rows > 0)
+    		{
+    			System.out.println("Update complete. \n");
+    		}
+    		else if (rows <=0)
+    		{
+    			System.out.println("Error. Could not complete update. Please try again later. \n");
+    		}
+    		else
+    		{
+    			//error, somehow edited more than one entry
+    		}
+    	}
+    	catch (Exception e)
+    	{
+    		e.printStackTrace();
+    	}
+    }
+    
+    /**
+     * 	Removes an account from the database.
+     * 
+     * 	@throws 	IllegalArgumentException	if orderID is non-positive	
+     * 	@param 		custID	a positive integer identifier of the account to be removed
+     */
+    public void removeAccount(int custID)
+    {
+    	if (custID < 1)
+        {
+        	throw new IllegalArgumentException("Invalid customer id. Please use an customer id greater than zero.");
+        }
+    	
+    	try 
+        {
+            Statement myStmt = myConn.createStatement();
+            query = "DELETE FROM customer WHERE CUSTOMER_ID=\"" + custID + "\""; 
+            int rows = myStmt.executeUpdate(query);
+            if (rows < 1)
+            {
+            	System.out.println("Error removing account. Please check if customer id is correct and try again later.\n");
+            }
+            else if (rows == 1)
+            {
+            	System.out.println("Your account has been removed.\n");
+            }
+            else
+            {
+            	//Error. Somehow removed more than one customer. This should be impossible?
+            	System.out.println("Deleted more than one account with same custID. \n");
+            }
+            myStmt.close(); 
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace(); 
+        }
+    }
+    
+    /**
 	 * Determines whether a customer's information matches the database, or if username is reserved. 
 	 * 
 	 * @param 	username	the customer's username
@@ -1112,35 +1249,6 @@ public class Connector
 	}
 	
 	/**
-	 * Finds the highest customer id number in the database. 
-	 * 
-	 * @return	the highest recorded customer id number
-	 */
-	public int getHighestCustomerID()
-	{
-		try
-		{
-			// 2. Create a statement
-			Statement myStmt = myConn.createStatement();
-			// 3. Execute a SQL query
-			ResultSet myRs = myStmt.executeQuery("select * from customer");
-			// 4. Process the result set 
-			int num = 0;
-			while(myRs.next())
-			{
-				num = myRs.getInt("CUSTOMER_ID");
-			}
-			myStmt.close();
-			return num; //will be the last number
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace(); 
-		}
-		return 0; //failure
-	}
-
-	/**
 	 * 	Finds the customer id of a customer.
 	 * 
 	 * 	@param 	username	the customer's username
@@ -1172,12 +1280,49 @@ public class Connector
 		return 0; //failure
 	}
 	
-    /**
-	 * Removes all login information from the store database. 
+	/**
+	 * Finds the highest customer id number in the database. 
+	 * 
+	 * @return	the highest recorded customer id number
 	 */
-    private void purgeLogins() 
+	public int getHighestCustomerID()
+	{
+		try
+		{
+			// 2. Create a statement
+			Statement myStmt = myConn.createStatement();
+			// 3. Execute a SQL query
+			ResultSet myRs = myStmt.executeQuery("select * from customer");
+			// 4. Process the result set 
+			int num = 0;
+			while(myRs.next())
+			{
+				int id = myRs.getInt("ORDER_ID");
+				if (id > num)
+					num = id;
+			}
+			myStmt.close();
+			return num; //will be the last number
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace(); 
+		}
+		return 0; //failure
+	}
+
+    /**
+	 * 	Removes all login information from the store database. Dangerous.
+	 * 
+	 * 	@throws	SecurityException			if this connection does not have admin privileges
+	 */
+	public void purgeLogins() 
     {
-        
+        if(!admin)
+        {
+        	throw new SecurityException("Ordinary users are not allowed to purge the logins list.");
+        }
+		
         try 
         {
         	Statement myStmt = myConn.createStatement();

@@ -2,7 +2,7 @@
  * An item of inventory for a store. 
  *
  * @author Jacob Normington
- * @version 3/22/2021
+ * @version 5/3/2021
  */
 public class Item 
 {
@@ -13,17 +13,6 @@ public class Item
 	   private int itemQuantity;
 
 	   /**
-	    * Default constructor for objects of ItemToPurchase class, 
-	    * sets all fields to 0 or equivalent.
-	    */
-	   public Item()
-	   {
-		   itemName = null;
-		   itemPrice = 0;
-		   itemQuantity = 0;
-	   }
-	   
-	   /**
 	    * Constructor for an item not specifying id or quantity, for use in adding an item to inventory.
 	    * 
 	    * @param 	category	the item's type: dairy, produce, etc.
@@ -32,19 +21,29 @@ public class Item
 	    */
 	   public Item(String category, String name, double price)
 	   { 
-	      this.category = category;
-	      itemName = name;
-	      itemPrice = (int) (price*100); //round
-	      itemQuantity = 0;
+		   id = null;
+		   this.category = category;
+		   itemName = name;
+		   itemPrice = (int) (price*100); //round
+		   itemQuantity = 0;
 	   }
 	   
+	   /**
+	    * Full constructor of item, specifying all necessary quantities
+	    * 
+	    * @param 	id			a String representation of an item's unique identifier
+	    * @param 	category	a String representing the type of product
+	    * @param 	name		the item's name
+	    * @param 	price		the unit price of the item
+	    * @param 	quantity	the number of this item the customer wishes to buy
+	    */
 	   public Item(String id, String category, String name, double price, int quantity)
 	   {
-	      this.id = id; 
-	      this.category = category;
-	      itemName = name;
-	      itemPrice = (int) (price*100); //round
-	      itemQuantity = quantity;
+		   this.id = id; 
+		   this.category = category;
+		   itemName = name;
+		   itemPrice = (int) (price*100); //round
+		   itemQuantity = quantity;
 	   }
 	   
 	   public String getProductId()

@@ -1,10 +1,8 @@
-import java.util.StringTokenizer;
-
 /**
  * A representation of a virtual storefront pulled from the shop_test database. 
  *
  * @author Jacob Normington
- * @version 5/2/2021
+ * @version 5/3/2021
  */
 public class Storefront 
 {
@@ -194,7 +192,9 @@ public class Storefront
 		
 		c.insert(prodID, item.getCategory(), item.getName(), item.getPrice(), quantity, restock);
 	}
+	
 	//cart method in ShoppingCart
+	
 	/**
 	 * 	Creates a new customer profile in the database. 
 	 *
@@ -218,7 +218,104 @@ public class Storefront
     	}
     }
 	
+    /**
+	 * Checks out a cart and issues the associated order to the store.
+	 * 
+	 * 	@param 	cart	a ShoppingCart of items to be checked out
+	 */
+	public void checkout(ShoppingCart cart)
+	{
+		int custID = cart.getCustomerId();
+		c.CONFIRM_ORDER(custID);
+		   
+		int orderID = c.placeOrder(custID, cart.getShipping(), cart.getTax(), cart.getTotalCost()); //issues a new order
+		if (orderID < 1) //order was not placed
+		{
+			System.out.println("Checkout failed. Please try again later.");
+			return;
+		}
+		   
+		Item i = cart.first(); //populates order
+		int line = 1;
+		do
+		{
+			c.addToOrder(orderID, line, i.getProductId(), i.getQuantity(), i.getPrice());
+			   
+			i = cart.next();
+			line++;
+		} while (cart.hasNext());
+		System.out.println(); //for structuring, placeOrder and addToOrder should be in one block
+		   
+		cart.clearCart();
+	   }
+	
 	//update methods
+	/**
+	 * 	Changes the location of an item in the store.
+	 * 
+	 * 	@param 	name	the product's name
+	 * 	@param 	aisle	the aisle it should be moved to
+	 */
+	public void moveItem(String name, String aisle)
+	{
+		c.update(name, "a", aisle); //changes product's type to aisle
+	}
+	/**
+	 * 	Changes the name of an item in the store.
+	 * 
+	 * 	@param 	oldName		the product's current name
+	 * 	@param 	newName		a new name the product should have
+	 */
+	public void changeProductName(String oldName, String newName)
+	{
+		c.update(oldName, "n", newName); //changes product's name to newName
+	}
+	/**
+	 * 	Changes the price of an item in the store.
+	 * 
+	 * 	@param 	name	the product's name
+	 * 	@param 	price	the new price to be charged for each unit
+	 */
+	public void setUnitPrice(String name, double price)
+	{
+		c.update(name, "p", ""+price); //changes product's cost to price
+	}
+	//inventory stock is controlled on the backend
+	/**
+	 * 	Changes the quantity at which an item should be reordered.
+	 * 
+	 * 	@param 	name		the product's name
+	 * 	@param 	reorder		a positive integer at which quantity this item should be restocked
+	 */
+	public void setReorder(String name, int reorder)
+	{
+		c.update(name, "r", ""+reorder); //changes product's reorder quantity to reorder
+	}
+	
+	//cart methods in ShoppingCart
+	
+	/**
+	 * 	Changes a customer's registered email address. 
+	 * 
+	 * 	@param 	custID	a positive integer uniquely identifying a customer
+	 * 	@param 	email	the new email address
+	 */
+	public void changeEmail(int custID, String email)
+	{
+		c.changeAccount(custID, "e", email); //change customer's email address to email
+	}
+	/**
+	 * 	Changes a customer's registered phone number 
+	 * 
+	 * 	@param 	custID			a positive integer uniquely identifying a customer
+	 * 	@param 	phoneNumber		the new phone number to be used
+	 */
+	public void changePhone(int custID, String phoneNumber)
+	{
+		c.changeAccount(custID, "p", phoneNumber); //change customer's phone number to phoneNumber
+	}
+	
+	//you cannot change an order once it is issued
 	
 	//remove methods
     /**
@@ -229,7 +326,28 @@ public class Storefront
     public void removeInventory(String name)
     {
     	c.delete(name); //this is probably insufficient
-
+    }
+    
+    //cart method in ShoppingCart
+    
+    /**
+     * 	Removes a user's account from the database. 
+     *  
+     * 	@param 	custID	a positive integer identifier of the account to be removed
+     */
+    public void removeAccount(int custID)
+    {
+    	c.removeAccount(custID);
+    }
+    
+    /**
+     * 	Removes a user's account from the database. 
+     *  
+     * 	@param 	custID	a positive integer identifier of the account to be removed
+     */
+    public void cancelOrder(int orderID)
+    {
+    	c.cancelOrder(orderID);
     }
 	
 	//other
@@ -298,12 +416,16 @@ public class Storefront
 		else //login does exist
 		{
 			int custID = 0;
-			StringTokenizer token = new StringTokenizer(cust, ":");
-			token.nextToken(); //removes meaningless information
-			String num = token.nextToken();
-			num = num.substring(1);
-			System.out.println(num);
-			custID = Integer.parseInt(num);
+			int i;
+			for (i = 0; i < cust.length(); i++) //removes useless data
+			{
+				if(cust.charAt(i)== ':')
+				{
+					break;
+				}
+			}
+			cust = cust.substring(1); //removes the space added
+			custID = Integer.parseInt(cust);
 			
 			if (custID > 1) //does not include default user
 				System.out.println("Login successful");
