@@ -19,25 +19,39 @@ public class ShoppingCart
 	private int size; //the total number of items in the cart
 
    /**
-    * Default constructor for ShoppingCart objects
+    * Default constructor for ShoppingCart objects. Signs in as default user. 
     */
    public ShoppingCart()
    {
-      customerName = "none";
-      c=Connector.getCon();
+	   customerName = "default";
+	   id = 1; 
+	   c=Connector.getCon();
       
-      head = null;  
-      tail = head; 
-      size = 0; 
+	   head = null;  
+	   tail = head; 
+	   size = 0; 
    }
    
-   public ShoppingCart(int custID)
+   private ShoppingCart(int custID)
    {
-      id = custID;
+	   customerName = "default";
+	   id = custID; 
+	   c=Connector.getCon();
       
-      head = null;  
-      tail = head; 
-      size = 0;
+	   head = null;  
+	   tail = head; 
+	   size = 0;
+   }
+   
+   public ShoppingCart(int custID, String name)
+   {
+	   customerName = name;
+	   id = custID;
+	   c=Connector.getCon();
+      
+	   head = null;  
+	   tail = head; 
+	   size = 0;
    }
    
    public String getCustomerName()
@@ -151,49 +165,6 @@ public class ShoppingCart
 		   }
 	   }
 	   System.out.println("Item not found in cart. No change.");
-   }
-   
-   /**
-    * Modifies an item's description, price, and/or quantity.
-    * Not reflected in database.
-    *
-    * @param   item  the item to be modified
-    * @return        none
-    */
-   private void modifyItem(Item item) //this is probably not useful 
-   {
-	   CartNode node = head; 
-	   while(node.hasNext())
-	   {
-		   if(node.getValue().getName().equals(item.getName()))
-		   {
-			   if(item.getDescription().equals("none"))
-				   node.getValue().setDescription(item.getDescription());
-	            
-	            if(!(item.getQuantity() == 0))
-	            	node.getValue().setQuantity(item.getQuantity());
-	            
-	            if(!(item.getPrice() == 0))
-	            	node.getValue().setPrice((int) (item.getPrice()*100));
-	            
-	            return;
-		   }
-		   node = node.getNext(); 
-	   }
-	   if(tail.getValue().getName().equals(item.getName()))
-	   {
-		   if(item.getDescription().equals("none"))
-			   tail.getValue().setDescription(item.getDescription());
-            
-            if(!(item.getQuantity() == 0))
-            	tail.getValue().setQuantity(item.getQuantity());
-            
-            if(!(item.getPrice() == 0))
-            	tail.getValue().setPrice((int) (item.getPrice()*100));
-            
-            return;
-	   }
-	   System.out.println("Item not found in cart. Nothing modified.");
    }
    
    /**
@@ -352,31 +323,6 @@ public class ShoppingCart
           tail.getValue().printItemCost();
           total += tail.getValue().getTotalCost(); 
           System.out.println("Total: $" + total);
-      }
-   }
-   
-   /**
-    * Outputs each item's description
-    */
-   private void printDescription()
-   {
-      if(size == 0)
-      {
-         System.out.println("SHOPPING CART IS EMPTY");
-      }
-      else
-      {
-    	  System.out.println(customerName + "'s Shopping Cart");
-    	  System.out.println();
-          System.out.println("Item Descriptions");
-          System.out.println();
-          CartNode node = head; 
-          while(node.hasNext())
-          {
-        	  node.getValue().printItemDescription(); 
-        	  node = node.getNext(); 
-          }
-          tail.getValue().printItemDescription();
       }
    }
 }

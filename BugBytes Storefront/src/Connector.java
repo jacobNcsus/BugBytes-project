@@ -12,6 +12,7 @@ public class Connector
 	private static final String username = "shopMgr";
     private static final String password = "csc131"; 
     public static final String[] aisles = {"Alcohol", "Bakery", "Breakfast", "Dairy", "Meat_seafood", "Produce"};
+    private static boolean admin = false; 
     
     private Connection myConn;
 	private String query;
@@ -80,13 +81,13 @@ public class Connector
 		//c.printAisle(aisles[0]);
 		//c.printAll();
 		
-		c.read("products");
-		c.read("Alcohol");
-		c.read("Meat_seafood");
-		c.read("cart");
-		c.read("customer");
-		c.read("order");
-		c.read("order_details");
+		c.read("products", -1);
+		c.read("Alcohol", -1);
+		c.read("Meat_seafood", -1);
+		c.read("cart", 1);
+		c.read("customer", -1);
+		c.read("order", 1);
+		c.read("order_details", 1);
 
 		c.close();
 	}
@@ -144,7 +145,7 @@ public class Connector
 	 */
 	public void printAisle(String aisle) 
 	{
-		if ( ! isAisle(aisle) & ! aisle.equalsIgnoreCase("products"))
+		if (!isAisle(aisle))
 		{
 			throw new IllegalArgumentException("Product type invalid, please choose 'Alcohol', 'Bakery', 'Dairy', 'Meat_seafood', or 'Produce'.");
 		}
@@ -199,16 +200,56 @@ public class Connector
 	} 
 	
 	/**
+	 * Finds the highest product number issued to any item in a given category. 
+	 * 
+	 * @throws	IllegalArgumentException	if aisle is not one of the valid aisles
+	 * @param 	aisle 	a String representing one of the six aisles
+	 * @return	the product number
+	 */
+	public int getHighestProductID(String aisle)
+	{
+		if (!isAisle(aisle))
+		{
+			throw new IllegalArgumentException("Product type invalid, please choose 'Alcohol', 'Bakery', 'Dairy', 'Meat_seafood', or 'Produce'.");
+		}
+		
+		try
+		{
+			// 2. Create a statement
+			Statement myStmt = myConn.createStatement();
+			// 3. Execute a SQL query
+			ResultSet myRs = myStmt.executeQuery("select * from products where PRODUCT_TYPE='" + aisle + "'");
+			// 4. Process the result set 
+			int num = 0;
+			while(myRs.next())
+			{
+				String prodID = myRs.getString("PRODUCT_ID");
+				//System.out.println(prodID.substring(prodID.length()-2));
+				num = Integer.parseInt(prodID.substring(prodID.length()-2)); //the last two digits
+			}
+			myStmt.close();
+			return num; //will be the last number
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace(); 
+		}
+		return 0; //failure
+	}
+	
+	/**
 	 * Prints to console some section of the database in structured text. 
 	 * 
 	 * @throws	IllegalArgumentException	if tableView does not represent a valid table (products, cart, customer, some aisle, etc.)
+	 * @throws	SecurityException			if this connection does not have admin privileges and read is used for a restricted function
 	 * @param	tableView	a String describing the table to be read
+	 * @param	id			an optional parameter for either a user or order id, negative to print all 
 	 */
-	public void read(String tableView) 
+	public void read(String tableView, int id) 
 	{
 		try
 		{
-			if (tableView.equals("products")) //display entire inventory
+			if (tableView.equalsIgnoreCase("products")) //display entire inventory
 			{
 				query = "select * from products";
 
@@ -251,14 +292,28 @@ public class Connector
 				myStmt.close(); 
 			}
 			
-			else if (tableView.equals("cart")) //display a user's cart
+			else if (tableView.equalsIgnoreCase("cart")) //display a user's cart
 			{
-				query = "select * from cart WHERE CUSTOMER_ID_CART= ?";
-				query = "SELECT c.PRODUCT_ID, c.QUANTITY_ORDERED, c.TOTAL_COST, cust.USERNAME FROM cart c LEFT JOIN customer cust ON c.CUSTOMER_ID_CART = cust.CUSTOMER_ID WHERE CUSTOMER_ID_CART=? AND CUSTOMER_ID_CART=?";
+				if (id <= 0) //in this case customer id
+				{
+					if (!admin)
+					{
+						throw new SecurityException("Ordinary customers are not allowed to access other customers' carts.");
+					}
+					
+					query = "SELECT c.PRODUCT_ID, c.QUANTITY_ORDERED, c.TOTAL_COST, cust.FIRST_NAME FROM cart c LEFT JOIN customer cust ON c.CUSTOMER_ID_CART = cust.CUSTOMER_ID";
+				}
+				else 
+				{
+					query = "SELECT c.PRODUCT_ID, c.QUANTITY_ORDERED, c.TOTAL_COST, cust.FIRST_NAME FROM cart c LEFT JOIN customer cust ON c.CUSTOMER_ID_CART = cust.CUSTOMER_ID WHERE CUSTOMER_ID_CART=? AND CUSTOMER_ID_CART=?";
+				}
 
 				PreparedStatement myStmt = myConn.prepareStatement(query);
-				myStmt.setInt(1, 1); //1-indexed
-				myStmt.setInt(2, 1); //1-indexed
+				if (id > 0)
+				{
+					myStmt.setInt(1, id); //1-indexed
+					myStmt.setInt(2, id);
+				}
 				ResultSet myRs = myStmt.executeQuery();
 			
 				if(!myRs.next() ) //false if the list is empty
@@ -267,7 +322,7 @@ public class Connector
 				}
 				else //your cart is not empty
 				{
-					System.out.println(myRs.getString("USERNAME") + "'s Shopping Cart:");
+					System.out.println(myRs.getString("FIRST_NAME") + "'s Shopping Cart:");
 					System.out.printf("%15s%21s%16s\n"
 						+ "-------------------------------------------------------\n"
 						,"Product","Quantity","Total Cost");
@@ -282,9 +337,21 @@ public class Connector
 				myStmt.close(); 
 			}
 			
-			else if (tableView.equals("customer")) //displays the list of customers
+			else if (tableView.equalsIgnoreCase("customer")) //displays the list of customers
 			{
-				query = "select * from customer";
+				if (id <= 0) //in this case customer id
+				{
+					if (!admin)
+					{
+						throw new SecurityException("Ordinary customers are not allowed to access other customers' information.");
+					}
+					
+					query = "select * from customer";
+				}
+				else 
+				{
+					query = "select * from customer WHERE CUSTOMER_ID='" + id + "'";
+				}
 
 				Statement myStmt = myConn.createStatement();
 				ResultSet myRs = myStmt.executeQuery(query);
@@ -310,10 +377,21 @@ public class Connector
 				myStmt.close(); 
 			}
 			
-			else if (tableView.equals("order")) //display the list of orders
+			else if (tableView.equalsIgnoreCase("order")) //display the list of orders
 			{
-				query = "select * from shop_test.order";
-
+				if (id <= 0) //in this case customer id
+				{
+					if (!admin)
+					{
+						throw new SecurityException("Ordinary customers are not allowed to access other customers' orders.");
+					}
+					
+					query = "select * from shop_test.order";
+				}
+				else 
+				{
+					query = "select * from shop_test.order WHERE CUSTOMER_ID='" + id + "'";
+				}
 				Statement myStmt = myConn.createStatement();
 				ResultSet myRs = myStmt.executeQuery(query);
 			
@@ -337,10 +415,48 @@ public class Connector
 					} while(myRs.next());
 				}
 				myStmt.close(); 
+				
+				System.out.println("Not finished");
 			}
 			
-			else if (tableView.equals("order_details")) //display the order details associated with an order
+			else if (tableView.equalsIgnoreCase("order_details")) //display the order details associated with an order
 			{
+				if (id <= 0) //only this time is it order id
+				{
+					if (!admin)
+					{
+						throw new SecurityException("Ordinary customers are not allowed to access more than one order.");
+					}
+					
+					query = "select * from order_detail";
+				}
+				else 
+				{
+					query = "select * from order_detail WHERE ORDER_ID='" + id + "'";
+				}
+				Statement myStmt = myConn.createStatement();
+				ResultSet myRs = myStmt.executeQuery(query);
+			
+				String output = "";
+				
+				if(!myRs.next() ) //false if the list is empty
+				{
+					System.out.println("There are no orders \n");
+				}
+				else //only if the list has entries
+				{
+					do
+					{ 
+							output = myRs.getInt("ORDER_ID") + " " +
+									 myRs.getInt("CUSTOMER_LINE_NUMBER") + " " +	
+									 myRs.getString("PRODUCT_ID") + " " +
+									 myRs.getInt("ORDERED_QUANTITY") + " " +
+									 myRs.getDouble("PRICE");
+							System.out.println(output + "\n");
+					} while(myRs.next());
+				}
+				myStmt.close(); 
+				
 				System.out.println("Not finished");
 			}
 			
@@ -354,9 +470,10 @@ public class Connector
 	}
 
 	/**
-	 * Adds a new item to inventory
+	 * Adds a new item to inventory. Requires authorization. 
 	 *
-	 * @throws	IllegalArgumentException	if type is not one of the six aisles
+	 * @throws	SecurityException			if this connection does not have admin privileges
+	 * 			IllegalArgumentException	if type is not one of the six aisles
 	 * 			IllegalArgumentException	if price is non-positive
 	 * 			IllegalArgumentException	if quantity is non-positive
 	 * @param	PRODUCT_ID			a series of alphanumeric characters representing a unique product
@@ -367,8 +484,13 @@ public class Connector
 	 * 			REORDER				the amount of stock at which this item should be restocked
 	 * @return        		0 on failure, or 1 on success
 	 */
-	private int insert(String PRODUCT_ID, String PRODUCT_TYPE, String PRODUCT_NAME, double PRICE, int QUANTITY_IN_STOCK, int REORDER)
+	public int insert(String PRODUCT_ID, String PRODUCT_TYPE, String PRODUCT_NAME, double PRICE, int QUANTITY_IN_STOCK, int REORDER)
 	{
+		if (!admin)
+		{
+			throw new SecurityException("Ordinary customers are not permitted to add new items to inventory.");
+		}
+		
 		if ( ! isAisle(PRODUCT_TYPE))
 		{
 			throw new IllegalArgumentException("Product type invalid, please choose 'Alcohol', 'Bakery', 'Dairy', 'Meat_seafood', or 'Produce'.");
@@ -421,10 +543,17 @@ public class Connector
 	}
 	
 	/**
-	 * 	An example method to change a value in a sample database
+	 * 	Updates an item in the inventory. Requires authorization.
+	 * 
+	 * @throws	SecurityException	if this connection does not have admin privileges
 	 */
 	private void update() //demo
 	{
+		if (!admin)
+		{
+			throw new SecurityException("Ordinary customers are not permitted to alter the store's inventory.");
+		}
+		
 		try
 		{
 			// 2. Create a statement
@@ -447,20 +576,27 @@ public class Connector
 	}
 	
 	/**
-	 * 	An example method to remove an entry from a sample database
+	 * 	Removes an item from the inventory. Requires authorization.
+	 * 
+	 * 	@throws	SecurityException	if this connection does not have admin privileges
+	 * 	@param	name		the name of the item to be removed
 	 */
-	public void delete(String productID) //demo
+	public void delete(String name)
 	{
+		if (!admin)
+		{
+			throw new SecurityException("Ordinary customers are not permitted to remove items from inventory.");
+		}
+		
 		try
 		{
 			// 2. Create a statement
 			Statement myStmt = myConn.createStatement();
 			// 3. Execute a SQL query
-			query = "delete from products where PRODUCT_ID ='"+ productID + "'"; 
+			query = "delete from products where PRODUCT_NAME ='"+ name + "'"; 
 			int rowsAffected = myStmt.executeUpdate(query); 
 			
-			System.out.println("Rows affected: " + rowsAffected);
-			System.out.println("Delete complete."); 
+			System.out.println("Item " + name + "removed \n");
 
 			myStmt.close(); 
 
@@ -876,6 +1012,12 @@ public class Connector
 	 *	Creates a new customer profile in the database. 
 	 *
 	 *	@throws		IllegalArgumentException	if id is non-positive
+	 *	@param		id			customer id
+	 *				username	the customer's username
+	 *				firstName	the customer's first name
+	 *				lastName	the customer's last name
+	 *				email		the customer's email address
+	 *				phone		the customer's phone number
 	 */
     public void signUp(int id, String username, String firstName, String lastName, String email, String phone)
     {
@@ -926,6 +1068,111 @@ public class Connector
     }
     
     /**
+	 * Determines whether a customer's information matches the database, or if username is reserved. 
+	 * 
+	 * @param 	username	the customer's username
+	 * 			firstName	the customer's first name
+	 * 			firstName	the customer's last name
+	 * @return		0 if username does not exist in database, negative if username is taken, positive customer id if matching account exists
+	 */
+	public int isCustomer(String username, String firstName, String lastName)
+	{
+		try
+		{
+			query = "select * from customer";
+
+			Statement myStmt = myConn.createStatement();
+			ResultSet myRs = myStmt.executeQuery(query);
+
+			while(myRs.next())
+			{ 
+				if(username.equals(myRs.getString("USERNAME")))
+				{
+					if(firstName.equals(myRs.getString("FIRST_NAME")) && lastName.equals(myRs.getString("LAST_NAME")))
+					{
+						int ret = myRs.getInt("CUSTOMER_ID");
+						myStmt.close();
+						return ret;
+					}
+					else
+					{
+						myStmt.close();
+						return -1;
+					}
+				}
+			} 
+			//username is never found
+			myStmt.close(); 
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	/**
+	 * Finds the highest customer id number in the database. 
+	 * 
+	 * @return	the highest recorded customer id number
+	 */
+	public int getHighestCustomerID()
+	{
+		try
+		{
+			// 2. Create a statement
+			Statement myStmt = myConn.createStatement();
+			// 3. Execute a SQL query
+			ResultSet myRs = myStmt.executeQuery("select * from customer");
+			// 4. Process the result set 
+			int num = 0;
+			while(myRs.next())
+			{
+				num = myRs.getInt("CUSTOMER_ID");
+			}
+			myStmt.close();
+			return num; //will be the last number
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace(); 
+		}
+		return 0; //failure
+	}
+
+	/**
+	 * 	Finds the customer id of a customer.
+	 * 
+	 * 	@param 	username	the customer's username
+	 * 	@return			the customer's id number
+	 */
+	public int getCustomerID(String username)
+	{
+		try
+		{
+			// 2. Create a statement
+			PreparedStatement myStmt = myConn.prepareStatement("select * from customer where USERNAME = ?");
+			myStmt.setString(1, username); //1 specifies the first parameter in the query
+			// 3. Execute a SQL query
+			ResultSet myRs = myStmt.executeQuery();
+			// 4. Process the result set 
+			if (myRs.next()) //false if empty
+			{
+				System.out.println("No customer by that username exists.");
+				return 0; //failure
+			}
+			int ret = myRs.getInt("CUSTOMER_ID");
+			myStmt.close();
+			return ret;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace(); 
+		}
+		return 0; //failure
+	}
+	
+    /**
 	 * Removes all login information from the store database. 
 	 */
     private void purgeLogins() 
@@ -946,6 +1193,27 @@ public class Connector
         }
     }
     
+    /**
+     * 	Determines whether this connection has admin privileges or not. 
+     * 
+     * 	@return	true, if this connection has admin privileges, false otherwise
+     */
+    public boolean admin()
+    {
+    	return admin;
+    }
+    
+    /**
+     * Attempts to secure administrator privileges on this connection based on an issued login.
+     * 
+     * @param 	username	a String username required to access admin privileges
+     * @param 	password	a String password required to access admin privileges
+     */
+    public void authorize(String username, String password)
+    {
+    	admin = username.equals(Connector.username) && password.equals(Connector.password); 
+    }
+    
     private static double round (double value, int places) 
     {
         if (places < 0) throw new IllegalArgumentException();
@@ -961,7 +1229,7 @@ public class Connector
      */
     public static void showShop()
     {
-    	System.out.println("Virtual Storefront Aisles: ");
+    	System.out.println("BugBytes Storefront Aisles: ");
     	for (String aisle : aisles)
     	{
     		System.out.println("\t" + aisle);

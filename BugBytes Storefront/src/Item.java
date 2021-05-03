@@ -9,7 +9,6 @@ public class Item
 	   private String id; //database product id
 	   private String category;
 	   private String itemName;
-	   private String itemDescription;
 	   private int itemPrice; //in USD cents 
 	   private int itemQuantity;
 
@@ -20,9 +19,23 @@ public class Item
 	   public Item()
 	   {
 		   itemName = null;
-		   itemDescription = null;
 		   itemPrice = 0;
 		   itemQuantity = 0;
+	   }
+	   
+	   /**
+	    * Constructor for an item not specifying id or quantity, for use in adding an item to inventory.
+	    * 
+	    * @param 	category	the item's type: dairy, produce, etc.
+	    * @param 	name		the name of the item
+	    * @param 	price		the item's price is USD
+	    */
+	   public Item(String category, String name, double price)
+	   { 
+	      this.category = category;
+	      itemName = name;
+	      itemPrice = (int) (price*100); //round
+	      itemQuantity = 0;
 	   }
 	   
 	   public Item(String id, String category, String name, double price, int quantity)
@@ -55,15 +68,6 @@ public class Item
 	   public void setCategory(String category)
 	   {
 	      this.category = category;
-	   }
-	   
-	   public String getDescription()
-	   {
-	      return itemDescription;
-	   }
-	   public void setDescription(String description)
-	   {
-	      itemDescription = description;
 	   }
 
 	   /**
@@ -110,18 +114,10 @@ public class Item
 	   }
 	   
 	   /**
-	    * Prints to console the item name and description
-	    */
-	   public void printItemDescription()
-	   {
-	      System.out.println(itemName + ": " + itemDescription); 
-	   }
-	   
-	   /**
-	    * Outputs the item name and description
+	    * Returns a string description of this Item.
 	    */
 	   public String toString()
 	   {
-	      return itemQuantity + " " + itemName + " @ " + itemQuantity + ": " + itemDescription;
+	      return itemQuantity + " " + itemName + " @ " + itemQuantity;
 	   }
 	}
