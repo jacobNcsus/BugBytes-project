@@ -997,23 +997,27 @@ public class Connector
             PreparedStatement myStmt = myConn.prepareStatement(query);
             myStmt.setInt(1, orderID); //1-indexed
             int orderSize = myStmt.executeUpdate();
-            //System.out.println("Item successfully removed from cart.\n");
-            
-            //delete from order
-            query = "DELETE FROM shop_test.order WHERE ORDER_ID=?";
-            myStmt = myConn.prepareStatement(query);
-            myStmt.setInt(1, orderID); //1-indexed
-            int rows = myStmt.executeUpdate();
-            
-            if (rows < 1 || orderSize < 1)
+            if (orderSize < 1)
             {
-            	System.out.println("Error in cancellation. Please try again later.");
+            	System.out.println("Error in cancellation. Please check if order id is correct and try again later.\n");
             }
-            else
+            else //only if you removed some order_details
             {
-            	System.out.println("Order cancelled.\n");
+            	//delete from order
+                query = "DELETE FROM shop_test.order WHERE ORDER_ID=?";
+                myStmt = myConn.prepareStatement(query);
+                myStmt.setInt(1, orderID); //1-indexed
+                int rows = myStmt.executeUpdate();
+                
+                if (rows < 1)
+                {
+                	System.out.println("Error in cancellation. Please check if order id is correct and try again later.\n");
+                }
+                else
+                {
+                	System.out.println("Order cancelled.\n");
+                }
             }
-            
             myStmt.close(); 
         } 
         catch (Exception e) 
@@ -1180,21 +1184,38 @@ public class Connector
     	
     	try 
         {
-            Statement myStmt = myConn.createStatement();
-            query = "DELETE FROM customer WHERE CUSTOMER_ID=\"" + custID + "\""; 
-            int rows = myStmt.executeUpdate(query);
-            if (rows < 1)
+    		//remove customer's cart, if any, first, in order to satisfy constraint with customer
+    		Statement myStmt = myConn.createStatement();
+            query = "DELETE FROM cart WHERE CUSTOMER_ID_CART=\"" + custID + "\""; 
+            int carts = myStmt.executeUpdate(query);
+            if (carts < 1)
             {
             	System.out.println("Error removing account. Please check if customer id is correct and try again later.\n");
             }
-            else if (rows == 1)
+            else if (carts > 1)
             {
-            	System.out.println("Your account has been removed.\n");
+            	//Error. Somehow removed more than one cart. This should be impossible?
+            	System.out.println("Deleted more than one cart with same custID. \n");
             }
-            else
+            else //only if you successfully removed the cart first
             {
-            	//Error. Somehow removed more than one customer. This should be impossible?
-            	System.out.println("Deleted more than one account with same custID. \n");
+            	//remove customer
+                myStmt = myConn.createStatement();
+                query = "DELETE FROM customer WHERE CUSTOMER_ID=\"" + custID + "\""; 
+                int rows = myStmt.executeUpdate(query);
+                if (rows < 1)
+                {
+                	System.out.println("Error removing account. Please check if customer id is correct and try again later.\n");
+                }
+                else if (rows == 1)
+                {
+                	System.out.println("Your account has been removed.\n");
+                }
+                else
+                {
+                	//Error. Somehow removed more than one customer. This should be impossible?
+                	System.out.println("Deleted more than one account with same custID. \n");
+                }
             }
             myStmt.close(); 
         } 
