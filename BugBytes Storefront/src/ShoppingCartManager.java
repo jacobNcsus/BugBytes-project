@@ -4,7 +4,7 @@ import java.util.Scanner;
  * Implements a menu to interact with the virtual store via console input
  *
  * @author Alexander Gunby, Sikander Ghafary, Jacob Normington
- * @version 5/3/2021
+ * @version 5/4/2021
  */
 public class ShoppingCartManager
 {
@@ -12,6 +12,7 @@ public class ShoppingCartManager
 	private static Storefront store;
 	private static ShoppingCart cart;
 	private static boolean loggedIn = false;
+	private static boolean reset = true; //determines whether or not the database should be reset upon use
 	
 	/**
     * Begins the manager to create your shopping cart by system input
@@ -58,7 +59,8 @@ public class ShoppingCartManager
         	case "3":
         	{
         		store.login("default", "Jagannadha", "Chidella");
-        		cart = new ShoppingCart();
+        		cart = new ShoppingCart(1, "default", reset);
+        		reset = false; //you don't want to reset the database during a session
         		loggedIn = false;
         		System.out.printf("\n\tWelcome to the BugBytes Shopping Center\n\n "+
     				    "\tPlease look around for anything that interests you!\n\n");
@@ -98,7 +100,8 @@ public class ShoppingCartManager
 			else
 				welcome();
 		}
-		cart = new ShoppingCart(custID, first + " " + last);
+		cart = new ShoppingCart(custID, first + " " + last, reset);
+		reset = false; //you don't want to reset the database during a session
 		loggedIn = true;
 		if (first.equalsIgnoreCase("Sai") && last.equalsIgnoreCase("Suresh"))
 		{
@@ -128,7 +131,8 @@ public class ShoppingCartManager
 		{
 			store.signUp(username, first, last, email, phone);
 			int custID = store.login(username, first, last);
-			cart = new ShoppingCart(custID, first + " " + last);
+			cart = new ShoppingCart(custID, first + " " + last, reset);
+			reset = false; //you don't want to reset the database during a session
 			loggedIn = true;
 			System.out.printf("\n\tWelcome %s %s to the BugBytes Shopping Center\n\n"+
 				    "Please look around for anything that interests you!\n\n", first,last);

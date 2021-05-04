@@ -1,16 +1,18 @@
+import java.io.IOException;
 import java.sql.*;
+import script.ScriptRunner;
 
 /**
  * Creates a connection to the shopping
  *
  * @author Jacob Normington, Daniel Beauchamp, Youser Alalusi
- * @version 5/3/2021
+ * @version 5/4/2021
  */
 public class Connector 
 {
 	private static final String url = "jdbc:mysql://localhost:3306/shop_test";
-	private static final String username = "shopMgr";
-    private static final String password = "csc131"; 
+	private static final String username = "shopMgr"; //"shopMgr"
+    private static final String password = "csc131"; //"csc131"
     public static final String[] aisles = {"Alcohol", "Bakery", "Breakfast", "Dairy", "Meat_seafood", "Produce"};
     private static boolean admin = false; 
     
@@ -101,14 +103,48 @@ public class Connector
 	}
 
 	/**
-	 * Reads an item from the inventory
+	 * 	Reads an item from the inventory
 	 *
-	 * @param	id		a series of alphanumeric characters representing a unique product
-	 * 			column 	the quantity you want to find
-	 * @return        	a String representation of the column value
+	 * 	@throws 	IllegalArgumentException	if column is invalid
+	 * 	@param		id		a series of alphanumeric characters representing a unique product
+	 * 				column 	the quantity you want to find
+	 * 	@return        	a String representation of the column value
 	 */
 	public String readItem(String id, String column) 
 	{
+		if (column.equalsIgnoreCase("a") || column.equalsIgnoreCase("aisle") || column.equalsIgnoreCase("'aisle'")
+    			||column.equalsIgnoreCase("t") || column.equalsIgnoreCase("type") || column.equalsIgnoreCase("'type'")
+    			||column.equalsIgnoreCase("c") || column.equalsIgnoreCase("category") || column.equalsIgnoreCase("'category'")
+    			||column.equalsIgnoreCase("product_type") || column.equalsIgnoreCase("'product_type'"))
+    	{
+    		column = "PRODUCT_TYPE";
+    	}
+    	else if (column.equalsIgnoreCase("n") || column.equalsIgnoreCase("name") || column.equalsIgnoreCase("'name'")
+    			||column.equalsIgnoreCase("product name") || column.equalsIgnoreCase("'product name'")
+    			||column.equalsIgnoreCase("product_name") || column.equalsIgnoreCase("'product_name'"))
+    	{
+    		column = "PRODUCT_NAME";
+    	}
+    	else if (column.equalsIgnoreCase("p") || column.equalsIgnoreCase("price") || column.equalsIgnoreCase("'price'")
+    			||column.equalsIgnoreCase("unit price") || column.equalsIgnoreCase("'unit price'"))
+    	{
+    		column = "PRICE";
+    	}
+    	else if (column.equalsIgnoreCase("q") || column.equalsIgnoreCase("quantity") || column.equalsIgnoreCase("'quantity'")
+    			||column.equalsIgnoreCase("quantity in stock") || column.equalsIgnoreCase("'quantity in stock'") 
+    			||column.equalsIgnoreCase("quantity_in_stock") || column.equalsIgnoreCase("'quantity_in_stock'"))
+    	{
+    		column = "QUANTITY_IN_STOCK";
+    	}
+    	else if (column.equalsIgnoreCase("r") || column.equalsIgnoreCase("reorder") || column.equalsIgnoreCase("'reorder'"))
+    	{
+    		column = "REORDER";
+    	}
+    	else
+    	{
+    		throw new IllegalArgumentException("Invalid position. Please choose either 'aisle', 'name', 'price', 'quantity', or 'reorder'.");
+    	}
+		
 		try
 		{
 			// 2. Create a statement
@@ -545,12 +581,12 @@ public class Connector
     	else if (column.equalsIgnoreCase("p") || column.equalsIgnoreCase("price") || column.equalsIgnoreCase("'price'")
     			||column.equalsIgnoreCase("unit price") || column.equalsIgnoreCase("'unit price'"))
     	{
-    		query = "UPDATE products SET PRODUCT_TYPE=? WHERE PRODUCT_NAME=?";
+    		query = "UPDATE products SET PRICE=? WHERE PRODUCT_NAME=?";
     		System.out.println("Changing product's unit price to " + value);
     	}
     	else if (column.equalsIgnoreCase("r") || column.equalsIgnoreCase("reorder") || column.equalsIgnoreCase("'reorder'"))
     	{
-    		query = "UPDATE products SET PRODUCT_TYPE=? WHERE PRODUCT_NAME=?";
+    		query = "UPDATE products SET REORDER=? WHERE PRODUCT_NAME=?";
     		System.out.println("Changing product's reorder value to " + value);
     	}
     	else
@@ -924,7 +960,7 @@ public class Connector
     }
     
     /**
-	 * Adds a new item to an order. Follow by a newline. 
+	 * Adds a new item to an order, and updates inventory. Follow block by a newline. 
 	 *
 	 * @throws 	IllegalArgumentException	if orderID is non-positive
 	 * 			IllegalArgumentException	if lineNumber is non-positive
@@ -956,9 +992,12 @@ public class Connector
         	throw new IllegalArgumentException("Invalid price. Please use a price greater than zero.");
         }
     	
-    	try 
+    	int inStock = Integer.parseInt(readItem(prodID, "quantity"));
+        update(prodID, "quantity", inStock-quantity+"");
+        
+        try 
         {
-        	query = "INSERT INTO order_details (ORDER_ID, ORDER_LINE_NUMBER, PRODUCT_ID, ORDERED_QUANTITY, PRICE) VALUES (?,?,?,?,?)";
+    		query = "INSERT INTO order_details (ORDER_ID, ORDER_LINE_NUMBER, PRODUCT_ID, ORDERED_QUANTITY, PRICE) VALUES (?,?,?,?,?)";
         	PreparedStatement myStmt = myConn.prepareStatement(query);
         	
         	myStmt.setInt(1, orderID); 
@@ -1378,6 +1417,27 @@ public class Connector
     public void authorize(String username, String password)
     {
     	admin = username.equals(Connector.username) && password.equals(Connector.password); 
+    }
+    
+    /**
+     * 	Runs an sql script at a given file path. Used for initializing the database.
+     */
+    public void runScript(String pathname)
+    {
+    	try
+    	{
+    		ScriptRunner runner = new ScriptRunner(myConn, false, false);
+    		runner.runScript(new java.io.BufferedReader(new java.io.FileReader(pathname)));
+    		//System.out.println("Script " + pathname + "successfully run \n");
+    	}
+    	catch (IOException e) 
+    	{
+    		System.err.println("File " + pathname + " not found: " + e);
+		} 
+    	catch (SQLException e) 
+    	{
+			System.err.println("Error connecting to database: " + e);
+		}
     }
     
     private static double round (double value, int places) 

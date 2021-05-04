@@ -1,13 +1,12 @@
 DROP DATABASE IF EXISTS shop_test;
 CREATE DATABASE IF NOT EXISTS shop_test;
 USE shop_test;
-DROP USER IF EXISTS 'shopMgr'@'localhost';
-FLUSH PRIVILEGES;        
+-- DROP USER IF EXISTS 'shopMgr'@'localhost';
+-- FLUSH PRIVILEGES;        
         
-CREATE USER 'shopMgr'@'localhost'
-  IDENTIFIED WITH caching_sha2_password BY 'csc131';
-
-GRANT ALL PRIVILEGES ON shop_test.* TO 'shopMgr'@'localhost';
+-- CREATE USER 'shopMgr'@'localhost'
+--   IDENTIFIED WITH caching_sha2_password BY 'csc131';
+-- GRANT ALL PRIVILEGES ON shop_test.* TO 'shopMgr'@'localhost';
 
 CREATE TABLE `customer` (
   `CUSTOMER_ID` int AUTO_INCREMENT NOT NULL,
@@ -108,13 +107,13 @@ INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUAN
 INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD05','Produce','Potato',0.99,30,5);
 INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD06','Produce','Mushroom',2.99,30,5);
 
-INSERT INTO customer (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (1,'default','Jagannadha','Chidella','foo@bar.com','number');
-INSERT INTO customer (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (2,'user2','Jacob','Normington','foo@bar.com','number');
-INSERT INTO customer (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (3,'user3','Alexander','Gunby','foo@bar.com','number');
-INSERT INTO customer (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (4,'user4','Sai','Suresh','foo@bar.com','number');
-INSERT INTO customer (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (5,'user5','Daniel','Beauchamp','foo@bar.com','number');
-INSERT INTO customer (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (6,'user6','Youser','Alalusi','foo@bar.com','number');
-INSERT INTO customer (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (7,'user7','Sikander','Ghafary','foo@bar.com','number');
+INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (1,'default','Jagannadha','Chidella','foo@bar.com','number');
+INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (2,'user2','Jacob','Normington','foo@bar.com','number');
+INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (3,'user3','Alexander','Gunby','foo@bar.com','number');
+INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (4,'user4','Sai','Suresh','foo@bar.com','number');
+INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (5,'user5','Daniel','Beauchamp','foo@bar.com','number');
+INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (6,'user6','Youser','Alalusi','foo@bar.com','number');
+INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (7,'user7','Sikander','Ghafary','foo@bar.com','number');
 
 
 CREATE 
@@ -236,12 +235,11 @@ VIEW `shop_test`.`customer_cart_v` AS
         (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
         
 DELIMITER $$
-	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
-	BEFORE UPDATE ON PRODUCTS
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE 
+	BEFORE UPDATE ON PRODUCTS 
 	FOR EACH ROW 
-		BEGIN
-		IF (NEW.QUANTITY_IN_STOCK <= 5)
-			THEN 
-			SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
-		END IF; 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
 END $$

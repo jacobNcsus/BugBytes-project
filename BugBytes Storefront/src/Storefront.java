@@ -424,7 +424,7 @@ public class Storefront
 					break;
 				}
 			}
-			cust = cust.substring(1); //removes the space added
+			cust = cust.trim(); //removes the space added
 			custID = Integer.parseInt(cust);
 			
 			if (custID > 1) //does not include default user

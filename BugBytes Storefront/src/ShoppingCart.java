@@ -3,12 +3,13 @@
  * functionality similar to that used in virtual storefronts.
  *
  * @author Jacob Normington
- * @version 5/3/2021
+ * @version 5/4/2021
  */
 public class ShoppingCart
 {
 	private static double TAX_RATE = 0.07;
 	private static double SHIPPING_RATE = 10.00;
+	private static final String scriptName = "BugBytes_shop_script.sql";
 	
 	private String customerName;
 	private int id; //user id
@@ -19,37 +20,61 @@ public class ShoppingCart
 	private CartNode current; //an iterator
 	private int size; //the total number of items in the cart
 
-   /**
-    * Default constructor for ShoppingCart objects. Signs in as default user. 
-    */
-   public ShoppingCart()
-   {
-	   customerName = "default";
-	   id = 1; 
-	   c=Connector.getCon();
-	   c.emptyCart(1);
-      
-	   head = null;  
-	   tail = head; 
-	   size = 0; 
-   }
+	public static void main(String[] args)
+	{
+		ShoppingCart cart = new ShoppingCart(1, "Jagannadha Chidella", true); //test if scriptRunner works
+		cart.addToCart("ALC01", 1);
+		cart.printTotal();
+	}
    
-   /**
-    * 	Constructor of a shopping cart matching a specified user
-    * 
-    * 	@param custID	the user's customer id number
-    * 	@param name		the user's first and last name
-    */
-   public ShoppingCart(int custID, String name)
-   {
+	/**
+     * 	Constructor of a shopping cart matching a specified user. 1 for default user.
+     * 
+     * 	@param custID	the user's customer id number
+     * 	@param name		the user's first and last name
+     */
+	private ShoppingCart(int custID, String name)
+	{
 	   customerName = name;
 	   id = custID;
 	   c=Connector.getCon();
-      
+	   if (custID > 1)
+	   {
+		   throw new IllegalArgumentException("Customer id must be positive.");
+	   }
+	   else if (custID == 1)
+	   {
+		   c.emptyCart(1);
+		   customerName = "default";
+	   }
+	   else
+	   {
+		 //load cart
+	   }
+	   
 	   head = null;  
 	   tail = head; 
 	   size = 0;
    }
+   
+   	/**
+   	 * 	Constructor of a shopping cart matching a specified user, and, if requested, resetting the associated database.
+   	 * 
+   	 * 	@param 	custID		the user's customer id number
+   	 * 			name		the user's first and last name
+   	 * 			reset		whether the parent database should be reset
+   	 * 	
+   	 */
+   	public ShoppingCart(int custID, String name, boolean reset)
+   	{
+   		this(custID, name);
+   		if (reset)
+   		{
+   			c.runScript("lib\\" + scriptName);
+   			//System.out.println(System.getProperty("user.dir"));
+   			System.out.println("Database initialized.\n");
+   		}
+   	}
    
    public String getCustomerName()
    {
@@ -319,18 +344,17 @@ public class ShoppingCart
       {
     	  System.out.println(customerName + "'s Shopping Cart");
           System.out.println("Number of Items: " + getCartSize());
-          System.out.println();
           CartNode node = head; 
           int total = 0;
           while(node.hasNext())
           {
-        	  node.getValue().printItemCost(); 
+        	  System.out.println("\t" + node.getValue());
         	  total += node.getValue().getTotalCost(); 
         	  node = node.getNext(); 
           }
-          tail.getValue().printItemCost();
+          System.out.println("\t" + node.getValue());
           total += tail.getValue().getTotalCost(); 
-          System.out.println("Total: $" + total);
+          System.out.println("Total: $" + total + "\n"); //spacing
       }
    }
    

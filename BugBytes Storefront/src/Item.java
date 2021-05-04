@@ -104,19 +104,10 @@ public class Item
 	   } 
 	   
 	   /**
-	    * Outputs the item name followed by the quantity, price, and subtotal
-	    */
-	   public void printItemCost()
-	   {
-	      System.out.println(getName() + " " + itemQuantity 
-	         + " @ $" + itemPrice + " = $" + getTotalCost());
-	   }
-	   
-	   /**
 	    * Returns a string description of this Item.
 	    */
 	   public String toString()
 	   {
-	      return itemQuantity + " " + itemName + " @ " + itemQuantity;
+	      return itemName + " " + itemQuantity + " @ " + getPrice();
 	   }
 	}
