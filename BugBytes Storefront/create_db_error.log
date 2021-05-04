@@ -1,0 +1,622 @@
+
+-------
+04/52/2021 10:52:51
+-------
+
+Error executing 'DROP USER IF EXISTS 'shopMgr'@'localhost' ' (line 4): Access denied; you need (at least one of) the CREATE USER privilege(s) for this operation
+Error executing 'FLUSH PRIVILEGES ' (line 5): Access denied; you need (at least one of) the RELOAD privilege(s) for this operation
+Error executing 'CREATE USER 'shopMgr'@'localhost'
+  IDENTIFIED WITH caching_sha2_password BY 'csc131' ' (line 8): Access denied; you need (at least one of) the CREATE USER privilege(s) for this operation
+Error executing 'GRANT ALL PRIVILEGES ON shop_test.* TO 'shopMgr'@'localhost' ' (line 10): Access denied for user 'shopMgr'@'localhost' to database 'shop_test'
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+		BEGIN
+		IF (NEW.QUANTITY_IN_STOCK <= 5)
+			THEN 
+			SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
+		END IF; 
+END  ' (line 247): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+
+-------
+04/38/2021 11:38:29
+-------
+
+Error executing 'DROP USER IF EXISTS 'shopMgr'@'localhost' ' (line 4): Access denied; you need (at least one of) the CREATE USER privilege(s) for this operation
+Error executing 'FLUSH PRIVILEGES ' (line 5): Access denied; you need (at least one of) the RELOAD privilege(s) for this operation
+Error executing 'CREATE USER 'shopMgr'@'localhost'
+  IDENTIFIED WITH caching_sha2_password BY 'csc131' ' (line 8): Access denied; you need (at least one of) the CREATE USER privilege(s) for this operation
+Error executing 'GRANT ALL PRIVILEGES ON shop_test.* TO 'shopMgr'@'localhost' ' (line 10): Access denied for user 'shopMgr'@'localhost' to database 'shop_test'
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+		BEGIN
+		IF (NEW.QUANTITY_IN_STOCK <= 5)
+			THEN 
+			SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
+		END IF; 
+END  ' (line 247): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+
+-------
+04/43/2021 11:43:54
+-------
+
+Error executing 'DROP USER IF EXISTS 'shopMgr'@'localhost' ' (line 4): Access denied; you need (at least one of) the CREATE USER privilege(s) for this operation
+Error executing 'FLUSH PRIVILEGES ' (line 5): Access denied; you need (at least one of) the RELOAD privilege(s) for this operation
+Error executing 'CREATE USER 'shopMgr'@'localhost'
+  IDENTIFIED WITH caching_sha2_password BY 'csc131' ' (line 8): Access denied; you need (at least one of) the CREATE USER privilege(s) for this operation
+Error executing 'GRANT ALL PRIVILEGES ON shop_test.* TO 'shopMgr'@'localhost' ' (line 10): Access denied for user 'shopMgr'@'localhost' to database 'shop_test'
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+		BEGIN
+		IF (NEW.QUANTITY_IN_STOCK <= 5)
+			THEN 
+			SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
+		END IF; 
+END  ' (line 247): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+
+-------
+04/45/2021 11:45:58
+-------
+
+Error executing 'DROP USER IF EXISTS 'shopMgr'@'localhost' ' (line 4): Access denied; you need (at least one of) the CREATE USER privilege(s) for this operation
+Error executing 'FLUSH PRIVILEGES ' (line 5): Access denied; you need (at least one of) the RELOAD privilege(s) for this operation
+Error executing 'CREATE USER 'shopMgr'@'localhost'
+  IDENTIFIED WITH caching_sha2_password BY 'csc131' ' (line 8): Access denied; you need (at least one of) the CREATE USER privilege(s) for this operation
+Error executing 'GRANT ALL PRIVILEGES ON shop_test.* TO 'shopMgr'@'localhost' ' (line 10): Access denied for user 'shopMgr'@'localhost' to database 'shop_test'
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+		BEGIN
+		IF (NEW.QUANTITY_IN_STOCK <= 5)
+			THEN 
+			SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
+		END IF; 
+END  ' (line 247): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+
+-------
+04/48/2021 11:48:58
+-------
+
+Error executing 'DROP USER IF EXISTS 'shopMgr'@'localhost' ' (line 4): Access denied; you need (at least one of) the CREATE USER privilege(s) for this operation
+Error executing 'FLUSH PRIVILEGES ' (line 5): Access denied; you need (at least one of) the RELOAD privilege(s) for this operation
+Error executing 'CREATE USER 'shopMgr'@'localhost'
+  IDENTIFIED WITH caching_sha2_password BY 'csc131' ' (line 8): Access denied; you need (at least one of) the CREATE USER privilege(s) for this operation
+Error executing 'GRANT ALL PRIVILEGES ON shop_test.* TO 'shopMgr'@'localhost' ' (line 10): Access denied for user 'shopMgr'@'localhost' to database 'shop_test'
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+		BEGIN
+		IF (NEW.QUANTITY_IN_STOCK <= 5)
+			THEN 
+			SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
+		END IF; 
+END  ' (line 247): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+
+-------
+04/47/2021 12:47:40
+-------
+
+Error executing 'DROP USER IF EXISTS 'shopMgr'@'localhost' ' (line 4): Access denied; you need (at least one of) the CREATE USER privilege(s) for this operation
+Error executing 'FLUSH PRIVILEGES ' (line 5): Access denied; you need (at least one of) the RELOAD privilege(s) for this operation
+Error executing 'CREATE USER 'shopMgr'@'localhost'
+  IDENTIFIED WITH caching_sha2_password BY 'csc131' ' (line 8): Access denied; you need (at least one of) the CREATE USER privilege(s) for this operation
+Error executing 'GRANT ALL PRIVILEGES ON shop_test.* TO 'shopMgr'@'localhost' ' (line 10): Access denied for user 'shopMgr'@'localhost' to database 'shop_test'
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+		BEGIN
+		IF (NEW.QUANTITY_IN_STOCK <= 5)
+			THEN 
+			SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
+		END IF; 
+END  ' (line 247): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+
+-------
+04/26/2021 13:26:41
+-------
+
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+		BEGIN
+		IF (NEW.QUANTITY_IN_STOCK <= 5)
+			THEN 
+			SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
+		END IF; 
+END  ' (line 246): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+
+-------
+04/02/2021 14:02:13
+-------
+
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+		BEGIN
+		IF (NEW.QUANTITY_IN_STOCK <= 5)
+			THEN 
+			SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
+		END IF; 
+END  ' (line 246): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+
+-------
+04/38/2021 14:38:24
+-------
+
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+		BEGIN
+		IF (NEW.QUANTITY_IN_STOCK <= 5)
+			THEN 
+			SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
+		END IF; 
+END  ' (line 246): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+
+-------
+04/08/2021 15:08:05
+-------
+
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+		BEGIN
+		IF (NEW.QUANTITY_IN_STOCK <= 5)
+			THEN 
+			SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
+		END IF; 
+END  ' (line 246): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+
+-------
+04/10/2021 15:10:05
+-------
+
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+		BEGIN
+		IF (NEW.QUANTITY_IN_STOCK <= 5)
+			THEN 
+			SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
+		END IF; 
+END  ' (line 246): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+
+-------
+04/12/2021 15:12:34
+-------
+
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+		BEGIN
+		IF (NEW.QUANTITY_IN_STOCK <= 5)
+			THEN 
+			SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30 ' (line 244): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+Error executing '		END IF ' (line 245): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'END IF' at line 1
+Error executing 'END $$
+' (line 246): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'END $$' at line 1
+
+-------
+04/25/2021 15:25:02
+-------
+
+Error executing 'DROP USER IF EXISTS 'shopMgr'@'localhost' ' (line 4): Access denied; you need (at least one of) the CREATE USER privilege(s) for this operation
+Error executing 'FLUSH PRIVILEGES ' (line 5): Access denied; you need (at least one of) the RELOAD privilege(s) for this operation
+Error executing 'CREATE USER 'shopMgr'@'localhost'
+   IDENTIFIED WITH caching_sha2_password BY 'csc131' ' (line 8): Access denied; you need (at least one of) the CREATE USER privilege(s) for this operation
+Error executing 'GRANT ALL PRIVILEGES ON shop_test.* TO 'shopMgr'@'localhost' ' (line 9): Access denied for user 'shopMgr'@'localhost' to database 'shop_test'
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+	BEGIN
+	IF (NEW.QUANTITY_IN_STOCK <= 5)
+		THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
+	END IF; 
+END  ' (line 246): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+
+-------
+04/25/2021 15:25:40
+-------
+
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+	BEGIN
+	IF (NEW.QUANTITY_IN_STOCK <= 5)
+		THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
+	END IF; 
+END  ' (line 246): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+
+-------
+04/40/2021 16:40:37
+-------
+
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+	BEGIN
+	IF (NEW.QUANTITY_IN_STOCK <= 5)
+		THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
+	END IF; 
+END;  ' (line 246): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+
+-------
+04/45/2021 16:45:23
+-------
+
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+	BEGIN
+	IF (NEW.QUANTITY_IN_STOCK <= 5)
+		THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
+	END IF; 
+END $$;
+' (line 246): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+
+-------
+04/46/2021 16:46:22
+-------
+
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+	BEGIN
+	IF (NEW.QUANTITY_IN_STOCK <= 5)
+		THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30;
+	END IF; 
+END  ' (line 246): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE
+	BEFORE UPDATE ON PRODUCTS
+	FOR EACH ROW 
+' at line 15
+
+-------
+04/49/2021 16:49:39
+-------
+
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE 
+	BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+END  ' (line 245): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE 
+	BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW' at line 15
+
+-------
+04/51/2021 16:51:31
+-------
+
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE 
+	BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+END  ' (line 245): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE 
+	BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW' at line 15
