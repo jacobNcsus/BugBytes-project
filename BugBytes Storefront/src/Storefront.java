@@ -1,8 +1,8 @@
 /**
- * A representation of a virtual storefront pulled from the shop_test database. 
+ * 	A representation of a virtual storefront pulled from the shop_test database. 
  *
- * @author Jacob Normington
- * @version 5/3/2021
+ * 	@author Jacob Normington
+ * 	@version 5/3/2021
  */
 public class Storefront 
 {
@@ -10,7 +10,7 @@ public class Storefront
 	private int[] productNums; 
 	
 	/**
-	 * Default constructor of class Storefront, creates a new connection to the store front. 
+	 * 	Default constructor of class Storefront, creates a new connection to the store front. 
 	 */
 	public Storefront ()
 	{
@@ -27,7 +27,7 @@ public class Storefront
 	
 	//print methods
 	/**
-	 * Prints the entire store inventory. 
+	 * 	Prints the entire store inventory. 
 	 */
 	public void printInventory()
 	{
@@ -35,16 +35,16 @@ public class Storefront
 	}
 	
 	/**
-	 * Prints the list of aisles in the store. 
+	 * 	Prints the list of aisles in the store. 
 	 */
 	public void printAisles()
 	{
 		Connector.showShop();
 	}
 	/**
-	 * Prints the contents of an aisle. 
+	 * 	Prints the contents of an aisle. 
 	 * 
-	 * @param	aisle	a String representing one of the aisles in the store
+	 * 	@param		aisle	a String representing one of the aisles in the store
 	 */
 	public void printAisle(String aisle)
 	{
@@ -52,16 +52,16 @@ public class Storefront
 	}
 	
 	/**
-	 * Prints out all the items in every user's cart. Requires authorization. 
+	 * 	Prints out all the items in every user's cart. Requires authorization. 
 	 */
 	public void printCarts()
 	{
 		c.read("cart", -1); //all carts
 	}
 	/**
-	 * Prints out the items in a single user's cart.
+	 * 	Prints out the items in a single user's cart.
 	 * 
-	 * @param 	custID	a positive integer customer id
+	 * 	@param 		custID	a positive integer customer id
 	 */
 	public void printMyCart(int custID)
 	{
@@ -69,16 +69,16 @@ public class Storefront
 	}
 	
 	/**
-	 * Prints out the list of customers' accounts. Requires authorization. 
+	 * 	Prints out the list of customers' accounts. Requires authorization. 
 	 */
 	public void printCustomers()
 	{
 		c.read("customer", -1); //all customers
 	}
 	/**
-	 * Prints out the information of a specified customer. 
+	 * 	Prints out the information of a specified customer. 
 	 * 
-	 * @param 	custID	a positive integer customer id
+	 * 	@param 		custID	a positive integer customer id
 	 */
 	public void printCustomer(int custID)
 	{
@@ -86,16 +86,16 @@ public class Storefront
 	}
 	
 	/**
-	 * Prints out the list of orders issued by all customers. Requires authorization. 
+	 * 	Prints out the list of orders issued by all customers. Requires authorization. 
 	 */
 	public void printOrders()
 	{
 		c.read("order", -1); //all orders
 	}
 	/**
-	 * Prints out the list of orders issued by one customer.  
+	 * 	Prints out the list of orders issued by one customer.  
 	 * 
-	 * @param 	custID	a positive integer customer id
+	 * 	@param 		custID	a positive integer customer id
 	 */
 	public void printMyOrders(int custID)
 	{
@@ -103,16 +103,16 @@ public class Storefront
 	}
 	
 	/**
-	 * Prints out the details of all orders issued by all customers. Requires authorization. 
+	 * 	Prints out the details of all orders issued by all customers. Requires authorization. 
 	 */
 	public void printOrderDetails()
 	{
 		c.read("order_details", -1); //all orders
 	}
 	/**
-	 * Prints out the contents of a specified order.   
+	 * 	Prints out the contents of a specified order.   
 	 * 
-	 * @param 	orderID		a positive integer order id number
+	 * 	@param 		orderID		a positive integer order id number
 	 */
 	public void printMyOrderDetails(int orderID)
 	{
@@ -121,11 +121,11 @@ public class Storefront
 	
 	//add methods
 	/**
-	 * Adds a new item to the store's inventory. Requires authorization. 
+	 * 	Adds a new item to the store's inventory. Requires authorization. 
 	 * 
-	 * @param 	item		an Item to be added
-	 * @param 	quantity	the number of the item added into stock
-	 * @param 	restock		the quantity at which this item should be restocked
+	 * 	@param 		item		an Item to be added
+	 * 	@param 		quantity	the number of the item added into stock
+	 * 	@param 		restock		the quantity at which this item should be restocked
 	 */
 	public void addInventory(Item item, int quantity, int restock)
 	{
@@ -199,10 +199,10 @@ public class Storefront
 	 * 	Creates a new customer profile in the database. 
 	 *
 	 * 	@param		username	the customer's username
-	 *				firstName	the customer's first name
-	 *				lastName	the customer's last name
-	 *				email		the customer's email address
-	 *				phone		the customer's phone number
+	 *	@param		firstName	the customer's first name
+	 *	@param		lastName	the customer's last name
+	 *	@param		email		the customer's email address
+	 *	@param		phone		the customer's phone number
 	 */
     public void signUp(String username, String firstName, String lastName, String email, String phone)
     {
@@ -219,9 +219,9 @@ public class Storefront
     }
 	
     /**
-	 * Checks out a cart and issues the associated order to the store.
+	 * 	Checks out a cart and issues the associated order to the store.
 	 * 
-	 * 	@param 	cart	a ShoppingCart of items to be checked out
+	 * 	@param 		cart	a ShoppingCart of items to be checked out
 	 */
 	public void checkout(ShoppingCart cart)
 	{
@@ -247,14 +247,14 @@ public class Storefront
 		System.out.println(); //for structuring, placeOrder and addToOrder should be in one block
 		   
 		cart.clearCart();
-	   }
+	}
 	
 	//update methods
 	/**
 	 * 	Changes the location of an item in the store.
 	 * 
-	 * 	@param 	name	the product's name
-	 * 	@param 	aisle	the aisle it should be moved to
+	 * 	@param 		name	the product's name
+	 * 	@param 		aisle	the aisle it should be moved to
 	 */
 	public void moveItem(String name, String aisle)
 	{
@@ -263,18 +263,18 @@ public class Storefront
 	/**
 	 * 	Changes the name of an item in the store.
 	 * 
-	 * 	@param 	oldName		the product's current name
-	 * 	@param 	newName		a new name the product should have
+	 * 	@param 		oldName		the product's current name
+	 * 	@param 		newName		a new name the product should have
 	 */
 	public void changeProductName(String oldName, String newName)
 	{
 		c.update(oldName, "n", newName); //changes product's name to newName
 	}
 	/**
-	 * 	Changes the price of an item in the store.
+	 *	Changes the price of an item in the store.
 	 * 
-	 * 	@param 	name	the product's name
-	 * 	@param 	price	the new price to be charged for each unit
+	 * 	@param 		name	the product's name
+	 * 	@param 		price	the new price to be charged for each unit
 	 */
 	public void setUnitPrice(String name, double price)
 	{
@@ -284,8 +284,8 @@ public class Storefront
 	/**
 	 * 	Changes the quantity at which an item should be reordered.
 	 * 
-	 * 	@param 	name		the product's name
-	 * 	@param 	reorder		a positive integer at which quantity this item should be restocked
+	 * 	@param 		name		the product's name
+	 * 	@param 		reorder		a positive integer at which quantity this item should be restocked
 	 */
 	public void setReorder(String name, int reorder)
 	{
@@ -297,8 +297,8 @@ public class Storefront
 	/**
 	 * 	Changes a customer's registered email address. 
 	 * 
-	 * 	@param 	custID	a positive integer uniquely identifying a customer
-	 * 	@param 	email	the new email address
+	 * 	@param 		custID	a positive integer uniquely identifying a customer
+	 * 	@param 		email	the new email address
 	 */
 	public void changeEmail(int custID, String email)
 	{
@@ -307,8 +307,8 @@ public class Storefront
 	/**
 	 * 	Changes a customer's registered phone number 
 	 * 
-	 * 	@param 	custID			a positive integer uniquely identifying a customer
-	 * 	@param 	phoneNumber		the new phone number to be used
+	 * 	@param 		custID			a positive integer uniquely identifying a customer
+	 * 	@param 		phoneNumber		the new phone number to be used
 	 */
 	public void changePhone(int custID, String phoneNumber)
 	{
@@ -321,7 +321,7 @@ public class Storefront
     /**
      * 	Removes an item from the store's inventory. Requires authorization.
      *  
-     * 	@param 	name	the name of the item to be removed
+     * 	@param 		name	the name of the item to be removed
      */
     public void removeInventory(String name)
     {
@@ -333,7 +333,7 @@ public class Storefront
     /**
      * 	Removes a user's account from the database. 
      *  
-     * 	@param 	custID	a positive integer identifier of the account to be removed
+     * 	@param 		custID	a positive integer identifier of the account to be removed
      */
     public void removeAccount(int custID)
     {
@@ -343,7 +343,7 @@ public class Storefront
     /**
      * 	Removes a user's account from the database. 
      *  
-     * 	@param 	custID	a positive integer identifier of the account to be removed
+     * 	@param 		custID	a positive integer identifier of the account to be removed
      */
     public void cancelOrder(int orderID)
     {
@@ -354,7 +354,7 @@ public class Storefront
     /**
      * 	Determines whether this connection has admin privileges or not. 
      * 
-     * 	@return	true, if this connection has admin privileges, false otherwise
+     * 	@return			true, if this connection has admin privileges, false otherwise
      */
     public boolean isAdmin()
     {
@@ -364,8 +364,8 @@ public class Storefront
     /**
      * 	Attempts to secure administrator privileges on this connection based on an issued login.
      * 
-     * 	@param 	username	a String username required to access admin privileges
-     * 	@param 	password	a String password required to access admin privileges
+     * 	@param 		username	a String username required to access admin privileges
+     * 	@param 		password	a String password required to access admin privileges
      */
 	public void requestAuthorization(String username, String password)
 	{
@@ -373,12 +373,12 @@ public class Storefront
 	}
 	
 	/**
-	 * Determines whether a customer's information matches the database, or if username is reserved. 
+	 * 	Determines whether a customer's information matches the database, or if username is reserved. 
 	 * 
-	 * @param 	username	the customer's username
-	 * 			firstName	the customer's first name
-	 * 			lastName	the customer's last name
-	 * @return		a String description of the customer's validity, customer id if valid
+	 * 	@param 		username	the customer's username
+	 * 	@param		firstName	the customer's first name
+	 * 	@param		lastName	the customer's last name
+	 * 	@return			a String description of the customer's validity, customer id if valid
 	 */
 	private String isCustomer(String username, String firstName, String lastName)
 	{

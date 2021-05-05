@@ -3,10 +3,10 @@ import java.sql.*;
 import script.ScriptRunner;
 
 /**
- * Creates a connection to the shopping
+ * 	Creates a connection to the BugBytes virtual store. 
  *
- * @author Jacob Normington, Daniel Beauchamp, Youser Alalusi
- * @version 5/4/2021
+ * 	@author Jacob Normington, Daniel Beauchamp, Youser Alalusi
+ * 	@version 5/5/2021
  */
 public class Connector 
 {
@@ -35,9 +35,9 @@ public class Connector
 	}
 	
 	/**
-	 * Creates a singleton object of Connector in order to access the database. 
+	 * 	Creates a singleton object of Connector in order to access the database. 
 	 * 
-	 * @return		a Connector object attached to the shop_test database
+	 * 	@return		a Connector object attached to the shop_test database
 	 */
 	public static Connector getCon()
 	{
@@ -45,7 +45,7 @@ public class Connector
 	}
 	
 	/**
-	 * Closes the connection to the database once it is no longer needed. 
+	 * 	Closes the connection to the database once it is no longer needed. 
 	 */
 	public void close()
 	{
@@ -65,37 +65,59 @@ public class Connector
 		c.authorize(username, password);
 		//Connector.showShop();
 		
-		//c.clearOrders();
-		//c.emptyCart(1);
+		c.clearOrders();
+		c.emptyCart(2);
 		//c.purgeLogins();
-		//c.signUp(1, "user1", "first", "last", "foo@bar.com", "18000000000");
-		//c.printCart(1);
-		//c.addToCart(1, "ALC01", 2);
-		//c.printCart(1);
-		//c.updateCart(1, "ALC01", 5);
-		//c.printCart(1);
-		//c.addToCart(1, "ALC02", 2);
-		//c.addToCart(1, "ALC03", 1);
-		//c.printCart(1);
-        //c.CONFIRM_ORDER(1);
-        //c.placeOrder(1, 10.00, 5.4544, 93.3744); //rounds off the last two decimals
-        //c.addToOrder(1, 1, "ALC01", 5, 10.9913);
-        //c.addToOrder(1, 2, "ALC02", 2, 5.991);
-        //c.addToOrder(1, 3, "ALC03", 1, 10.991);
-        //System.out.println(); //has to be done manually
-        //c.emptyCart(1); 
-        //c.printCart(1); //checks that cart is now empty
-		
-		//c.insert("ALC07", aisles[0], "Hennesy", 20.00, 10, 5); 
-		//c.printAisle(aisles[0]);
-		//c.printAll();
 		
 		//c.read("products", -1);
+		//c.read(aisles[0], -1);
+		//c.read(aisles[1], -1);
+		//c.read(aisles[2], -1);
+		//c.read(aisles[3], -1);
+		//c.read(aisles[4], -1);
+		//c.read(aisles[5], -1);
+		//c.insert("ALC07", aisles[0], "Hennesy", 20.00, 10, 5);
 		//c.read("Alcohol", -1);
-		//c.read("Meat_seafood", -1);
+		//c.delete("Hennesy");
+		//c.read("Alcohol", -1);
+		//c.update("Whiskey", "q", "10");
+		//c.read("Alcohol", -1);
+		
 		//c.read("cart", -1);
-		c.read("customer", -1);
+		//c.read("cart", 2);
+		//c.addToCart(2, "ALC01", 2);
+		//c.read("cart", 2);
+		//c.updateCart(2, "ALC01", 5);
+		//c.read("cart", 2);
+		//c.addToCart(2, "ALC02", 2);
+		//c.addToCart(2, "ALC03", 1);
+		//c.read("cart", 2);
+		//c.CONFIRM_ORDER(2);
+		//c.emptyCart(2); 
+		//c.read("cart", 2); //checks that cart is now empty
+		
+		//c.read("customer", -1);
+		//c.read("customer", 2);
+		//c.signUp(8, "user8", "foo", "bar", "foo@bar.com", "18000000000");
+		//c.read("customer", -1);
+		//c.removeAccount(8);
+		//c.read("customer", -1);
+		//c.changeAccount(8, "e", "new@gmail.com");
+		//c.read("customer", -1);
+
 		//c.read("order", -1);
+		//c.read("order", 2);
+		//int orderID = c.placeOrder(2, 10.00, 5.4544, 93.3744); //rounds off the last two decimals
+		//c.read("order", -1);
+		//c.addToOrder(orderID, 1, "ALC01", 5, 10.9913);
+		//c.read("order_details", orderID);
+		//c.addToOrder(orderID, 2, "ALC02", 2, 5.991);
+		//c.read("order_details", orderID);
+		//c.addToOrder(orderID, 3, "ALC03", 1, 10.991);
+		//c.read("order_details", orderID);
+		//System.out.println(); //has to be done manually
+		//c.read("order_details", -1);
+		//c.clearOrders();
 		//c.read("order_details", -1);
 		
 		System.out.println("Done.");
@@ -107,7 +129,7 @@ public class Connector
 	 *
 	 * 	@throws 	IllegalArgumentException	if column is invalid
 	 * 	@param		id		a series of alphanumeric characters representing a unique product
-	 * 				column 	the quantity you want to find
+	 * 	@param		column 	the quantity you want to find
 	 * 	@return        	a String representation of the column value
 	 */
 	public String readItem(String id, String column) 
@@ -167,12 +189,12 @@ public class Connector
 	}
 
 	/**
-	 * Prints to console some section of the database in structured text. 
+	 * 	Prints to console some section of the database in structured text. 
 	 * 
-	 * @throws	IllegalArgumentException	if tableView does not represent a valid table (products, cart, customer, some aisle, etc.)
-	 * @throws	SecurityException			if this connection does not have admin privileges and read is used for a restricted function
-	 * @param	tableView	a String describing the table to be read
-	 * @param	id			an optional parameter for either a user or order id, negative to print all 
+	 * 	@throws		IllegalArgumentException	if tableView does not represent a valid table (products, cart, customer, some aisle, etc.)
+	 * 	@throws		SecurityException			if this connection does not have admin privileges and read is used for a restricted function
+	 * 	@param		tableView	a String describing the table to be read
+	 * 	@param		id			an optional parameter for either a user or order id, negative to print all 
 	 */
 	public void read(String tableView, int id) 
 	{
@@ -241,7 +263,7 @@ public class Connector
 					query = "SELECT c.*, p.PRODUCT_NAME, cust.FIRST_NAME "
 							+ "FROM cart c "
 							+ "LEFT JOIN customer cust ON c.CUSTOMER_ID_CART = cust.CUSTOMER_ID "
-							+ "LEFT JOIN products p ON p.PRODUCT_ID = p.PRODUCT_ID "
+							+ "LEFT JOIN products p ON c.PRODUCT_ID = p.PRODUCT_ID "
 							+ "WHERE CUSTOMER_ID_CART=? AND CUSTOMER_ID_CART=?";
 				}
 
@@ -255,7 +277,7 @@ public class Connector
 			
 				if(!myRs.next() ) //false if the list is empty
 				{
-					System.out.println("Cart is empty \n");
+					System.out.println("Cart is empty. \n");
 				}
 				else //your cart is not empty
 				{
@@ -299,7 +321,7 @@ public class Connector
 			
 				if(!myRs.next() ) //false if the list is empty
 				{
-					System.out.println("There are no customers \n");
+					System.out.println("There are no customers. \n");
 				}
 				else //list is not empty
 				{
@@ -383,7 +405,7 @@ public class Connector
 						System.out.printf("%-10s%-15s%-15s%-12s%-8s%-15s \n", 
 								myRs.getString("ORDER_ID"), myRs.getString("CUSTOMER_ID"), date, myRs.getString("SHIPPING_COST"), myRs.getString("TAX"), myRs.getString("TOTAL_COST"));
 					}
-					System.out.println("\tAll Order Contents: ");
+					System.out.println("\n\tAll Order Contents:");
 					query = "select * from order_details";
 				}
 				else 
@@ -407,7 +429,7 @@ public class Connector
 						System.out.printf("%-10s%-15s%-15s%-12s%-8s%-15s \n", 
 								myRs.getString("ORDER_ID"), myRs.getString("CUSTOMER_ID"), date, myRs.getString("SHIPPING_COST"), myRs.getString("TAX"), myRs.getString("TOTAL_COST"));
 					}
-					System.out.println("\tContents of order " + id + ": ");
+					System.out.println("\n\tContents of order " + id + ": ");
 					query = "select * from order_details WHERE ORDER_ID='" + id + "'";
 				}
 				Statement myStmt = myConn.createStatement();
@@ -442,11 +464,11 @@ public class Connector
 	}
 
 	/**
-	 * Finds the highest product number issued to any item in a given category. 
+	 * 	Finds the highest product number issued to any item in a given category. 
 	 * 
-	 * @throws	IllegalArgumentException	if aisle is not one of the valid aisles
-	 * @param 	aisle 	a String representing one of the six aisles
-	 * @return	the product number
+	 * 	@throws		IllegalArgumentException	if aisle is not one of the valid aisles
+	 * 	@param 		aisle 	a String representing one of the six aisles
+	 * 	@return		the product number
 	 */
 	public int getHighestProductID(String aisle)
 	{
@@ -484,17 +506,17 @@ public class Connector
 	/**
 	 * Adds a new item to inventory. Requires authorization. 
 	 *
-	 * @throws	SecurityException			if this connection does not have admin privileges
-	 * 			IllegalArgumentException	if type is not one of the six aisles
-	 * 			IllegalArgumentException	if price is non-positive
-	 * 			IllegalArgumentException	if quantity is non-positive
-	 * @param	PRODUCT_ID			a series of alphanumeric characters representing a unique product
-	 * 			PRODUCT_TYPE		the product type or category
-	 * 			PRODUCT_NAME		the name of the item
-	 * 			PRICE				the price of the item, rounded to two decimal places
-	 * 			QUANTITY_IN_STOCK	the number of item in stock
-	 * 			REORDER				the amount of stock at which this item should be restocked
-	 * @return        		0 on failure, or 1 on success
+	 * 	@throws		SecurityException			if this connection does not have admin privileges
+	 * 	@throws		IllegalArgumentException	if type is not one of the six aisles
+	 * 	@throws		IllegalArgumentException	if price is non-positive
+	 * 	@throws		IllegalArgumentException	if quantity is non-positive
+	 * 	@param		PRODUCT_ID			a series of alphanumeric characters representing a unique product
+	 * 	@param		PRODUCT_TYPE		the product type or category
+	 * 	@param		PRODUCT_NAME		the name of the item
+	 * 	@param		PRICE				the price of the item, rounded to two decimal places
+	 * 	@param		QUANTITY_IN_STOCK	the number of item in stock
+	 * 	@param		REORDER				the amount of stock at which this item should be restocked
+	 * 	@return        		0 on failure, or 1 on success
 	 */
 	public int insert(String PRODUCT_ID, String PRODUCT_TYPE, String PRODUCT_NAME, double PRICE, int QUANTITY_IN_STOCK, int REORDER)
 	{
@@ -558,10 +580,10 @@ public class Connector
 	 * 	Updates an item in the inventory. Requires authorization.
 	 * 
 	 * 	@throws		IllegalArgumentException	if column is invalid
-	 * 				SecurityException			if this connection does not have admin privileges
+	 * 	@throws		SecurityException			if this connection does not have admin privileges
 	 * 	@param 		name		the name of the item to be changed
-	 * 				column		the field you wish to change, either aisle, name, price, or reorder
-	 * 				value		the new value proposed for this field
+	 * 	@param		column		the field you wish to change, either aisle, name, price, quantity, or reorder
+	 * 	@param		value		the new value proposed for this field
 	 */
 	public void update(String name, String column, String value)
 	{
@@ -584,6 +606,12 @@ public class Connector
     		query = "UPDATE products SET PRICE=? WHERE PRODUCT_NAME=?";
     		System.out.println("Changing product's unit price to " + value);
     	}
+    	else if (column.equalsIgnoreCase("q") || column.equalsIgnoreCase("quantity") || column.equalsIgnoreCase("'quantity'")
+    			|| column.equalsIgnoreCase("quantity_in_stock") || column.equalsIgnoreCase("'quantity_in_stock'"))
+    	{
+    		query = "UPDATE products SET QUANTITY_IN_STOCK=? WHERE PRODUCT_NAME=?";
+    		System.out.println("Changing product's quantity to " + value);
+    	}
     	else if (column.equalsIgnoreCase("r") || column.equalsIgnoreCase("reorder") || column.equalsIgnoreCase("'reorder'"))
     	{
     		query = "UPDATE products SET REORDER=? WHERE PRODUCT_NAME=?";
@@ -591,7 +619,7 @@ public class Connector
     	}
     	else
     	{
-    		throw new IllegalArgumentException("Invalid position. Please choose either 'aisle', 'name', 'price', or 'reorder'.");
+    		throw new IllegalArgumentException("Invalid position. Please choose either 'aisle', 'name', 'price', 'quantity', or 'reorder'.");
     	}
 		
 		if (!admin)
@@ -609,7 +637,7 @@ public class Connector
     		{
     			System.out.println("Update complete. \n");
     		}
-    		else if (rows <=0)
+    		else if (rows < 1)
     		{
     			System.out.println("Error. Could not complete update. Please try again later. \n");
     		}
@@ -628,8 +656,8 @@ public class Connector
 	/**
 	 * 	Removes an item from the inventory. Requires authorization.
 	 * 
-	 * 	@throws	SecurityException	if this connection does not have admin privileges
-	 * 	@param	name		the name of the item to be removed
+	 * 	@throws		SecurityException	if this connection does not have admin privileges
+	 * 	@param		name		the name of the item to be removed
 	 */
 	public void delete(String name)
 	{
@@ -660,13 +688,13 @@ public class Connector
 	}
 	
 	/**
-	 * Adds a new item to a user's shopping cart. 
+	 * 	Adds a new item to a user's shopping cart. 
 	 *
-	 * @throws	IllegalArgumentException	if custID is non-positive
-	 * 			IllegalArgumentException	if quantity is non-positive
-	 * @param	custID		a positive integer, the id number of the customer
-	 * 			prodID		a series of alphanumeric characters representing a unique product
-	 * 			quantity	the number of this item to add
+	 * 	@throws		IllegalArgumentException	if custID is non-positive
+	 * 	@throws		IllegalArgumentException	if quantity is non-positive
+	 * 	@param		custID		a positive integer, the id number of the customer
+	 * 	@param		prodID		a series of alphanumeric characters representing a unique product
+	 * 	@param		quantity	the number of this item to add
 	 */
 	public void addToCart(int custID, String prodID, int quantity) 
 	{
@@ -717,11 +745,11 @@ public class Connector
     }
     
 	/**
-	 * Removes an item from a user's shopping cart. 
+	 * 	Removes an item from a user's shopping cart. 
 	 *
-	 * @throws	IllegalArgumentException	if custID is non-positive
-	 * @param	custID		a positive integer, the id number of the customer
-	 * 			prodID		a series of alphanumeric characters representing a unique product
+	 * 	@throws		IllegalArgumentException	if custID is non-positive
+	 * 	@param		custID		a positive integer, the id number of the customer
+	 * 	@param		prodID		a series of alphanumeric characters representing a unique product
 	 */
     public void removeFromCart(int custID, String prodID) 
     {
@@ -745,10 +773,64 @@ public class Connector
     }
     
     /**
-	 * Removes all items from a user's shopping cart. 
+     * 	Executes a union on a given cart and its associated place in the database, 
+     * 	assigns both places to that union. 
+     * 	
+     * 	@param 		cart	a ShoppingCart object specifying a user's cart
+     */
+    public void fillCart(ShoppingCart cart)
+    {
+    	boolean empty = cart.getCartSize()==0;
+    	int custID = cart.getCustomerId();
+    	
+    	//fill cart from database
+    	try
+    	{
+    		Statement myStmt = myConn.createStatement();
+    		query = "SELECT p.PRODUCT_ID, p.PRODUCT_TYPE, p.PRODUCT_NAME, p.PRICE, c.QUANTITY_ORDERED FROM cart c LEFT JOIN products p ON c.PRODUCT_ID=p.PRODUCT_ID WHERE CUSTOMER_ID_CART='" + cart.getCustomerId() + "'";
+    		ResultSet myRs = myStmt.executeQuery(query);
+    		if (!myRs.next()) //false if set is empty
+    		{
+    			System.out.println("No update to be made forward.");
+    		}
+    		else
+    		{
+    			do
+        		{
+        			if(!cart.contains(myRs.getString("PRODUCT_ID")))
+        			{
+        				removeFromCart(custID, myRs.getString("PRODUCT_ID")); //clears from database
+            			cart.addToCart(myRs.getString("PRODUCT_ID"), myRs.getInt("QUANTITY_ORDERED")); //adds to both
+            			removeFromCart(custID, myRs.getString("PRODUCT_ID")); //because you are using addToCart rather than addItem
+        			}
+        			else
+        				removeFromCart(custID, myRs.getString("PRODUCT_ID")); //clears from database
+        		} while (myRs.next());
+    		}
+    	}
+    	catch (SQLException e)
+    	{
+    		System.out.println("Error executing query. Cart could not be properly filled. \n");
+    		return;
+    	}
+    	
+    	if(!empty) //fill emptied database from cart (which is already the union of cart U database)
+    	{
+    		Item current = cart.first();
+    		do
+    		{
+    			addToCart(custID, current.getProductId(), current.getQuantity());
+    			current = cart.next();
+    		} while(cart.hasNext());
+    	}
+    	System.out.println("\n");
+    }
+    
+    /**
+	 * 	Removes all items from a user's shopping cart. 
 	 *
-	 * @throws	IllegalArgumentException	if custID is non-positive
-	 * @param	custID		a positive integer, the id number of the customer
+	 * 	@throws		IllegalArgumentException	if custID is non-positive
+	 * 	@param		custID		a positive integer, the id number of the customer
 	 */
     public void emptyCart(int custID) 
     {
@@ -762,7 +844,7 @@ public class Connector
             Statement myStmt = myConn.createStatement();
             query = "DELETE FROM cart WHERE CUSTOMER_ID_CART=\"" + custID + "\""; 
             myStmt.executeUpdate(query);
-            System.out.println("Cart emptied \n");
+            System.out.println("Cart emptied. \n");
             myStmt.close(); 
         } 
         catch (Exception e) 
@@ -772,13 +854,13 @@ public class Connector
     }
     
     /**
-	 * Changes the quantity of an item in a user's cart.
+	 * 	Changes the quantity of an item in a user's cart.
 	 *
-	 * @throws	IllegalArgumentException	if custID is non-positive
-	 * 			IllegalArgumentException	if quantity is non-positive
-	 * @param	custID		a positive integer, the id number of the customer
-	 * 			prodID		a series of alphanumeric characters representing a unique product
-	 * 			quantity	the number of this item you now want to have
+	 * 	@throws		IllegalArgumentException	if custID is non-positive
+	 * 	@throws		IllegalArgumentException	if quantity is non-positive
+	 * 	@param		custID		a positive integer, the id number of the customer
+	 * 	@param		prodID		a series of alphanumeric characters representing a unique product
+	 * 	@param		quantity	the number of this item you now want to have
 	 */
     public void updateCart(int custID, String prodID, int quantity) //really just changes quantity
 	{
@@ -832,10 +914,10 @@ public class Connector
 	}
     
     /**
-	 * Final method to confirm an order is valid, and then turn it in to the server. 
+	 * 	Final method to confirm an order is valid, and then turn it in to the server. 
 	 *
-	 * @throws	IllegalArgumentException	if custID is non-positive
-	 * @param	custID		a positive integer, the id number of the customer
+	 * 	@throws		IllegalArgumentException	if custID is non-positive
+	 * 	@param		custID		a positive integer, the id number of the customer
 	 */
     public void CONFIRM_ORDER(int custID) 
     {
@@ -872,9 +954,9 @@ public class Connector
     }
     
     /**
-	 * Finds the highest id number of any order issued. 
+	 * 	Finds the highest id number of any order issued. 
 	 * 
-	 * @return	the highest recorded order id number
+	 *	@return		the highest recorded order id number
 	 */
 	public int getHighestOrderID()
 	{
@@ -903,16 +985,16 @@ public class Connector
 	}
     
     /**
-	 * Issues an order to the database. 
+	 * 	Issues an order to the database. 
 	 *
-	 * @throws	IllegalArgumentException	if custID is non-positive
-	 * 			IllegalArgumentException	if shipping is negative
-	 * 			IllegalArgumentException	if tax is negative
-	 * 			IllegalArgumentException	if total is negative
-	 * @param	custID		a positive integer, the id number of the customer
-	 * 			shipping	a double value representing the shipping price to be collected, rounded to two decimal places
-	 * 			tax			a double value representing the tax to be collected, rounded to two decimal places
-	 * 			total		a double value representing the total price to be charged for the order, rounded to two decimal places
+	 * 	@throws		IllegalArgumentException	if custID is non-positive
+	 * 	@throws		IllegalArgumentException	if shipping is negative
+	 * 	@throws		IllegalArgumentException	if tax is negative
+	 * 	@throws		IllegalArgumentException	if total is negative
+	 * 	@param		custID		a positive integer, the id number of the customer
+	 * 	@param		shipping	a double value representing the shipping price to be collected, rounded to two decimal places
+	 * 	@param		tax			a double value representing the tax to be collected, rounded to two decimal places
+	 * 	@param		total		a double value representing the total price to be charged for the order, rounded to two decimal places
 	 * 	@return			the order id generated for this new order
 	 */
     public int placeOrder(int custID, double shipping, double tax, double total) 
@@ -960,17 +1042,17 @@ public class Connector
     }
     
     /**
-	 * Adds a new item to an order, and updates inventory. Follow block by a newline. 
+	 * 	Adds a new item to an order, and updates inventory. Follow block by a newline. 
 	 *
-	 * @throws 	IllegalArgumentException	if orderID is non-positive
-	 * 			IllegalArgumentException	if lineNumber is non-positive
-	 * 			IllegalArgumentException	if quantity is non-positive
-	 * 			IllegalArgumentException	if price is negative
-	 * @param	orderID		a positive integer uniquely identifying the order this is a part of
-	 * 			lineNumber	a positive integer representing which item in the order this is
-	 * 			prodID		a series of alphanumeric characters representing a unique product
-	 * 			quantity	a positive integer representing the number of an item to purchase
-	 * 			price		a double representing the unit price of an item, rounded to two decimal places
+	 * 	@throws 	IllegalArgumentException	if orderID is non-positive
+	 * 	@throws		IllegalArgumentException	if lineNumber is non-positive
+	 * 	@throws		IllegalArgumentException	if quantity is non-positive
+	 * 	@throws		IllegalArgumentException	if price is negative
+	 * 	@param		orderID		a positive integer uniquely identifying the order this is a part of
+	 * 	@param		lineNumber	a positive integer representing which item in the order this is
+	 * 	@param		prodID		a series of alphanumeric characters representing a unique product
+	 * 	@param		quantity	a positive integer representing the number of an item to purchase
+	 * 	@param		price		a double representing the unit price of an item, rounded to two decimal places
 	 */
     public void addToOrder(int orderID, int lineNumber, String prodID, int quantity, double price) 
     {
@@ -1007,7 +1089,7 @@ public class Connector
         	myStmt.setDouble(5, round(price, 2)*quantity); //should be total price, not unit price
         	
             myStmt.executeUpdate();
-            System.out.println("Item added to order: " + lineNumber);
+            System.out.println("Item " + lineNumber + " added to order: " + orderID);
             myStmt.close(); 
         } 
         catch (Exception e) 
@@ -1066,9 +1148,9 @@ public class Connector
     }
     
     /**
-	 * Removes all orders from the store database. 
+	 * 	Removes all orders from the store database. 
 	 * 
-	 * @throws	SecurityException	if this connection does not have admin privileges
+	 * 	@throws		SecurityException	if this connection does not have admin privileges
 	 */
 	public void clearOrders() 
     {
@@ -1102,11 +1184,11 @@ public class Connector
 	 *
 	 *	@throws		IllegalArgumentException	if id is non-positive
 	 *	@param		id			customer id
-	 *				username	the customer's username
-	 *				firstName	the customer's first name
-	 *				lastName	the customer's last name
-	 *				email		the customer's email address
-	 *				phone		the customer's phone number
+	 *	@param		username	the customer's username
+	 *	@param		firstName	the customer's first name
+	 *	@param		lastName	the customer's last name
+	 *	@param		email		the customer's email address
+	 *	@param		phone		the customer's phone number
 	 */
     public void signUp(int id, String username, String firstName, String lastName, String email, String phone)
     {
@@ -1159,10 +1241,10 @@ public class Connector
     /**
      * 	Changes the email address or phone number registered to a user's account. 
      * 
-     * 	@throws	IllegalArgumentException	if column is invalid
-     * 	@param 	custID	a positive integer identifier of the account to be removed
-     * 			column	the quantity to be changed, either email or phone
-     * 			value	the value to be assigned in that position
+     * 	@throws		IllegalArgumentException	if column is invalid
+     * 	@param 		custID	a positive integer identifier of the account to be removed
+     * 	@param		column	the quantity to be changed, either email or phone
+     * 	@param		value	the value to be assigned in that position
      */
     public void changeAccount(int custID, String column, String value)
     {
@@ -1195,7 +1277,7 @@ public class Connector
     		}
     		else if (rows <=0)
     		{
-    			System.out.println("Error. Could not complete update. Please try again later. \n");
+    			System.out.println("Error. Could not complete update. Please check that the customer id is correct and try again later. \n");
     		}
     		else
     		{
@@ -1225,36 +1307,25 @@ public class Connector
         {
     		//remove customer's cart, if any, first, in order to satisfy constraint with customer
     		Statement myStmt = myConn.createStatement();
-            query = "DELETE FROM cart WHERE CUSTOMER_ID_CART=\"" + custID + "\""; 
-            int carts = myStmt.executeUpdate(query);
-            if (carts < 1)
+            query = "DELETE FROM cart WHERE CUSTOMER_ID_CART='" + custID + "'"; 
+            myStmt.executeUpdate(query);
+            
+            //remove customer
+            myStmt = myConn.createStatement();
+            query = "DELETE FROM customer WHERE CUSTOMER_ID=\"" + custID + "\""; 
+            int rows = myStmt.executeUpdate(query);
+            if (rows < 1)
             {
-            	System.out.println("Error removing account. Please check if customer id is correct and try again later.\n");
+            	System.out.println("This account does not exist. Please check if customer id is correct and try again later.\n");
             }
-            else if (carts > 1)
+            else if (rows == 1)
             {
-            	//Error. Somehow removed more than one cart. This should be impossible?
-            	System.out.println("Deleted more than one cart with same custID. \n");
+            	System.out.println("Your account has been removed.\n");
             }
-            else //only if you successfully removed the cart first
+            else
             {
-            	//remove customer
-                myStmt = myConn.createStatement();
-                query = "DELETE FROM customer WHERE CUSTOMER_ID=\"" + custID + "\""; 
-                int rows = myStmt.executeUpdate(query);
-                if (rows < 1)
-                {
-                	System.out.println("Error removing account. Please check if customer id is correct and try again later.\n");
-                }
-                else if (rows == 1)
-                {
-                	System.out.println("Your account has been removed.\n");
-                }
-                else
-                {
-                	//Error. Somehow removed more than one customer. This should be impossible?
-                	System.out.println("Deleted more than one account with same custID. \n");
-                }
+            	//Error. Somehow removed more than one customer. This should be impossible?
+            	System.out.println("Deleted more than one account with same custID. \n");
             }
             myStmt.close(); 
         } 
@@ -1265,12 +1336,12 @@ public class Connector
     }
     
     /**
-	 * Determines whether a customer's information matches the database, or if username is reserved. 
+	 * 	Determines whether a customer's information matches the database, or if username is reserved. 
 	 * 
-	 * @param 	username	the customer's username
-	 * 			firstName	the customer's first name
-	 * 			firstName	the customer's last name
-	 * @return		0 if username does not exist in database, negative if username is taken, positive customer id if matching account exists
+	 * 	@param 		username	the customer's username
+	 * 				firstName	the customer's first name
+	 * 				firstName	the customer's last name
+	 * 	@return			0 if username does not exist in database, negative if username is taken, positive customer id if matching account exists
 	 */
 	public int isCustomer(String username, String firstName, String lastName)
 	{
@@ -1311,7 +1382,7 @@ public class Connector
 	/**
 	 * 	Finds the customer id of a customer.
 	 * 
-	 * 	@param 	username	the customer's username
+	 *	@param 		username	the customer's username
 	 * 	@return			the customer's id number
 	 */
 	public int getCustomerID(String username)
@@ -1341,9 +1412,9 @@ public class Connector
 	}
 	
 	/**
-	 * Finds the highest customer id number in the database. 
+	 * 	Finds the highest customer id number in the database. 
 	 * 
-	 * @return	the highest recorded customer id number
+	 * 	@return			the highest recorded customer id number
 	 */
 	public int getHighestCustomerID()
 	{
@@ -1374,7 +1445,7 @@ public class Connector
     /**
 	 * 	Removes all login information from the store database. Dangerous.
 	 * 
-	 * 	@throws	SecurityException			if this connection does not have admin privileges
+	 * 	@throws		SecurityException	if this connection does not have admin privileges
 	 */
 	public void purgeLogins() 
     {
@@ -1401,7 +1472,7 @@ public class Connector
     /**
      * 	Determines whether this connection has admin privileges or not. 
      * 
-     * 	@return	true, if this connection has admin privileges, false otherwise
+     * 	@return			true, if this connection has admin privileges, false otherwise
      */
     public boolean admin()
     {
@@ -1409,10 +1480,10 @@ public class Connector
     }
     
     /**
-     * Attempts to secure administrator privileges on this connection based on an issued login.
+     * 	Attempts to secure administrator privileges on this connection based on an issued login.
      * 
-     * @param 	username	a String username required to access admin privileges
-     * @param 	password	a String password required to access admin privileges
+     * 	@param 		username	a String username required to access admin privileges
+     * 	@param 		password	a String password required to access admin privileges
      */
     public void authorize(String username, String password)
     {
@@ -1420,7 +1491,7 @@ public class Connector
     }
     
     /**
-     * 	Runs an sql script at a given file path. Used for initializing the database.
+     *	Runs an sql script at a given file path. Used for initializing the database.
      */
     public void runScript(String pathname)
     {
@@ -1451,7 +1522,7 @@ public class Connector
     }
     
     /**
-     * Prints the aisles in the shop. 
+     * 	Prints the aisles in the shop. 
      */
     public static void showShop()
     {
@@ -1464,9 +1535,9 @@ public class Connector
     }
     
     /**
-     * Evaluates if a string parameter is one of the valid aisles. Not case sensitive. 
+     * 	Evaluates if a string parameter is one of the valid aisles. Not case sensitive. 
      * 
-     * @param	s	a string to be checked against
+     * 	@param		s	a string to be checked against
      */
     public static boolean isAisle(String s)
     {

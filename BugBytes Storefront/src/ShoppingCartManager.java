@@ -1,10 +1,10 @@
 import java.util.Scanner;
 
 /**
- * Implements a menu to interact with the virtual store via console input
+ * 	Implements a menu to interact with the virtual store via console input
  *
- * @author Alexander Gunby, Sikander Ghafary, Jacob Normington
- * @version 5/4/2021
+ * 	@author Alexander Gunby, Sikander Ghafary, Jacob Normington
+ * 	@version 5/4/2021
  */
 public class ShoppingCartManager
 {
@@ -15,8 +15,8 @@ public class ShoppingCartManager
 	private static boolean reset = true; //determines whether or not the database should be reset upon use
 	
 	/**
-    * Begins the manager to create your shopping cart by system input
-    */
+	 * 	Begins the manager to create your shopping cart by system input. 
+	 */
 	public static void main(String args[])
 	{
 		in = new Scanner(System.in);
@@ -149,7 +149,7 @@ public class ShoppingCartManager
 	}
     
    	/**
-   	 * Outputs a menu of options for use in the store, must have
+   	 * 	Outputs a menu of options for use in the store, must have
    	 */
    	private static void printMenu()
    	{
@@ -299,13 +299,5 @@ public class ShoppingCartManager
 				return false; //ends session
 			}
 		}
-   	}
-   	
-   	@SuppressWarnings("unused")
-	private static String retry(String answers)
-   	{
-   		System.out.println("Please try again");
-   		System.out.println("Valid answers: " + answers);
-   		return in.nextLine();
    	}
 }
