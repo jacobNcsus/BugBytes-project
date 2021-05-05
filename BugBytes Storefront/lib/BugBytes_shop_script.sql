@@ -232,14 +232,13 @@ VIEW `shop_test`.`customer_cart_v` AS
         (`shop_test`.`cart` `a`
         JOIN `shop_test`.`products` `b`)
     WHERE
-        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`)
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`);
         
 DELIMITER $$
-	CREATE TRIGGER RESTOCK_PRODUCT_UPDATE 
-	BEFORE UPDATE ON PRODUCTS 
+CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
 	FOR EACH ROW 
 	BEGIN 
 	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
 		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
 	END IF; 
-END $$
+	END $$

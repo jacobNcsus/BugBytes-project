@@ -1,3 +1,5 @@
+SET GLOBAL log_bin_trust_function_creators = 1;
+
 DROP USER IF EXISTS 'shopMgr'@'localhost';
 FLUSH PRIVILEGES;
 CREATE USER 'shopMgr'@'localhost'
