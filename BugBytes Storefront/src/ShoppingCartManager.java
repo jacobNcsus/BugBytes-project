@@ -12,7 +12,7 @@ public class ShoppingCartManager
 	private static Storefront store;
 	private static ShoppingCart cart;
 	private static boolean loggedIn = false;
-	private static boolean reset = true; //determines whether or not the database should be reset upon use
+	private static boolean reset = false; //determines whether or not the database should be reset upon use
 	
 	/**
 	 * 	Begins the manager to create your shopping cart by system input. 

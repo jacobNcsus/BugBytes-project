@@ -68,6 +68,7 @@ public class Connector
 		c.clearOrders();
 		c.emptyCart(2);
 		//c.purgeLogins();
+		//c.runScript("lib\\BugBytes_shop_script.sql");
 		
 		//c.read("products", -1);
 		//c.read(aisles[0], -1);
@@ -1458,7 +1459,7 @@ public class Connector
 			int num = 0;
 			while(myRs.next())
 			{
-				int id = myRs.getInt("ORDER_ID");
+				int id = myRs.getInt("CUSTOMER_ID");
 				if (id > num)
 					num = id;
 			}

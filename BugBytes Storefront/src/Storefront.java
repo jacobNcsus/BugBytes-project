@@ -424,6 +424,8 @@ public class Storefront
 					break;
 				}
 			}
+			System.out.println(cust);
+			cust = cust.substring(i+1);
 			cust = cust.trim(); //removes the space added
 			custID = Integer.parseInt(cust);
 			

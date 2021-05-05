@@ -37,6 +37,7 @@ public class ShoppingCart
 	{
 	   customerName = name;
 	   id = custID;
+	   c=Connector.getCon();
 	   
 	   head = null;  
 	   tail = head; 
@@ -68,11 +69,10 @@ public class ShoppingCart
    			c.runScript("lib\\" + scriptName);
    			//System.out.println(System.getProperty("user.dir"));
    			System.out.println("Database initialized.\n");
-   			c=Connector.getCon();
+   			
    		}
    		else if (custID > 1) //It's a waste of time to update the cart if you first reset the database, it will be empty.
    		{
-   			c=Connector.getCon();
    			update();
    		}
    	}
