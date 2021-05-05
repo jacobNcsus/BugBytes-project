@@ -80,8 +80,10 @@ public class Connector
 		//c.read("Alcohol", -1);
 		//c.delete("Hennesy");
 		//c.read("Alcohol", -1);
-		//c.update("Whiskey", "q", "10");
-		//c.read("Alcohol", -1);
+		//c.update("Whiskey", "a", "bakery");
+		//c.read("bakery", -1);
+		//c.update("Whiskey", "a", "alcohol");
+		//c.read("alcohol", -1);
 		
 		//c.read("cart", -1);
 		//c.read("cart", 2);
@@ -92,7 +94,7 @@ public class Connector
 		//c.addToCart(2, "ALC02", 2);
 		//c.addToCart(2, "ALC03", 1);
 		//c.read("cart", 2);
-		//c.CONFIRM_ORDER(2);
+		//c.CONFIRM_ORDER(2); //technically a method on cart, should be true
 		//c.emptyCart(2); 
 		//c.read("cart", 2); //checks that cart is now empty
 		
@@ -110,12 +112,11 @@ public class Connector
 		//int orderID = c.placeOrder(2, 10.00, 5.4544, 93.3744); //rounds off the last two decimals
 		//c.read("order", -1);
 		//c.addToOrder(orderID, 1, "ALC01", 5, 10.9913);
-		//c.read("order_details", orderID);
 		//c.addToOrder(orderID, 2, "ALC02", 2, 5.991);
-		//c.read("order_details", orderID);
 		//c.addToOrder(orderID, 3, "ALC03", 1, 10.991);
-		//c.read("order_details", orderID);
 		//System.out.println(); //has to be done manually
+		//c.read("order_details", orderID);
+		//c.read("Alcohol", -1); //check if correct changes to products table have been made
 		//c.read("order_details", -1);
 		//c.clearOrders();
 		//c.read("order_details", -1);
@@ -587,34 +588,40 @@ public class Connector
 	 */
 	public void update(String name, String column, String value)
 	{
+		int type; //-1 for String, 0 for double, 1 for int
 		if (column.equalsIgnoreCase("a") || column.equalsIgnoreCase("aisle") || column.equalsIgnoreCase("'aisle'")
     			||column.equalsIgnoreCase("t") || column.equalsIgnoreCase("type") || column.equalsIgnoreCase("'type'")
     			||column.equalsIgnoreCase("c") || column.equalsIgnoreCase("category") || column.equalsIgnoreCase("'category'"))
     	{
     		query = "UPDATE products SET PRODUCT_TYPE=? WHERE PRODUCT_NAME=?";
+    		type = -1; //string
     		System.out.println("Changing product type to " + value);
     	}
     	else if (column.equalsIgnoreCase("n") || column.equalsIgnoreCase("name") || column.equalsIgnoreCase("'name'")
     			||column.equalsIgnoreCase("product name") || column.equalsIgnoreCase("'product name'"))
     	{
     		query = "UPDATE products SET PRODUCT_NAME=? WHERE PRODUCT_NAME=?";
+    		type = -1; //string
     		System.out.println("Changing product name to " + value);
     	}
     	else if (column.equalsIgnoreCase("p") || column.equalsIgnoreCase("price") || column.equalsIgnoreCase("'price'")
     			||column.equalsIgnoreCase("unit price") || column.equalsIgnoreCase("'unit price'"))
     	{
     		query = "UPDATE products SET PRICE=? WHERE PRODUCT_NAME=?";
+    		type = 0; //double
     		System.out.println("Changing product's unit price to " + value);
     	}
     	else if (column.equalsIgnoreCase("q") || column.equalsIgnoreCase("quantity") || column.equalsIgnoreCase("'quantity'")
     			|| column.equalsIgnoreCase("quantity_in_stock") || column.equalsIgnoreCase("'quantity_in_stock'"))
     	{
     		query = "UPDATE products SET QUANTITY_IN_STOCK=? WHERE PRODUCT_NAME=?";
+    		type = 1; //int
     		System.out.println("Changing product's quantity to " + value);
     	}
     	else if (column.equalsIgnoreCase("r") || column.equalsIgnoreCase("reorder") || column.equalsIgnoreCase("'reorder'"))
     	{
     		query = "UPDATE products SET REORDER=? WHERE PRODUCT_NAME=?";
+    		type = 1; //int
     		System.out.println("Changing product's reorder value to " + value);
     	}
     	else
@@ -629,10 +636,17 @@ public class Connector
 		
 		try
     	{
-    		PreparedStatement myStmt = myConn.prepareStatement(query);
-    		myStmt.setString(1, value);
+			PreparedStatement myStmt = myConn.prepareStatement(query);
+    		if (type < 0) { //is a string
+    			myStmt.setString(1, value);
+    		} else if (type == 0) { //is a double
+    			myStmt.setDouble(1, Double.parseDouble(value));
+    		} else { //is an int
+    			myStmt.setInt(1, Integer.parseInt(value));
+    		}
     		myStmt.setString(2, name);
     		int rows = myStmt.executeUpdate(); 
+    		
     		if (rows == 1)
     		{
     			System.out.println("Update complete. \n");
@@ -1073,11 +1087,27 @@ public class Connector
         {
         	throw new IllegalArgumentException("Invalid price. Please use a price greater than zero.");
         }
-    	
     	int inStock = Integer.parseInt(readItem(prodID, "quantity"));
-        update(prodID, "quantity", inStock-quantity+"");
+    	
+    	try //update product quantity
+    	{
+    		query = "UPDATE products SET QUANTITY_IN_STOCK=? WHERE PRODUCT_ID=?";
+    		PreparedStatement myStmt = myConn.prepareStatement(query);
+    		myStmt.setInt(1, inStock-quantity);
+    		myStmt.setString(2, prodID);
+    		int rows = myStmt.executeUpdate();
+    		if (rows < 1)
+    		{
+    			System.out.println("Failed to find item identified by" + prodID + ". Please check if product id is correct and try again later.");
+    			return;
+    		}
+    	}
+    	catch (SQLException e)
+    	{
+    		e.printStackTrace();
+    	}
         
-        try 
+        try //add new entry to order_details
         {
     		query = "INSERT INTO order_details (ORDER_ID, ORDER_LINE_NUMBER, PRODUCT_ID, ORDERED_QUANTITY, PRICE) VALUES (?,?,?,?,?)";
         	PreparedStatement myStmt = myConn.prepareStatement(query);
