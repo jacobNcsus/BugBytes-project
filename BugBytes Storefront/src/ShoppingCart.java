@@ -37,20 +37,6 @@ public class ShoppingCart
 	{
 	   customerName = name;
 	   id = custID;
-	   c=Connector.getCon();
-	   if (custID < 1)
-	   {
-		   throw new IllegalArgumentException("Customer id must be positive.");
-	   }
-	   else if (custID == 1)
-	   {
-		   c.emptyCart(1);
-		   customerName = "default";
-	   }
-	   else
-	   {
-		 update();
-	   }
 	   
 	   head = null;  
 	   tail = head; 
@@ -67,11 +53,27 @@ public class ShoppingCart
    	public ShoppingCart(int custID, String name, boolean reset)
    	{
    		this(custID, name);
+   		if (custID < 1)
+   		{
+   			throw new IllegalArgumentException("Customer id must be positive.");
+   		}
+   		else if (custID == 1)
+   		{
+   			c.emptyCart(1);
+   			customerName = "default";
+   		}
+   		
    		if (reset)
    		{
    			c.runScript("lib\\" + scriptName);
    			//System.out.println(System.getProperty("user.dir"));
    			System.out.println("Database initialized.\n");
+   			c=Connector.getCon();
+   		}
+   		else if (custID > 1) //It's a waste of time to update the cart if you first reset the database, it will be empty.
+   		{
+   			c=Connector.getCon();
+   			update();
    		}
    	}
    
