@@ -293,34 +293,6 @@ public class ShoppingCart
    	}
    
    	/**
-   	 * 	Checks out cart and clears its contents. 
-   	 */
-   	public void checkout()
-   	{
-   		c.CONFIRM_ORDER(id);
-	   
-   		c.placeOrder(id, getShipping(), getTax(), getTotalCost()); //issues a new order
-	   
-   		CartNode current = head; //populates order
-   		int line = 0;
-   		while (current.hasNext())
-   		{
-   			Item i = current.getValue();
-   			c.addToOrder(1, line, i.getProductId(), i.getQuantity(), i.getPrice()); //does not account for more than one order
-		   
-   			current = current.getNext();
-   			line++;
-   		}
-   		System.out.println(); //for structuring, placeOrder and addToOrder should be in one block
-	   
-   		c.emptyCart(id); //clears database
-	   
-   		head.getNext().setPrevious(null); //remove reference from second
-   		head = null; //remove reference from head
-   		//garbage collector will delete all the stray nodes in frontend cart
-   	}
-   
-   	/**
    	 * 	Determines and returns the total cost of items in cart.
    	 *
    	 * 	@return    total check out price of the cart
