@@ -214,7 +214,7 @@ public class Storefront
     	}
     	else
     	{
-    		System.out.println(); //for structuring
+    		System.out.println("Sign up successful."); //for structuring
     	}
     }
 	
@@ -415,7 +415,6 @@ public class Storefront
 		}
 		else //login does exist
 		{
-			int custID = 0;
 			int i;
 			for (i = 0; i < cust.length(); i++) //removes useless data
 			{
@@ -424,13 +423,11 @@ public class Storefront
 					break;
 				}
 			}
-			System.out.println(cust);
-			cust = cust.substring(i+1);
-			cust = cust.trim(); //removes the space added
-			custID = Integer.parseInt(cust);
-			
+			String cid = cust.substring(i+1).trim(); //removes everything before and including colon, then removes the space surrounding custID
+			int custID = Integer.parseInt(cid);
+			//System.out.println(cust);
 			if (custID > 1) //does not include default user
-				System.out.println("Login successful");
+				System.out.println("Login successful.");
 			return custID;
 		}
 	}

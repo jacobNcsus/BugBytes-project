@@ -94,23 +94,25 @@ public class ShoppingCartManager
 		int custID = store.login(username, first, last);
 		if (custID < 1) //account does not exist
 		{
-			System.out.println("No such account exists.");
 			if (retry())
 				login();
 			else
 				welcome();
 		}
-		cart = new ShoppingCart(custID, first + " " + last, reset);
-		reset = false; //you don't want to reset the database during a session
-		loggedIn = true;
-		if (first.equalsIgnoreCase("Sai") && last.equalsIgnoreCase("Suresh"))
+		else
 		{
-			store.requestAuthorization("shopMgr", "csc131");
-			System.out.println("user4 has been granted store admin privileges.");
+			cart = new ShoppingCart(custID, first + " " + last, reset, cart);
+			reset = false; //you don't want to reset the database during a session
+			loggedIn = true;
+			if (first.equalsIgnoreCase("Sai") && last.equalsIgnoreCase("Suresh"))
+			{
+				store.requestAuthorization("shopMgr", "csc131");
+				System.out.println("user4 has been granted store admin privileges.");
+			}
+			System.out.printf("\n\tWelcome %s %s to the BugBytes Shopping Center\n\n"+
+				    "Please look around for anything that interests you!\n\n", first,last);
+			printMenu();
 		}
-		System.out.printf("\n\tWelcome %s %s to the BugBytes Shopping Center\n\n"+
-			    "Please look around for anything that interests you!\n\n", first,last);
-		printMenu();
 	}
 	
 	private static void signUp() 
@@ -131,7 +133,7 @@ public class ShoppingCartManager
 		{
 			store.signUp(username, first, last, email, phone);
 			int custID = store.login(username, first, last);
-			cart = new ShoppingCart(custID, first + " " + last, reset);
+			cart = new ShoppingCart(custID, first + " " + last, reset, cart);
 			reset = false; //you don't want to reset the database during a session
 			loggedIn = true;
 			System.out.printf("\n\tWelcome %s %s to the BugBytes Shopping Center\n\n"+
@@ -237,9 +239,13 @@ public class ShoppingCartManager
       		}
       		case "s":
       		{
-      			loggedIn = false;
-      			welcome();
-      			break;
+      			if(loggedIn)
+      			{
+      				loggedIn = false;
+      				cart = null; //releases all information connected to your cart
+          			welcome();
+          			break;
+      			}
       		}
       		case "i":
       		{

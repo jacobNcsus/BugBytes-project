@@ -806,7 +806,7 @@ public class Connector
     		ResultSet myRs = myStmt.executeQuery(query);
     		if (!myRs.next()) //false if set is empty
     		{
-    			System.out.println("No update to be made forward.");
+    			//System.out.println("No update to be made forward.");
     		}
     		else
     		{
@@ -825,18 +825,19 @@ public class Connector
     	}
     	catch (SQLException e)
     	{
-    		System.out.println("Error executing query. Cart could not be properly filled. \n");
+    		System.out.println("Error executing query. Cart could not be properly filled.");
     		return;
     	}
     	
     	if(!empty) //fill emptied database from cart (which is already the union of cart U database)
     	{
     		Item current = cart.first();
-    		do
+    		addToCart(custID, current.getProductId(), current.getQuantity());
+    		while(cart.hasNext())
     		{
-    			addToCart(custID, current.getProductId(), current.getQuantity());
     			current = cart.next();
-    		} while(cart.hasNext());
+    			addToCart(custID, current.getProductId(), current.getQuantity());
+    		} 
     	}
     	System.out.println("\n");
     }
@@ -859,7 +860,10 @@ public class Connector
             Statement myStmt = myConn.createStatement();
             query = "DELETE FROM cart WHERE CUSTOMER_ID_CART=\"" + custID + "\""; 
             myStmt.executeUpdate(query);
-            System.out.println("Cart emptied. \n");
+            if (custID > 1) //not default user
+			{
+            	System.out.println("Cart emptied. \n");
+			}
             myStmt.close(); 
         } 
         catch (Exception e) 

@@ -45,7 +45,9 @@ public class ShoppingCart
    }
    
    	/**
-   	 * 	Constructor of a shopping cart matching a specified user, and, if requested, resetting the associated database.
+   	 * 	Constructor of a shopping cart matching a specified user, and, if requested, 
+   	 * 	resetting the associated database. The cart is then filled with any items saved
+   	 * 	to your cart in the store's database from previous sessions.
    	 * 
    	 * 	@param	custID		the user's customer id number
    	 * 	@param	name		the user's first and last name
@@ -74,6 +76,41 @@ public class ShoppingCart
    		else if (custID > 1) //It's a waste of time to update the cart if you first reset the database, it will be empty.
    		{
    			update();
+   		}
+   	}
+   	
+   	/**
+   	 * 	Constructor used to create a new cart from an existing cart, particularly when signing after 
+   	 * 	browsing as a default user. Exactly the same as ShoppingCart(int, String, boolean), except that 
+   	 * 	the cart will then be populated with the contents of an existing cart. In the case that the same
+   	 * 	item exists in the new user's cart and oldCart, the item in OldCart is used. 
+   	 * 
+   	 * 	@param	custID		the user's customer id number
+   	 * 	@param	name		the user's first and last name
+   	 * 	@param	reset		whether the parent database should be reset
+   	 * 	@param	oldCart		a ShoppingCart holding items to be added to this cart
+   	 */
+   	public ShoppingCart(int custID, String name, boolean reset, ShoppingCart oldCart)
+   	{
+   		this(custID, name, reset);
+   		if (oldCart != null)
+   		{
+   			Item current = oldCart.first();
+   	   		while(oldCart.hasNext())
+   	   		{
+   	   			current = oldCart.next();
+   	   			String prodID = current.getProductId();
+   	   			int oldCartQuantity = current.getQuantity();
+   	   			if(contains(prodID)) //if cart have current, remove saved item, then add current quantity
+   	   			{
+   	   				removeFromCart(prodID);
+   	   				addToCart(prodID, oldCartQuantity);
+   	   			}
+   	   			else //if cart does not have current, add it
+   	   			{
+   	   				addToCart(prodID, oldCartQuantity);
+   	   			}
+   	   		}
    		}
    	}
    
