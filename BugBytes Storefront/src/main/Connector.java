@@ -1,3 +1,4 @@
+package main;
 import java.io.IOException;
 import java.sql.*;
 import script.ScriptRunner;

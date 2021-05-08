@@ -1,3 +1,4 @@
+package main;
 /**
  * An item of inventory for a store. 
  *
@@ -61,16 +62,6 @@ public class Item
 	   {
 	      return itemName;
 	   }
-	   /**
-	    * 	Changes the item's name.
-	    * 
-	    * 	@param 	name	a String representing the item's name
-	    */
-	   @SuppressWarnings("unused")
-	   private void setName(String name)
-	   {
-	      itemName = name;
-	   }
 	   
 	   /**
 	    * 	Return's the item's type/category.
@@ -79,16 +70,6 @@ public class Item
 	   {
 	      return category;
 	   }
-	   /**
-	    * 	Changes the item's category.
-	    * 
-	    * 	@param 	category	a String representation of the item's category 
-	    */
-	   @SuppressWarnings("unused")
-	   private void setCategory(String category)
-	   {
-	      this.category = category;
-	   }
 
 	   /**
 	    * 	Returns the item's price in USD. 
@@ -96,16 +77,6 @@ public class Item
 	   public double getPrice()
 	   {
 	      return itemPrice/100.0;
-	   }
-	   /**
-	    * 	Changes the price of the item.  
-	    * 
-	    * 	@param		price	the item's value in USD cents. 
-	    */
-	   @SuppressWarnings("unused")
-	   private void setPrice(int price)
-	   {
-	      itemPrice = price;
 	   }
 	   
 	   /**
@@ -130,7 +101,7 @@ public class Item
 	    */
 	   public double getTotalCost()
 	   {
-	      return itemQuantity/100.0*itemPrice;
+	      return itemQuantity*itemPrice/100.0;
 	   } 
 	   
 	   /**

@@ -1,3 +1,4 @@
+package main;
 /**
  * 	A ShoppingCart is an List of Item objects, with 
  * 	functionality similar to that used in virtual storefronts.
@@ -48,12 +49,13 @@ public class ShoppingCart
    	 * 	Constructor of a shopping cart matching a specified user, and, if requested, 
    	 * 	resetting the associated database. The cart is then filled with any items saved
    	 * 	to your cart in the store's database from previous sessions.
-   	 * 
+   	 * 	
+   	 * 	@throws IllegalArgumentException	if custID is non-positive
    	 * 	@param	custID		the user's customer id number
    	 * 	@param	name		the user's first and last name
    	 * 	@param	reset		whether the parent database should be reset
    	 */
-   	public ShoppingCart(int custID, String name, boolean reset)
+   	public ShoppingCart(int custID, String name, boolean reset) throws IllegalArgumentException
    	{
    		this(custID, name);
    		if (custID < 1)

@@ -1,3 +1,4 @@
+package main;
 /**
  * 	A representation of a virtual storefront pulled from the shop_test database. 
  *
