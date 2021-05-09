@@ -1586,4 +1586,34 @@ public class Connector
     	}
     	return false; 
     }
+    
+    public String getIDFromName(String s) 
+    {
+    	try
+    	{
+    	String ret = "No String ;-;";
+    	// 2. Create a statement
+    	PreparedStatement myStmt = myConn.prepareStatement("SELECT PRODUCT_ID from PRODUCTS where PRODUCT_NAME = ?");
+    	myStmt.setString(1, s); //1 specifies the first parameter in the query
+    	// 3. Execute a SQL query
+    	ResultSet myRs = myStmt.executeQuery();
+    	// 4. Process the result set 	
+    	while(myRs.next())	
+		{
+    		ret = myRs.getString("PRODUCT_ID");
+		}
+		myStmt.close();
+		ret.toString();
+		return ret;	
+    		
+    		
+    		
+	
+    	}
+    	catch (Exception e)
+    	{
+    	e.printStackTrace();
+    	}
+    	return "Something Went Wrong I thinks";
+    }
 }
