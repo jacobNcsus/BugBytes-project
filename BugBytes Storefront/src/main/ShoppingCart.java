@@ -248,6 +248,7 @@ public class ShoppingCart
    	public void addToCart(String prodID, int quantity)
    	{
    		//find item
+   		prodID = c.getIDFromName(prodID);				// converts to prodID from Product_name 
    		String category = c.readItem(prodID, "PRODUCT_TYPE");
    		String name = c.readItem(prodID, "PRODUCT_NAME");
    		double price = Double.parseDouble(c.readItem(prodID, "PRICE")); 
@@ -266,6 +267,7 @@ public class ShoppingCart
    	 */
    	public void removeFromCart(String prodID)
    	{
+   		prodID = c.getIDFromName(prodID);			// converts to prodID from Product_name 
    		removeItem(prodID); //update cart
       
    		c.removeFromCart(id, prodID); //update database
@@ -279,7 +281,8 @@ public class ShoppingCart
    	 */
    	public void changeCartQuantity(String prodID, int quantity)
    	{
-	   	changeQuantity(prodID, quantity); //update cart
+   		prodID = c.getIDFromName(prodID);
+   		changeQuantity(prodID, quantity); //update cart
 	   	
 	   	c.updateCart(id, prodID, quantity); //update database
    	}
@@ -509,4 +512,5 @@ class CartNode
 	public void setNext(CartNode next) {
 		this.next = next;
 	}
+
 }

@@ -1,6 +1,29 @@
 package main;
 import java.util.Scanner;
 
+/*
+ * Stuff Alexander did: 
+ *	Edited addToCart in ShoppingCart class. The method auto translates Name of Product to the ID code. 
+ *
+ *	makeOrder() method: Asks if you want to add an item. If yes then allows you to do so. (Only visible/possible when loggedIn)
+ * 	CartMenu() method: Does cart actions 
+ * 
+ *  I did some of the Switch things with Numbers because i got errors when i did it with letters.
+ * 
+ * ERRORS found by Alex: 	
+ * 	-If you View anonymously then try to log in errors occur. Something about CartNode.getValue() and this.current is null
+ * 	-When log in , add item to cart, log out, logging in again ERROR results 
+ * 	
+ * 	-adding an item that was already added before causes an error. 
+ * 
+ * 
+ *  -removeFromCart doesn't work if it deletes either the head or tail. Some error code happens. 
+ * 						
+ * 
+ * 		
+ * 
+ */
+
 /**
  * 	Implements a menu to interact with the virtual store via console input
  *
@@ -173,6 +196,7 @@ public class ShoppingCartManager
      	else
      	{
      		System.out.println("");
+     		System.out.println("c - View cart");
          	System.out.println("s - sign out");
      	}
      	if(store.isAdmin())
@@ -184,53 +208,83 @@ public class ShoppingCartManager
      	}
      	System.out.println("Choose an option: ");
      	String nextInv = in.nextLine();
+     	System.out.println(nextInv);
      	
      	switch (nextInv)
       	{
-      		case "q": //quit
+      		case "t": //test
       		{
+      			printMenu();
       			break;
       		}
       		case "a": //print all
       		{
       			store.printInventory();
       			//question
+      	   		makeOrder("an");			//asks if user wants to add something to cart. Does so if yes
+      			printMenu();
+      			
       			break;
       		}
       		case "w": //print alcohol aisle
       		{
       			store.printAisle("Alcohol");
       			//question
+      	   		makeOrder( "an");			
+      			printMenu();
       			break;
       		}
       		case "b":
       		{
       			store.printAisle("Bakery");
       			//question
+      	   		makeOrder( "an");	
+      			printMenu();
       			break;
       		}
       		case "f": 
       		{
       			store.printAisle("Breakfast");
       			//question
+      	   		makeOrder( "an");	
+      			printMenu();
       			break;
       		}
       		case "d":
       		{
       			store.printAisle("Dairy");
       			//question
+      	   		makeOrder( "an");	
+      			printMenu();
       			break;
       		}
       		case "m": 
       		{
       			store.printAisle("Meat_seafood");
       			//question
+      	   		makeOrder( "an");	
+      			printMenu();
       			break;
       		}
       		case "p":
       		{
       			store.printAisle("Produce");
       			//question
+      	   		makeOrder( "an");	
+      			printMenu();
+      			break;
+      		}
+      		case "c":
+      		{
+      			if (cart.getCartSize() == 0)
+      			{
+      				System.out.println("Cart is empty: Choose another option");
+      				printMenu();
+      			}
+      			else
+      			{
+      				printCartMenu();
+      			}
       			break;
       		}
       		case "l":
@@ -249,7 +303,7 @@ public class ShoppingCartManager
           			break;
       			}
       		}
-      		case "i":
+      		case "i":    //adds item to database
       		{
       			System.out.println("Insert the type of Product: Ex(Alcohol,Bakery,Breakfast,Dairy,Meat_seafood,Produce)");
             	String s1 = in.nextLine();
@@ -264,7 +318,7 @@ public class ShoppingCartManager
            	 	store.addInventory(new Item(s1, s2, d1), i1, i2);
     	 		printMenu(); //goes back to main menu
       		}
-      		case "r":
+      		case "r":	//remove item from database
       		{
       			System.out.println("Insert name of Product to be removed");
             	String name = in.nextLine();
@@ -283,7 +337,7 @@ public class ShoppingCartManager
     
    	private static boolean retry()
    	{
-   		System.out.println("Would you like to try again?");
+   		System.out.println("Would you like to try again? Y/N");
 		String answer = in.nextLine();
 		switch (answer)
 		{
@@ -308,4 +362,127 @@ public class ShoppingCartManager
 			}
 		}
    	}
+   	
+   	private static void makeOrder( String alt)						// Adds item to cart, errors with calling itself within the if statements. 
+		//String alt is just used to change the message slightly.
+   	{
+
+   		if (loggedIn)
+   			{
+   				System.out.println("Would you like to add " + alt + " item into your cart? \n1. Yes\n2. No");
+
+   				int confirmAdd;
+   				confirmAdd = in.nextInt();
+   				in.nextLine();
+
+
+   				if (confirmAdd == 1)
+   				{
+   					System.out.println("Insert Product name to Cart: ");      	//Insert name of Product	(NOT product ID, its name)	
+
+   					String nextItem 	= in.nextLine();
+
+
+   					System.out.println("Quantity: ");
+   					int nextItemNum = in.nextInt();
+   					cart.addToCart(nextItem,nextItemNum);
+   					makeOrder( "another");
+   					return;
+
+
+   				}
+   				else if (confirmAdd == 2)
+   				{
+   					System.out.println("Returning to Menu.\n");
+   					printMenu();
+   				}	
+   				else 
+   				{
+   					System.out.println("Incorrect input, Please input Y/N");
+   					makeOrder("an");
+   				}
+
+
+   			}
+   	}
+   	private static void printCartMenu()
+   	{
+   		System.out.println("Viewing Cart Menu");
+   		cart.printTotal();
+   		System.out.println("Cart Menu Options:");
+   		System.out.println("1 - Confirm Order ");
+   		System.out.println("2 - Remove item from cart");
+   		System.out.println("3 - Change quantity order for item.");
+   		System.out.println();
+   		System.out.println("4 - Return to Menu");
+   		System.out.println();
+   		System.out.println("5 - Delete entire cart"); //mainly used for testing 
+
+   		int nextOrder = in.nextInt();
+   		switch (nextOrder)
+   		{
+
+   		case(1):
+   		{
+
+   			System.out.println("Confirm order? Y/N");
+   			String nextConfirm = in.nextLine();
+   			nextConfirm = in.nextLine();
+   			//in.next();							//gets the \n so you can input again
+   			if (nextConfirm.equals("y")||nextConfirm.equals("Y"))
+   			{
+   				store.checkout(cart);
+   				
+   			}
+   			else if (nextConfirm.equals("n") || nextConfirm.equals("N"))
+   			{
+   				System.out.println("Returning to Cart Menu: ");
+   				printCartMenu();
+   			}
+   			else 
+   			{
+   				System.out.println("Incorrect input: Please input a Y or N");
+   				printCartMenu();
+   			}
+   			break;
+   		}
+   		case(2): //remove item from cart
+   		{
+   			System.out.println("Insert name of product you wish to remove.");
+   			in.nextLine();
+   			String prodID_SCM = in.nextLine();
+   			cart.removeFromCart(prodID_SCM);
+   			printCartMenu();
+   			break;
+   		}
+   		case(3): //change quantity of item from cart
+   		{
+
+   			System.out.println("Insert name of product whoose quantity you wish to edit");
+   			in.nextLine();
+   			String prodID_SCM = in.nextLine();
+   			System.out.println("Insert new quantity");
+   			int quantity_SCM = in.nextInt();
+   			cart.changeCartQuantity(prodID_SCM, quantity_SCM);
+   			printCartMenu();
+
+   			break;
+   		}
+
+   		case(4): //return to menu 
+   		{
+   			printMenu();
+   			break;
+   		}
+   		case(5): // clears cart
+   		{
+   			cart.clearCart();
+   			break;
+   		}
+   		default: 
+   			System.out.println("Insert proper command: " );
+   		}
+   		return;
+   	}
+   	
 }
