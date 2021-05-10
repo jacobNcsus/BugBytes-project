@@ -39,7 +39,7 @@ class ShoppingCartTest
 	
 	@Test
 	void changeQuantityTest() {
-		customer_1.changeQuantity 
+		
 	}
 		
 		
