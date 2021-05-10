@@ -15,7 +15,7 @@ public class ShoppingCart
 	private String customerName;
 	private int id; //user id
 	private Connector c; 
-   
+    
 	private CartNode head; //beginning of list
 	private CartNode tail; //end of list
 	private CartNode current; //an iterator

@@ -5293,3 +5293,315 @@ Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS
 		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
 	END IF; 
 	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/37/2021 15:37:55
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/37/2021 15:37:55
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/37/2021 15:37:56
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/37/2021 15:37:56
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/37/2021 15:37:56
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/37/2021 15:37:57
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/37/2021 15:37:57
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/37/2021 15:37:57
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/44/2021 15:44:27
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/44/2021 15:44:28
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/44/2021 15:44:28
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/44/2021 15:44:28
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/44/2021 15:44:28
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/44/2021 15:44:44
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/44/2021 15:44:44
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/44/2021 15:44:44
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/44/2021 15:44:45
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/44/2021 15:44:45
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/46/2021 15:46:47
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/46/2021 15:46:47
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/46/2021 15:46:47
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/46/2021 15:46:48
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/46/2021 15:46:48
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/46/2021 15:46:48
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/46/2021 15:46:48
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/46/2021 15:46:49
+-------
+
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
