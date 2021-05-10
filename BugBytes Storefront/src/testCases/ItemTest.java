@@ -7,66 +7,63 @@ import org.junit.jupiter.api.Test;
 /**
  * 	A test class for the BugBytes Item class.
  * 	
- * 	@author 	Jacob Normington
- *	@version	5/8/2021
+ * 	@author 	Jacob Normington, Sikander Ghafary
+ *	@version	05/09/2021
  */
 class ItemTest {
+
+	main.Item i1 = new main.Item("PROD06", "produce", "lettuce", 2.50001, 1);	// Item Constructor i1 
+	main.Item i2 = new main.Item("produce", "lettuce", 2.50001);				// Item Constructor i2
 
 	@Test
 	void constructor_default() 
 	{
-		main.Item i = new main.Item("produce", "lettuce", 2.50001);
 		
-		assertEquals(i.getProductId(), null);
-		assertEquals(i.getCategory(), "produce");
-		assertEquals(i.getName(), "lettuce");
-		assertEquals(i.getPrice(), 2.50); //includes rounding off trailing digits
-		assertEquals(i.getQuantity(), 0);
-		i.getTotalCost();
+		assertEquals(i2.getProductId(), null);
+		assertEquals(i2.getCategory(), "produce");
+		assertEquals(i2.getName(), "lettuce");
+		assertEquals(i2.getPrice(), 2.50); //includes rounding off trailing digits
+		assertEquals(i2.getQuantity(), 0);
+		i2.getTotalCost();
 	}
 	
 	@Test
 	void constructor_complete() 
 	{
-		main.Item i = new main.Item("PROD06", "produce", "lettuce", 2.50001, 1);
 		
-		assertEquals(i.getProductId(), "PROD06");
-		assertEquals(i.getCategory(), "produce");
-		assertEquals(i.getName(), "lettuce");
-		assertEquals(i.getPrice(), 2.50); //includes rounding off trailing digits
-		assertEquals(i.getQuantity(), 1);
+		assertEquals(i1.getProductId(), "PROD06");
+		assertEquals(i1.getCategory(), "produce");
+		assertEquals(i1.getName(), "lettuce");
+		assertEquals(i1.getPrice(), 2.50); //includes rounding off trailing digits
+		assertEquals(i1.getQuantity(), 1);
 	}
 	
 	@Test
 	void setQuantity()
 	{
-		main.Item i = new main.Item("PROD06", "produce", "lettuce", 2.50001, 1);
 		
-		i.setQuantity(3);
-		assertEquals(i.getQuantity(), 3);
+		i1.setQuantity(3);
+		assertEquals(i1.getQuantity(), 3);
 	}
 	
 	@Test
 	void getTotalCost_correct()
 	{
-		main.Item i = new main.Item("PROD06", "produce", "lettuce", 2.50001, 1);
 		
-		assertEquals(i.getTotalCost(), 2.50);
+		assertEquals(i1.getTotalCost(), 2.50);
 	}
 	
 	@Test
 	void getTotalCost_default()
 	{
-		main.Item i = new main.Item("produce", "lettuce", 2.50001);
 		
-		assertEquals(i.getTotalCost(), 0);
+		assertEquals(i2.getTotalCost(), 0);
 	}
 	
 	@Test
 	void string()
 	{
-		main.Item i = new main.Item("PROD06", "produce", "lettuce", 2.50001, 1);
 		
-		assertNotEquals(i.toString(), "lettuce 1 @ 2.50");
+		assertNotEquals(i1.toString(), "lettuce 1 @ 2.50");
 	}
 }
