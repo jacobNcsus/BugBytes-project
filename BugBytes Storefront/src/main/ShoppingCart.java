@@ -21,6 +21,7 @@ public class ShoppingCart
 	private CartNode current; //an iterator
 	private int size; //the total number of items in the cart
 
+
 	public static void main(String[] args)
 	{
 		ShoppingCart cart = new ShoppingCart(1, "Jagannadha Chidella", true); //test if scriptRunner works
@@ -34,7 +35,7 @@ public class ShoppingCart
      * 	@param custID	the user's customer id number
      * 	@param name		the user's first and last name
      */
-	private ShoppingCart(int custID, String name)
+	public ShoppingCart(int custID, String name)
 	{
 	   customerName = name;
 	   id = custID;
@@ -152,7 +153,7 @@ public class ShoppingCart
    	 *
    	 * 	@param  item   an item to be added to the cart
    	 */
-   	private void addItem(Item item)
+   	public void addItem(Item item)
    	{
    		if (head == null)
       	{
@@ -174,7 +175,7 @@ public class ShoppingCart
    	 * 	@param  id   	a string representing the item in the cart
    	 * 	@return       the item removed from the list, or null if not found
    	 */
-   	private Item removeItem(String id)
+   	public Item removeItem(String id)
    	{
    		if (size > 0)
    		{
