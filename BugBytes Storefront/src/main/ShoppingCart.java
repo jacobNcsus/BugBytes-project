@@ -251,8 +251,8 @@ public class ShoppingCart
    		String category = c.readItem(prodID, "PRODUCT_TYPE");
    		String name = c.readItem(prodID, "PRODUCT_NAME");
    		double price = Double.parseDouble(c.readItem(prodID, "PRICE")); 
-	   
-	   
+	    
+	    
    		addItem(new Item(prodID, category, name, price, quantity)); //update cart
 	   
    		c.addToCart(id, prodID, quantity); //update database

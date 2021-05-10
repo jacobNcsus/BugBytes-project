@@ -41,6 +41,18 @@ class ShoppingCartTest
 	void changeQuantityTest() {
 		
 	}
+	
+	@Test
+	void cartTest() {
+		String category = "ALC01";
+		customer_1.addToCart(category,1);
+		customer_1.addItem(item);
+		customer_1.removeFromCart(null);
+		customer_1.changeCartQuantity(category,1);
+		customer_1.clearCart(); // incomplete test
+		customer_1.getSubtotal();
+	}
+	
 		
 		
 	
