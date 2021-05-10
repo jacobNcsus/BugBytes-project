@@ -297,6 +297,7 @@ public class ShoppingCartManager
       			if(loggedIn)
       			{
       				loggedIn = false;
+      				store.requestAuthorization("", ""); //removes authorization
       				cart = null; //releases all information connected to your cart
           			welcome();
           			break;
