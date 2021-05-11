@@ -4,7 +4,7 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-
+import java.util.Scanner;
 
 /**
  * 	A test class for the BugBytes ShoppingCart class. Incomplete

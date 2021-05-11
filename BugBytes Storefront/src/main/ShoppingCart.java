@@ -15,7 +15,7 @@ public class ShoppingCart
 	private String customerName;
 	private int id; //user id
 	private Connector c; 
-   
+    
 	private CartNode head; //beginning of list
 	private CartNode tail; //end of list
 	private CartNode current; //an iterator
@@ -251,7 +251,7 @@ public class ShoppingCart
    		String prodID = c.getProductID(name);				// converts to prodID from Product_name 
    		String category = c.readItem(prodID, "PRODUCT_TYPE");
    		double price = Double.parseDouble(c.readItem(prodID, "PRICE")); 
-   		
+
    		addItem(new Item(prodID, category, name, price, quantity)); //update cart
    		
    		c.addToCart(id, prodID, quantity); //update database
