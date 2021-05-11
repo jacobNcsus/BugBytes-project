@@ -130,17 +130,20 @@ public class Storefront
 	 */
 	public void addInventory(Item item, int quantity, int restock)
 	{
+		String aisle = item.getCategory();
+		
 		int index = 0;
 		for (int i = 0; i < Connector.aisles.length; i++)
 		{
-			if (Connector.aisles[i].equals(item.getCategory()))
+			if (Connector.aisles[i].equalsIgnoreCase(aisle))
 			{
 				index = i;
+				aisle = Connector.aisles[i];
 				break;
 			}
 		}
 		String prodID = "";
-		switch(item.getCategory())
+		switch(aisle)
 		{
 			case "Alcohol":
 			{
@@ -190,8 +193,9 @@ public class Storefront
 		{
 			throw new ArrayIndexOutOfBoundsException();
 		}
-		
-		c.insert(prodID, item.getCategory(), item.getName(), item.getPrice(), quantity, restock);
+		String name = item.getName();
+		Connector.capitalizeFirstLetter(name);
+		c.insert(prodID, aisle, name, item.getPrice(), quantity, restock);
 	}
 	
 	//cart method in ShoppingCart

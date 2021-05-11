@@ -201,15 +201,21 @@ public class Connector
     {
     	try
     	{
-    		String ret = "No String ;-;";
+    		String ret = null;
     		// 2. Create a statement
-    		PreparedStatement myStmt = myConn.prepareStatement("SELECT PRODUCT_ID from PRODUCTS where PRODUCT_NAME = ?");
+    		PreparedStatement myStmt = myConn.prepareStatement("SELECT PRODUCT_ID FROM products WHERE PRODUCT_NAME=?");
     		myStmt.setString(1, name); //1 specifies the first parameter in the query
     		// 3. Execute a SQL query
     		ResultSet myRs = myStmt.executeQuery();
     		// 4. Process the result set 	
-    		myRs.next();
-    		ret = myRs.getString("PRODUCT_ID");
+    		if(myRs.next())
+    		{
+    			ret = myRs.getString("PRODUCT_ID");
+    		}
+    		else
+    		{
+    			System.out.println("Product not found.");
+    		}
     		
     		myStmt.close();
     		return ret;
@@ -231,6 +237,8 @@ public class Connector
 	 */
 	public void read(String tableView, int id) 
 	{
+		Connector.capitalizeFirstLetter(tableView);
+		
 		try
 		{
 			if (tableView.equalsIgnoreCase("products")) //display entire inventory
@@ -846,7 +854,7 @@ public class Connector
         			if(!cart.contains(myRs.getString("PRODUCT_ID")))
         			{
         				removeFromCart(custID, myRs.getString("PRODUCT_ID")); //clears from database
-            			cart.addToCart(myRs.getString("PRODUCT_ID"), myRs.getInt("QUANTITY_ORDERED")); //adds to both
+            			cart.addToCart(myRs.getString("PRODUCT_NAME"), myRs.getInt("QUANTITY_ORDERED")); //adds to both
             			removeFromCart(custID, myRs.getString("PRODUCT_ID")); //because you are using addToCart rather than addItem
         			}
         			else
@@ -1578,7 +1586,7 @@ public class Connector
 		}
     }
     
-    private static double round (double value, int places) 
+    public static double round (double value, int places) 
     {
         if (places < 0) throw new IllegalArgumentException();
 
@@ -1587,6 +1595,20 @@ public class Connector
         long tmp = Math.round(value);
         return (double) tmp / factor;
     }
+    
+    /**
+   	 * 	Capitalizes the first letter of a string, and changes to lower case all subsequent letters. 
+   	 * 	Used for manipulating the database, since fields but product ID (upper case) must be in 
+   	 * 	this format. 
+   	 * 	
+   	 * 	@param 		field	the String to be changed
+   	 */
+   	public static void capitalizeFirstLetter(String field)
+   	{
+   		System.out.println(field);
+   		field = field.substring(0,1).toUpperCase() + field.substring(1).toLowerCase();
+   		System.out.println(field);
+   	}
     
     /**
      * 	Prints the aisles in the shop. 

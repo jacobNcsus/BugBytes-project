@@ -23,7 +23,8 @@ public class Item
 	   public Item(String category, String name, double price)
 	   { 
 		   id = null;
-		   this.category = category;
+		   this.category = category.toLowerCase();
+		   Connector.capitalizeFirstLetter(name);
 		   itemName = name;
 		   itemPrice = (int) (price*100); //round
 		   itemQuantity = 0;
@@ -41,7 +42,8 @@ public class Item
 	   public Item(String id, String category, String name, double price, int quantity)
 	   {
 		   this.id = id; 
-		   this.category = category;
+		   this.category = category.toLowerCase();
+		   Connector.capitalizeFirstLetter(name);
 		   itemName = name;
 		   itemPrice = (int) (price*100); //round
 		   itemQuantity = quantity;

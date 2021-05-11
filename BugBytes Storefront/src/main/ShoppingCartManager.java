@@ -27,7 +27,7 @@ public class ShoppingCartManager
         
         //arrive here only when the user has quit
         String fairwell = "Thank you for shopping with us today";
-        if (loggedIn)
+        if (cart != null && cart.getCustomerId() > 1)
         {
         	fairwell += ", " + cart.getCustomerName(); 
         }
@@ -43,8 +43,9 @@ public class ShoppingCartManager
         System.out.println("2 - sign up for a new account");
         System.out.println("3 - view anonymously");
         System.out.println("4 - quit");
-        System.out.println("Choose an option: ");
+        System.out.print("Choose an option: ");
         String answer = in.nextLine();
+        System.out.println();
         
         switch (answer)
         {
@@ -70,6 +71,7 @@ public class ShoppingCartManager
         	}
         	case "4":
         	{
+        		System.out.println();
         		break; //terminate's session
         	}
         	default:
@@ -184,7 +186,7 @@ public class ShoppingCartManager
          	System.out.println("i - Add Item to Inventory");
          	System.out.println("r - Remove Item from Inventory");
      	}
-     	System.out.println("Choose an option: ");
+     	System.out.print("Choose an option: ");
      	String nextInv = in.nextLine();
      	System.out.println(); //spacing
      	
@@ -198,58 +200,50 @@ public class ShoppingCartManager
       		case "a": //print all
       		{
       			store.printInventory();
-      			makeOrder( "an"); //question, if user wants to add something to the cart
-      			printMenu();
-      			
+      			makeOrder("an"); //question, if user wants to add something to the cart
       			break;
       		}
       		case "w": //print alcohol aisle
       		{
       			store.printAisle("Alcohol");
-      			makeOrder( "an"); //question			
-      			printMenu();
+      			makeOrder("an"); //question
       			break;
       		}
       		case "b":
       		{
       			store.printAisle("Bakery");
-      			makeOrder( "an"); //question
-      			printMenu();
+      			makeOrder("an"); //question
       			break;
       		}
       		case "f": 
       		{
       			store.printAisle("Breakfast");
-      			makeOrder( "an"); //question	
-      			printMenu();
+      			makeOrder("an"); //question
       			break;
       		}
       		case "d":
       		{
       			store.printAisle("Dairy");
-      			makeOrder( "an"); //question	
-      			printMenu();
+      			makeOrder("an"); //question
       			break;
       		}
       		case "m": 
       		{
       			store.printAisle("Meat_seafood");
-      			makeOrder( "an"); //question
-      			printMenu();
+      			makeOrder("an"); //question
       			break;
       		}
       		case "p":
       		{
       			store.printAisle("Produce");
-      	   		makeOrder( "an"); //question
-      			printMenu();
+      	   		makeOrder("an"); //question
       			break;
       		}
       		case "c":
       		{
       			if (cart.getCartSize() == 0)
       			{
-      				System.out.println("Cart is empty: Choose another option");
+      				System.out.println("Cart is empty: Choose another option \n");
       				printMenu();
       			}
       			else
@@ -271,8 +265,8 @@ public class ShoppingCartManager
       				store.requestAuthorization("", ""); //removes authorization
       				cart = null; //releases all information connected to your cart
           			welcome();
-          			break;
       			}
+      			break;
       		}
       		case "i":    //adds item to database
       		{
@@ -281,13 +275,14 @@ public class ShoppingCartManager
             	System.out.println("Insert name of Product");
             	String s2 = in.nextLine(); 
             	System.out.println("Insert price of Product");
-            	double d1 = in.nextDouble();
+            	double d1 = Double.parseDouble(in.nextLine().trim());
             	System.out.println("Insert quantity of Product");
-            	int 	i1 = in.nextInt();
+            	int 	i1 = Integer.parseInt(in.nextLine().trim());
             	System.out.println("Insert quantity at which the Product should be restocked");
-           	 	int 	i2 = in.nextInt();
+           	 	int 	i2 = Integer.parseInt(in.nextLine().trim());
            	 	store.addInventory(new Item(s1, s2, d1), i1, i2);
     	 		printMenu(); //goes back to main menu
+    	 		break;
       		}
       		case "r":	//remove item from database
       		{
@@ -295,15 +290,16 @@ public class ShoppingCartManager
             	String name = in.nextLine();
             	store.removeInventory(name);
             	printMenu(); //goes back to main menu
+            	break;
       		}
       		default: 
       		{
       			System.out.println("Invalid answer. Please try again. \n\n");
       			printMenu();
+      			break;
       		}
       	}
      	//user has quit
-     	//System.out.println("quit from printMenu");
    	}
    	
    	/**
@@ -313,76 +309,89 @@ public class ShoppingCartManager
    	 */
    	private static void makeOrder( String alt)						// Adds item to cart, errors with calling itself within the if statements. 
    	{
-   		if (loggedIn)
+   		System.out.println("Would you like to add " + alt + " item into your cart?");
+   		System.out.print("Answer: ");
+   		String answer = in.nextLine();
+   		System.out.println(); //spacing
+   		
+   		switch (answer)
    		{
-   			System.out.println("Would you like to add " + alt + " item into your cart?");
-   			String answer = in.nextLine();
-   			switch (answer)
-   			{
-   				case "y": 
-   					answer = "y";
-   					break;
-   				case "yes": 
-   					answer = "y";
-   					break;
-   				case "Y": 
-   					answer = "y";
-   					break;
-   				case "Yes": 
-   					answer = "y";
-   					break;
-   				case "YES": 
-   					answer = "y";
-   					break;
+   			case "y": 
+   				answer = "y";
+   				break;
+   			case "yes": 
+   				answer = "y";
+   				break;
+   			case "Y": 
+   				answer = "y";
+   				break;
+   			case "Yes": 
+   				answer = "y";
+   				break;
+   			case "YES": 
+   				answer = "y";
+   				break;
 
-   				case "n": 
-   					answer = "n";
-   					break;
-   				case "no": 
-   					answer = "n";
-   					break;
-   				case "N": 
-   					answer = "n";
-   					break;
-   				case "No": 
-   					answer = "n";
-   					break;
-   				case "NO": 
-   					answer = "n";
-   					break;
+   			case "n": 
+   				answer = "n";
+   				break;
+   			case "no": 
+   				answer = "n";
+   				break;
+   			case "N": 
+   				answer = "n";
+   				break;
+   			case "No": 
+   				answer = "n";
+   				break;
+   			case "NO": 
+   				answer = "n";
+   				break;
    				
-   				default:
+   			default:
+   			{
+   				System.out.println("Answer cannot be understood.");
+   				if(retry())
+   					makeOrder("an");
+   				else
+   					printMenu();
+   				return;
+   			}
+   		}
+   			
+   		switch(answer)
+   		{
+   			case "y":
+   			{
+   				System.out.print("Name of item to be added: ");	//Insert name of Product
+   				String nextItem = in.nextLine();
+   				System.out.print("Quantity: ");
+   				int quantity = Integer.parseInt(in.nextLine().trim());
+   				try
    				{
-   					System.out.println("Answer cannot be understood.");
+   					cart.addToCart(nextItem, quantity);
+   	   				makeOrder("another");
+   	   				return;
+   				}
+   				catch (Exception e)
+   				{
+   					System.out.println(e + "\n");
    					if(retry())
-   						makeOrder("an");
-   					else
-   						printMenu();
-   					return;
+   	   					makeOrder("an");
+   	   				else
+   	   					printMenu();
+   	   				return;
    				}
    			}
-   			
-   			switch(answer)
+   			case "n":
    			{
-   				case "y":
-   				{
-   					System.out.print("Name of item to be added: ");	//Insert name of Product
-   					String nextItem = in.nextLine();
-   					System.out.print("Quantity: ");
-   					int quantity = Integer.parseInt(in.nextLine().trim());
-   					cart.addToCart(nextItem, quantity);
-   					makeOrder("another");
-   					return;
-   				}
-   				case "n":
-   				{
-   					System.out.println("Returning to Menu.\n");
-   					printMenu();
-   				}
-   				default:
-   				{
-   					//do nothing, this is impossible
-   				}
+   				System.out.println("Returning to Menu.\n");
+   				printMenu();
+   				return;
+   			}
+   			default:
+   			{
+   				//do nothing, this is impossible
    			}
    		}
    	}
@@ -391,47 +400,50 @@ public class ShoppingCartManager
    		//System.out.println("Viewing Cart Menu");
    		cart.printTotal();
    		System.out.println("Cart Menu Options:");
-   		System.out.println("1 - Confirm Order");
-   		System.out.println("2 - Remove item from cart");
-   		System.out.println("3 - Change quantity order for item");
+   		System.out.println("1 - confirm order");
+   		System.out.println("2 - remove item from cart");
+   		System.out.println("3 - change quantity order for item");
    		System.out.println();
-   		System.out.println("4 - Return to Menu");
+   		System.out.println("4 - return to menu");
    		System.out.println();
-   		System.out.println("5 - Delete entire cart"); //mainly used for testing 
-   		System.out.println("Choose an option: ");
-
-   		int nextOrder = in.nextInt();
+   		System.out.println("5 - delete cart"); //mainly used for testing 
+   		System.out.print("Choose an option: ");
+   		int nextOrder = Integer.parseInt(in.nextLine().trim());
+   		System.out.println(); //spacing
+   		
    		switch (nextOrder)
    		{
    			case 1:
    			{
    				System.out.println("Confirm order? Y/N");
+   				System.out.print("Answer: ");
    				String nextConfirm = in.nextLine();
-   				nextConfirm = in.nextLine();
    				//in.next();							//gets the \n so you can input again
    				if (nextConfirm.equals("y")||nextConfirm.equals("Y"))
    				{
    					store.checkout(cart);
    					printMenu();
+   					return;
    				}
    				else if (nextConfirm.equals("n") || nextConfirm.equals("N"))
    				{
    					System.out.println("Returning to Cart Menu: ");
    					printCartMenu();
+   					return;
    				}
    				else 
    				{
    					System.out.println("Incorrect input: Please input a Y or N");
    					printCartMenu();
+   					return;
    				}
-   				break;
    			}
    			
    			case 2: //remove item from cart
    			{
-   				System.out.println("Insert name of product you wish to remove.");
-   				in.nextLine();
+   				System.out.print("Name of item to be removed: ");
    				String name = in.nextLine();
+   				System.out.println(); //spacing
    				if(cart.containsName(name))
    				{
    					cart.removeFromCart(name);
@@ -440,18 +452,18 @@ public class ShoppingCartManager
    				{
    					System.out.println("You do not have an item called: " + name + "\n");
    				}
-   			
+   				
    				printCartMenu();
-   				break;
+   				return;
    			}
    			
    			case 3: //change quantity of item from cart
    			{
-   				System.out.println("Insert name of product whoose quantity you wish to edit");
-   				in.nextLine();
+   				System.out.print("Name of item to be edited: ");
    				String name = in.nextLine();
-   				System.out.println("Insert new quantity");
-   				int quantity = in.nextInt();
+   				System.out.print("New quantity: ");
+   				int quantity = Integer.parseInt(in.nextLine().trim());
+   				System.out.println(); //spacing
    				if(cart.containsName(name))
    				{
    					cart.changeCartQuantity(name, quantity);
@@ -462,25 +474,25 @@ public class ShoppingCartManager
    				}
    				
    				printCartMenu();
-   				break;
+   				return;
    			}
 
    			case 4: //return to menu 
    			{
    				printMenu();
-   				break;
+   				return;
    			}
    		
    			case 5: // clears cart
    			{
    				cart.clearCart();
-   				break;
+   				return;
    			}
    		
    			default: 
    				System.out.println("Insert proper command: " );
+   				return;
    		}
-   		return;
    	}
    	
    	/**
@@ -491,7 +503,10 @@ public class ShoppingCartManager
    	private static boolean retry()
    	{
    		System.out.println("Would you like to try again? Y/N");
+   		System.out.print("Answer: ");
 		String answer = in.nextLine();
+		System.out.println(); //spacing
+		
 		switch (answer)
 		{
 			case "y": return true;
@@ -509,11 +524,7 @@ public class ShoppingCartManager
 			default:
 			{
 				System.out.println("Answer cannot be understood. Returning to main menu.");
-				if (loggedIn)
-					printMenu();
-				else
-					welcome();
-				return false; //ends session?
+				return false;
 			}
 		}
    	}

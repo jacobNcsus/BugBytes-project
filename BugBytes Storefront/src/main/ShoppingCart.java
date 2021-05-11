@@ -177,26 +177,37 @@ public class ShoppingCart
    	 */
    	private Item removeItem(String prodID)
    	{
+   		prodID = prodID.toUpperCase();
+   		
    		if (size > 0)
    		{
-   			CartNode node = head; 
-   			while(node.hasNext()) //does not include last element
+   			CartNode node = head;
+   			if (head.getValue().getProductId().equalsIgnoreCase(prodID)) //remove first
    			{
-   				if (node.getValue().getProductId().equalsIgnoreCase(prodID))
-   				{ 
-   					if(node == head)
-   					{
-   						head = null; 
-   						node.getNext().setPrevious(null); //remove link from next node
-   					}
-   					else
-   						node.remove();
-   					size -= node.getValue().getQuantity(); 
-   					return node.getValue();
+   				head = null;
+   				if(node.getNext() != null) //there is a second node
+   				{
+   					node.getNext().setPrevious(null); //remove link from next node
+   				}
+   				size -= node.getValue().getQuantity();
+   				return node.getValue();
+   			}
+   			
+   			while(node.hasNext()) //does not include first or last element
+   			{
+   				if (node != head)
+   				{
+   					if (node.getValue().getProductId().equalsIgnoreCase(prodID))
+   	   				{ 
+   	   					node.remove();
+   	   					size -= node.getValue().getQuantity(); 
+   	   					return node.getValue();
+   	   				}
    				}
    				node = node.getNext(); 
    			}
-   			if (tail.getValue().getProductId().equalsIgnoreCase(prodID))
+   			
+   			if (node != head && tail.getValue().getProductId().equalsIgnoreCase(prodID)) //remove last
    			{
    				tail = null; 
    				node.getPrevious().setNext(null); //remove link from previous node
@@ -217,6 +228,8 @@ public class ShoppingCart
    	 */
    	private void changeQuantity(String prodID, int amount)
    	{
+   		prodID = prodID.toUpperCase();
+   		
    		if (size > 0)
    		{
    			CartNode node = head; 
@@ -224,14 +237,18 @@ public class ShoppingCart
    			{
    				if (node.getValue().getProductId().equalsIgnoreCase(prodID))
    				{ 
+   					size -= node.getValue().getQuantity();
    					node.getValue().setQuantity(amount);
+   					size += amount;
    					return;
    				}
    				node = node.getNext(); 
    			}
    			if (tail.getValue().getProductId().equalsIgnoreCase(prodID))
    			{
+   				size -= node.getValue().getQuantity();
    				tail.getValue().setQuantity(amount);
+   				size += amount;
    				return;
    			}
    		}
@@ -239,16 +256,21 @@ public class ShoppingCart
    	}
    
    	/**
-   	 *	Adds an item to the shopping cart from the database. 
+   	 *	Adds an item to the shopping cart from the database. Not case sensitive. 
    	 * 
-   	 * 	@param	name		the name of the item to be added
-   	 * 	@param	quantity	the quantity of that item to be purchased
-   	 * 	@return        	none
+   	 * 	@throws 	IllegalArgumentException	if no such item exists in the database
+   	 * 	@param		name		the name of the item to be added
+   	 * 	@param		quantity	the quantity of that item to be purchased
+   	 * 	@return        		none
    	 */
    	public void addToCart(String name, int quantity)
    	{
+   		Connector.capitalizeFirstLetter(name);
+   		
    		//find item
-   		String prodID = c.getProductID(name);				// converts to prodID from Product_name 
+   		String prodID = c.getProductID(name);	// converts to prodID from Product_name 
+   		if (prodID == null)
+   			throw new IllegalArgumentException("No product of that name exists: " + name + ".");
    		String category = c.readItem(prodID, "PRODUCT_TYPE");
    		double price = Double.parseDouble(c.readItem(prodID, "PRICE")); 
 
@@ -258,15 +280,20 @@ public class ShoppingCart
    	}
    
    	/**
-   	 * 	Removes an item from the shopping cart. 
+   	 * 	Removes an item from the shopping cart. Not case sensitive.
    	 * 
-   	 * 	@param	name		the name of the item to be added
+   	 * 	@throws 	IllegalArgumentException	if no such item exists in the database	
+   	 *	@param		name		the name of the item to be added
    	 * 	@return        	none
    	 */
    	public void removeFromCart(String name)
    	{
+   		Connector.capitalizeFirstLetter(name);
+   		
    		//find item
    		String prodID = c.getProductID(name);
+   		if (prodID == null)
+   			throw new IllegalArgumentException("No product of that name exists: " + name + ".");
    		
    		removeItem(prodID); //update cart
       
@@ -274,15 +301,20 @@ public class ShoppingCart
    	}
    
    	/**
-   	 *	Changes the quantity of an item in the cart. 
+   	 *	Changes the quantity of an item in the cart. Not case sensitive.
    	 *
-   	 *	@param	name		the name of the item to be added
-   	 *	@param 	quantity	the number of this item the cart should have		
+   	 *	@throws 	IllegalArgumentException	if no such item exists in the database	
+   	 *	@param		name		the name of the item to be added
+   	 *	@param 			quantity	the number of this item the cart should have		
    	 */
    	public void changeCartQuantity(String name, int quantity)
    	{
+   		Connector.capitalizeFirstLetter(name);
+   		
    		//find item
    		String prodID = c.getProductID(name);
+   		if (prodID == null)
+   			throw new IllegalArgumentException("No product of that name exists: " + name + ".");
    		
    		changeQuantity(prodID, quantity); //update cart
 	   	
@@ -292,11 +324,13 @@ public class ShoppingCart
    	/**
    	 * 	Determines whether the cart contains a certain item.
    	 * 
-   	 * 	@param 	prodID		a String uniquely identifying one of the store's items
+   	 * 	@param 		prodID		a String uniquely identifying one of the store's items
    	 * 	@return			true, if the cart contains such an item, false otherwise
    	 */
    	public boolean contains(String prodID)
    	{
+   		prodID = prodID.toUpperCase();
+   		
    		if (size > 0)
    		{
  		   CartNode node = head; 
@@ -317,25 +351,32 @@ public class ShoppingCart
    	}
    	
    	/**
-   	 * 	Determines whether the cart contains a certain item.
+   	 * 	Determines whether the cart contains a certain item. Not case sensitive.
    	 * 
-   	 * 	@param 	prodID		a String uniquely identifying one of the store's items
+   	 *	@throws 	IllegalArgumentException	if no such item exists in the database	
+   	 * 	@param 		prodID		a String uniquely identifying one of the store's items
    	 * 	@return			true, if the cart contains such an item, false otherwise
    	 */
    	public boolean containsName(String name)
    	{
+   		Connector.capitalizeFirstLetter(name);
+   		
    		String prodID = c.getProductID(name);
+   		if (prodID == null)
+   			throw new IllegalArgumentException("No product of that name exists: " + name + ".");
    		return contains(prodID);
    	}
    	
    	/**
-   	 * 	Finds the quantity of a specific item in cart. 
+   	 * 	Finds the quantity of a specific item in cart. Not case sensitive.
    	 * 
-   	 * 	@param 	name	the item's name
-   	 * 	@return		0, if the cart does not contain that item, or else the item's quantity
+   	 * 	@param 		name	the item's name
+   	 * 	@return			0, if the cart does not contain that item, or else the item's quantity
    	 */
    	public int getQuantity(String name)
    	{
+   		Connector.capitalizeFirstLetter(name);
+   		
    		if (size > 0)
    		{
  		   CartNode node = head; 
@@ -404,7 +445,7 @@ public class ShoppingCart
      */
    	public double getTax()
    	{
-   		return getSubtotal()*TAX_RATE;
+   		return Connector.round(getSubtotal()*TAX_RATE, 2);
    	}
    	
    	/**
@@ -424,7 +465,7 @@ public class ShoppingCart
      */
    	public double getTotalCost()
    	{
-   		return getSubtotal() * (1+TAX_RATE) + SHIPPING_RATE;
+   		return Connector.round(getSubtotal() * (1+TAX_RATE) + SHIPPING_RATE, 2);
    	}
    
    	/**
@@ -432,15 +473,12 @@ public class ShoppingCart
    	 */
    	public void printTotal()
    	{
-   		if(size == 0)
+   		System.out.println(customerName + "'s Shopping Cart");
+      	System.out.println("Number of Items: " + getCartSize());
+   		
+   		if(size != 0)
       	{
-   			System.out.println("SHOPPING CART IS EMPTY");
-      	}
-      	else
-      	{
-    	  	System.out.println(customerName + "'s Shopping Cart");
-          	System.out.println("Number of Items: " + getCartSize());
-          	CartNode node = head; 
+   			CartNode node = head; 
           	double subtotal = 0.0;
           	while(node.hasNext())
           	{
@@ -450,14 +488,15 @@ public class ShoppingCart
           	}
           	System.out.println("\t" + node.getValue());
           	subtotal += tail.getValue().getTotalCost(); 
-          	System.out.println("Subtotal: $" + subtotal);
-          	double tax = subtotal*TAX_RATE;
-          	System.out.println("Tax: $" + tax);
-          	System.out.println("Shipping: $" + SHIPPING_RATE);
-          	double total = subtotal+tax+SHIPPING_RATE;
-          	System.out.println("Total: $" + total); 
-          	System.out.println(); //spacing
+          	
+          	System.out.println("Subtotal:  $" + subtotal);
+          	double tax = Connector.round(subtotal*TAX_RATE, 2);
+          	System.out.println("Tax:       $" + tax);
+          	System.out.println("Shipping:  $" + SHIPPING_RATE);
+          	double total = Connector.round(subtotal+tax+SHIPPING_RATE, 2);
+          	System.out.println("Total:     $" + total); 
       	}
+   		System.out.println(); //spacing
    	}
    
    	/**
