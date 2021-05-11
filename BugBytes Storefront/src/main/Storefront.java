@@ -130,6 +130,8 @@ public class Storefront
 	 */
 	public void addInventory(Item item, int quantity, int restock)
 	{
+		String name = item.getName();
+		Connector.capitalizeFirstLetter(name);
 		String aisle = item.getCategory();
 		
 		int index = 0;
@@ -193,8 +195,6 @@ public class Storefront
 		{
 			throw new ArrayIndexOutOfBoundsException();
 		}
-		String name = item.getName();
-		Connector.capitalizeFirstLetter(name);
 		c.insert(prodID, aisle, name, item.getPrice(), quantity, restock);
 	}
 	

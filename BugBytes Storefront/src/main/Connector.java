@@ -1605,9 +1605,7 @@ public class Connector
    	 */
    	public static void capitalizeFirstLetter(String field)
    	{
-   		System.out.println(field);
    		field = field.substring(0,1).toUpperCase() + field.substring(1).toLowerCase();
-   		System.out.println(field);
    	}
     
     /**
