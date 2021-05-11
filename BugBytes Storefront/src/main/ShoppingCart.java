@@ -379,7 +379,7 @@ public class ShoppingCart
    	/**
    	 * 	Determines and returns the total cost of items in cart.
    	 *
-   	 * 	@return    total check out price of the cart
+   	 * 	@return    the subtotal of cart's items before tax or shipping
    	 */
    	public double getSubtotal()
    	{
@@ -441,16 +441,22 @@ public class ShoppingCart
     	  	System.out.println(customerName + "'s Shopping Cart");
           	System.out.println("Number of Items: " + getCartSize());
           	CartNode node = head; 
-          	int total = 0;
+          	double subtotal = 0.0;
           	while(node.hasNext())
           	{
         	  	System.out.println("\t" + node.getValue());
-        	  	total += node.getValue().getTotalCost(); 
+        	  	subtotal += node.getValue().getTotalCost(); 
         	  	node = node.getNext(); 
           	}
           	System.out.println("\t" + node.getValue());
-          	total += tail.getValue().getTotalCost(); 
-          	System.out.println("Total: $" + total + "\n"); //spacing
+          	subtotal += tail.getValue().getTotalCost(); 
+          	System.out.println("Subtotal: $" + subtotal);
+          	double tax = subtotal*TAX_RATE;
+          	System.out.println("Tax: $" + tax);
+          	System.out.println("Shipping: $" + SHIPPING_RATE);
+          	double total = subtotal+tax+SHIPPING_RATE;
+          	System.out.println("Total: $" + total); 
+          	System.out.println(); //spacing
       	}
    	}
    

@@ -186,7 +186,7 @@ public class ShoppingCartManager
      	}
      	System.out.println("Choose an option: ");
      	String nextInv = in.nextLine();
-     	System.out.println(nextInv);
+     	System.out.println(); //spacing
      	
      	switch (nextInv)
       	{
@@ -388,7 +388,7 @@ public class ShoppingCartManager
    	}
    	private static void printCartMenu()
    	{
-   		System.out.println("Viewing Cart Menu");
+   		//System.out.println("Viewing Cart Menu");
    		cart.printTotal();
    		System.out.println("Cart Menu Options:");
    		System.out.println("1 - Confirm Order");
