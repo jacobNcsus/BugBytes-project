@@ -24,8 +24,8 @@ public class ShoppingCart
 
 	public static void main(String[] args)
 	{
-		ShoppingCart cart = new ShoppingCart(1, "Jagannadha Chidella", true); //test if scriptRunner works
-		cart.addToCart("ALC01", 1);
+		ShoppingCart cart = new ShoppingCart(1, "Jagannadha Chidella", false); //true to test if scriptRunner works
+		cart.addToCart("Whiskey", 1);
 		cart.printTotal();
 	}
    

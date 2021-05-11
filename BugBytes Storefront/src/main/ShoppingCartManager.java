@@ -43,6 +43,7 @@ public class ShoppingCartManager
         System.out.println("2 - sign up for a new account");
         System.out.println("3 - view anonymously");
         System.out.println("4 - quit");
+        System.out.println("Choose an option: ");
         String answer = in.nextLine();
         
         switch (answer)
@@ -308,7 +309,7 @@ public class ShoppingCartManager
    	/**
    	 * 	Asks user if they would like to add an item to their cart. 
    	 * 
-   	 * 	@param alt	is just used to change the message slightly
+   	 * 	@param 	alt		is just used to change the message slightly
    	 */
    	private static void makeOrder( String alt)						// Adds item to cart, errors with calling itself within the if statements. 
    	{
@@ -397,6 +398,7 @@ public class ShoppingCartManager
    		System.out.println("4 - Return to Menu");
    		System.out.println();
    		System.out.println("5 - Delete entire cart"); //mainly used for testing 
+   		System.out.println("Choose an option: ");
 
    		int nextOrder = in.nextInt();
    		switch (nextOrder)

@@ -6389,3 +6389,8 @@ Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS
 	END IF; 
 	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
 >>>>>>> branch 'FinalProject_product' of https://github.com/jacobNcsus/BugBytes-project.git
+
+-------
+10/58/2021 17:58:03
+-------
+

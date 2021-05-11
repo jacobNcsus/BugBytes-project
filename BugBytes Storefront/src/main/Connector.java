@@ -60,18 +60,18 @@ public class Connector
 		}
 	}
 	
-	public static void main(String[] args)
+	public static void main(String[] args) //run to see the contents of the database
 	{
 		Connector c = Connector.getCon();
 		c.authorize(username, password);
 		//Connector.showShop();
 		
-		c.clearOrders();
-		c.emptyCart(2);
+		//c.clearOrders();
+		//c.emptyCart(2);
 		//c.purgeLogins();
 		//c.runScript("lib\\BugBytes_shop_script.sql");
 		
-		//c.read("products", -1);
+		c.read("products", -1);
 		//c.read(aisles[0], -1);
 		//c.read(aisles[1], -1);
 		//c.read(aisles[2], -1);
@@ -87,7 +87,7 @@ public class Connector
 		//c.update("Whiskey", "a", "alcohol");
 		//c.read("alcohol", -1);
 		
-		//c.read("cart", -1);
+		c.read("cart", -1);
 		//c.read("cart", 2);
 		//c.addToCart(2, "ALC01", 2);
 		//c.read("cart", 2);
@@ -100,7 +100,7 @@ public class Connector
 		//c.emptyCart(2); 
 		//c.read("cart", 2); //checks that cart is now empty
 		
-		//c.read("customer", -1);
+		c.read("customer", -1);
 		//c.read("customer", 2);
 		//c.signUp(8, "user8", "foo", "bar", "foo@bar.com", "18000000000");
 		//c.read("customer", -1);
@@ -121,7 +121,7 @@ public class Connector
 		//c.read("Alcohol", -1); //check if correct changes to products table have been made
 		//c.read("order_details", -1);
 		//c.clearOrders();
-		//c.read("order_details", -1);
+		c.read("order_details", -1);
 		
 		System.out.println("Done.");
 		c.close();
@@ -837,7 +837,7 @@ public class Connector
     		ResultSet myRs = myStmt.executeQuery(query);
     		if (!myRs.next()) //false if set is empty
     		{
-    			//System.out.println("No update to be made forward.");
+    			System.out.println("Cart is up to date.");
     		}
     		else
     		{
@@ -852,6 +852,7 @@ public class Connector
         			else
         				removeFromCart(custID, myRs.getString("PRODUCT_ID")); //clears from database
         		} while (myRs.next());
+    			System.out.println("Cart is up to date.");
     		}
     	}
     	catch (SQLException e)
