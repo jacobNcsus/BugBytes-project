@@ -14,49 +14,16 @@ import org.junit.jupiter.api.Test;
  */
 class ShoppingCartTest 
 {
-	main.ShoppingCart customer_0 = new main.ShoppingCart(0,"username");
-	main.ShoppingCart customer_1 = new main.ShoppingCart(1,"username");
-	main.ShoppingCart customer_2 = new main.ShoppingCart(2,"username",true);
-	main.ShoppingCart customer_3 = new main.ShoppingCart(2,"username",false);
-	main.Item item = new main.Item("PROD06", "produce", "lettuce", 2.50001, 1);	// Item Constructor i1 
-
-	
-	
-	@Test
-	void addItemTest() {
-
-		customer_1.addItem(item);
-		assertThrows(NullPointerException.class, () -> {
-			customer_1.addItem(null);
-			});
-		
-		}
-	
-	@Test
-	void removeItemTest() {
-		
-	}
-	
-	@Test
-	void changeQuantityTest() {
-		
-	}
-		
-		
-	
+	main.ShoppingCart cart = new main.ShoppingCart(2,"username",false);
 	
 	@Test
 	void constructor_lowID() 
 	{
-		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, 
-				() -> {
-					customer_1.getCustomerId();
- 
-				});
+		assertThrows(IllegalArgumentException.class, () -> {
+			new main.ShoppingCart(0,"username", false);
+		});
 	}
 	
-	
-
 	@Test
 	void constructor_defaultUser()
 	{
@@ -79,5 +46,40 @@ class ShoppingCartTest
 		main.ShoppingCart s = new main.ShoppingCart(2, "username", false);
 		
 		assertEquals(s.getCustomerName(), "username");
+	}
+	
+	@Test
+	void addItem() 
+	{
+		cart.addToCart("lettuce", 1);
+		
+		assertEquals(cart.containsName("lettuce"), true);
+		assertEquals(cart.getQuantity("lettuce"), 1);
+	}
+	
+	@Test
+	void addItem_LowQuantity() 
+	{
+		assertThrows(IllegalArgumentException.class, () -> {
+			cart.addToCart("lettuce", 0);
+		});
+	}
+	
+	@Test
+	void addItem_DoesNotExist() 
+	{
+		//how do you do this?
+	}
+	
+	@Test
+	void removeItemTest() 
+	{
+		
+	}
+	
+	@Test
+	void changeQuantityTest() 
+	{
+		
 	}
 }

@@ -35,7 +35,7 @@ public class ShoppingCart
      * 	@param custID	the user's customer id number
      * 	@param name		the user's first and last name
      */
-	public ShoppingCart(int custID, String name)
+	private ShoppingCart(int custID, String name)
 	{
 	   customerName = name;
 	   id = custID;
@@ -153,7 +153,7 @@ public class ShoppingCart
    	 *
    	 * 	@param  item   an item to be added to the cart
    	 */
-   	public void addItem(Item item)
+   	private void addItem(Item item)
    	{
    		if (head == null)
       	{
@@ -172,17 +172,17 @@ public class ShoppingCart
    	 * 	Removes an item from the cart.
    	 * 	Not reflected in database.
    	 *
-   	 * 	@param  id   	a string representing the item in the cart
-   	 * 	@return       the item removed from the list, or null if not found
+   	 * 	@param		prodID		a string representing the item in the database
+   	 * 	@return				the item removed from the list, or null if not found
    	 */
-   	public Item removeItem(String id)
+   	private Item removeItem(String prodID)
    	{
    		if (size > 0)
    		{
    			CartNode node = head; 
    			while(node.hasNext()) //does not include last element
    			{
-   				if (node.getValue().getProductId().equals(id))
+   				if (node.getValue().getProductId().equalsIgnoreCase(prodID))
    				{ 
    					if(node == head)
    					{
@@ -196,7 +196,7 @@ public class ShoppingCart
    				}
    				node = node.getNext(); 
    			}
-   			if (tail.getValue().getProductId().equals(id))
+   			if (tail.getValue().getProductId().equalsIgnoreCase(prodID))
    			{
    				tail = null; 
    				node.getPrevious().setNext(null); //remove link from previous node
@@ -212,7 +212,7 @@ public class ShoppingCart
    	 * 	Alters the quantity of an item in the cart. 
    	 * 	Not reflected in database.
    	 * 
-   	 * 	@param	id		a string representing the item in the database
+   	 * 	@param	prodID		a string representing the item in the database
    	 * 	@param	amount		the number of item user wants to buy
    	 */
    	private void changeQuantity(String prodID, int amount)
@@ -222,14 +222,14 @@ public class ShoppingCart
    			CartNode node = head; 
    			while(node.hasNext()) //does not include last element
    			{
-   				if (node.getValue().getProductId().equals(prodID))
+   				if (node.getValue().getProductId().equalsIgnoreCase(prodID))
    				{ 
    					node.getValue().setQuantity(amount);
    					return;
    				}
    				node = node.getNext(); 
    			}
-   			if (tail.getValue().getProductId().equals(prodID))
+   			if (tail.getValue().getProductId().equalsIgnoreCase(prodID))
    			{
    				tail.getValue().setQuantity(amount);
    				return;
@@ -241,33 +241,33 @@ public class ShoppingCart
    	/**
    	 *	Adds an item to the shopping cart from the database. 
    	 * 
-   	 * 	@param	prodID		a string representing the item in the database
+   	 * 	@param	name		the name of the item to be added
    	 * 	@param	quantity	the quantity of that item to be purchased
    	 * 	@return        	none
    	 */
-   	public void addToCart(String prodID, int quantity)
+   	public void addToCart(String name, int quantity)
    	{
    		//find item
-   		prodID = c.getIDFromName(prodID);				// converts to prodID from Product_name 
+   		String prodID = c.getProductID(name);				// converts to prodID from Product_name 
    		String category = c.readItem(prodID, "PRODUCT_TYPE");
-   		String name = c.readItem(prodID, "PRODUCT_NAME");
    		double price = Double.parseDouble(c.readItem(prodID, "PRICE")); 
-	   
-	   
+   		
    		addItem(new Item(prodID, category, name, price, quantity)); //update cart
-	   
+   		
    		c.addToCart(id, prodID, quantity); //update database
    	}
    
    	/**
-   	 * Removes an item from the shopping cart. 
+   	 * 	Removes an item from the shopping cart. 
    	 * 
-   	 * @param   prodID		a string representing the item in the database
-   	 * @return        	none
+   	 * 	@param	name		the name of the item to be added
+   	 * 	@return        	none
    	 */
-   	public void removeFromCart(String prodID)
+   	public void removeFromCart(String name)
    	{
-   		prodID = c.getIDFromName(prodID);			// converts to prodID from Product_name 
+   		//find item
+   		String prodID = c.getProductID(name);
+   		
    		removeItem(prodID); //update cart
       
    		c.removeFromCart(id, prodID); //update database
@@ -276,12 +276,14 @@ public class ShoppingCart
    	/**
    	 *	Changes the quantity of an item in the cart. 
    	 *
-   	 *	@param	prodID		a string representing the item in the database
-   	 *	@param 	quantity	the number of this item the cart should have
+   	 *	@param	name		the name of the item to be added
+   	 *	@param 	quantity	the number of this item the cart should have		
    	 */
-   	public void changeCartQuantity(String prodID, int quantity)
+   	public void changeCartQuantity(String name, int quantity)
    	{
-   		prodID = c.getIDFromName(prodID);
+   		//find item
+   		String prodID = c.getProductID(name);
+   		
    		changeQuantity(prodID, quantity); //update cart
 	   	
 	   	c.updateCart(id, prodID, quantity); //update database
@@ -290,28 +292,67 @@ public class ShoppingCart
    	/**
    	 * 	Determines whether the cart contains a certain item.
    	 * 
-   	 * 	@param 		prodID	a String uniquely identifying one of the store's items
-   	 * 	@return		true, if the cart contains such an item, false otherwise
+   	 * 	@param 	prodID		a String uniquely identifying one of the store's items
+   	 * 	@return			true, if the cart contains such an item, false otherwise
    	 */
    	public boolean contains(String prodID)
    	{
    		if (size > 0)
- 	   {
+   		{
  		   CartNode node = head; 
  		   while(node.hasNext()) //does not include last element
  		   {
- 			   if (node.getValue().getProductId().equals(prodID))
+ 			   if (node.getValue().getProductId().equalsIgnoreCase(prodID))
  		       { 
  				   return true;
  		       }
  			   node = node.getNext(); 
  		   }
- 		   if (tail.getValue().getProductId().equals(prodID))
+ 		   if (tail.getValue().getProductId().equalsIgnoreCase(prodID))
  		   {
  			   return true;
  		   }
- 	   }
+   		}
    		return false;
+   	}
+   	
+   	/**
+   	 * 	Determines whether the cart contains a certain item.
+   	 * 
+   	 * 	@param 	prodID		a String uniquely identifying one of the store's items
+   	 * 	@return			true, if the cart contains such an item, false otherwise
+   	 */
+   	public boolean containsName(String name)
+   	{
+   		String prodID = c.getProductID(name);
+   		return contains(prodID);
+   	}
+   	
+   	/**
+   	 * 	Finds the quantity of a specific item in cart. 
+   	 * 
+   	 * 	@param 	name	the item's name
+   	 * 	@return		0, if the cart does not contain that item, or else the item's quantity
+   	 */
+   	public int getQuantity(String name)
+   	{
+   		if (size > 0)
+   		{
+ 		   CartNode node = head; 
+ 		   while(node.hasNext()) //does not include last element
+ 		   {
+ 			   if (node.getValue().getName().equalsIgnoreCase(name))
+ 		       { 
+ 				   return node.getValue().getQuantity();
+ 		       }
+ 			   node = node.getNext(); 
+ 		   }
+ 		   if (tail.getValue().getName().equalsIgnoreCase(name))
+ 		   {
+ 			  return node.getValue().getQuantity();
+ 		   }
+   		}
+   		return 0;
    	}
    
    	/**
@@ -330,7 +371,7 @@ public class ShoppingCart
    	 * 	Searches through the database for changes which need to be made to the cart, 
    	 * 	then adds all contents of the cart to 
    	 */
-   	public void update()
+   	private void update()
    	{
    		c.fillCart(this);
    	}

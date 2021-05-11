@@ -4429,3 +4429,786 @@ Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS
 		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
 	END IF; 
 	END  ' (line 244): You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+
+-------
+10/58/2021 16:58:23
+-------
+
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `dairy` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Dairy') ' (line 186): Unknown database 'shop_test'
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `meat_seafood` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Meat_seafood') ' (line 203): Table 'shop_test.products' doesn't exist
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `produce` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Produce') ' (line 220): Table 'shop_test.products' doesn't exist
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`) ' (line 235): Table 'shop_test.cart' doesn't exist
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): Table 'shop_test.products' doesn't exist
+
+-------
+10/59/2021 16:59:36
+-------
+
+Error executing 'CREATE TABLE `order_details` (
+  `ORDER_ID` int NOT NULL,
+  `ORDER_LINE_NUMBER` int NOT NULL,
+  `PRODUCT_ID` varchar(45) NOT NULL,
+  `ORDERED_QUANTITY` int DEFAULT NULL,
+  `PRICE` decimal(5,2) DEFAULT NULL,
+  PRIMARY KEY (`ORDER_LINE_NUMBER`,`ORDER_ID`),
+  KEY `PRODUCT_ID_idx` (`PRODUCT_ID`),
+  CONSTRAINT `PRODUCT_ID` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `products` (`PRODUCT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ' (line 52): Unknown database 'shop_test'
+Error executing 'CREATE TABLE `shop_test`.`cart` (
+  `CUSTOMER_ID_CART` INT NOT NULL,
+  `PRODUCT_ID` VARCHAR(45) NOT NULL,
+  `QUANTITY_ORDERED` INT NULL,
+  `TOTAL_COST` DECIMAL(5,2) DEFAULT NULL,
+  PRIMARY KEY (`CUSTOMER_ID_CART`, `PRODUCT_ID`),
+  INDEX `PRODUCT_ID_CART_IDX_idx` (`PRODUCT_ID` ASC) VISIBLE,
+  CONSTRAINT `CUSTOMER_ID_CART_IDX`
+    FOREIGN KEY (`CUSTOMER_ID_CART`)
+    REFERENCES `shop_test`.`customer` (`CUSTOMER_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `PRODUCT_ID_CART_IDX`
+    FOREIGN KEY (`PRODUCT_ID`)
+    REFERENCES `shop_test`.`products` (`PRODUCT_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION) ' (line 70): Failed to open the referenced table 'customer'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC01','Alcohol','Whiskey',10.99,30,5) ' (line 72): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC02','Alcohol','Beer',5.99,30,5) ' (line 73): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC03','Alcohol','Wine',10.99,30,5) ' (line 74): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC04','Alcohol','Vodka',12.99,30,5) ' (line 75): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC05','Alcohol','Gin',10.99,30,5) ' (line 76): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BAKE01','Bakery','Bread',2.99,30,5) ' (line 77): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BAKE02','Bakery','Muffin',2.99,30,5) ' (line 78): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BAKE03','Bakery','Cake',5.99,30,5) ' (line 79): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BAKE04','Bakery','Doughnut',0.99,30,5) ' (line 80): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BREAK01','Breakfast','Cereal',3.99,30,5) ' (line 81): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BREAK02','Breakfast','Oatmeal',5.99,30,5) ' (line 82): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BREAK03','Breakfast','Syrup',4.99,30,5) ' (line 83): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BREAK04','Breakfast','Pancake_mix',5.99,30,5) ' (line 84): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR01','Dairy','Gallon_2% Milk',3.99,30,5) ' (line 85): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR02','Dairy','Gallon_1% Milk',3.99,30,5) ' (line 86): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR03','Dairy','Gallon_Whole Milk',3.99,30,5) ' (line 87): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR04','Dairy','Gallon_fatfree milk',3.99,30,5) ' (line 88): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR05','Dairy','shredded_mozzarella',4.99,30,5) ' (line 89): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR06','Dairy','shredded_ItalianBlend',4.99,30,5) ' (line 90): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR07','Dairy','shredded_PepperJack',4.99,30,5) ' (line 91): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR08','Dairy','sliced_mozzarella',4.99,30,5) ' (line 92): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR09','Dairy','sliced_PepperJack',4.99,30,5) ' (line 93): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR10','Dairy','Butter',5.99,30,5) ' (line 94): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA01','Meat_seafood','Beef',10.99,30,5) ' (line 95): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA02','Meat_seafood','Chicken',10.99,30,5) ' (line 96): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA03','Meat_seafood','Turkey',12.99,30,5) ' (line 97): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA04','Meat_seafood','Lamb',20.00,30,5) ' (line 98): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA05','Meat_seafood','Pork',10.99,30,5) ' (line 99): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA06','Meat_seafood','Salmon',15.99,30,5) ' (line 100): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA07','Meat_seafood','Tuna',15.99,30,5) ' (line 101): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA08','Meat_seafood','Crab',15.99,30,5) ' (line 102): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD01','Produce','Brocolli',2.99,30,5) ' (line 103): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD02','Produce','Cabbage',2.99,30,5) ' (line 104): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD03','Produce','Avocado',4.99,30,5) ' (line 105): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD04','Produce','Radish',1.99,30,5) ' (line 106): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD05','Produce','Potato',0.99,30,5) ' (line 107): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD06','Produce','Mushroom',2.99,30,5) ' (line 108): Table 'shop_test.products' doesn't exist
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `alcohol` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Alcohol') ' (line 134): Table 'shop_test.products' doesn't exist
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `bakery` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Bakery') ' (line 151): Table 'shop_test.products' doesn't exist
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `breakfast` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Breakfast') ' (line 169): Table 'shop_test.products' doesn't exist
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `dairy` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Dairy') ' (line 186): Table 'shop_test.products' doesn't exist
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `meat_seafood` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Meat_seafood') ' (line 203): Table 'shop_test.products' doesn't exist
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `produce` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Produce') ' (line 220): Table 'shop_test.products' doesn't exist
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`) ' (line 235): Table 'shop_test.cart' doesn't exist
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): Table 'shop_test.products' doesn't exist
+
+-------
+10/59/2021 16:59:41
+-------
+
+Error executing 'CREATE TABLE `products` (
+  `PRODUCT_ID` varchar(30) NOT NULL,
+  `PRODUCT_TYPE` varchar(45) DEFAULT NULL,
+  `PRODUCT_NAME` varchar(30) DEFAULT NULL,
+  `PRICE` decimal(5,2) DEFAULT NULL,
+  `QUANTITY_IN_STOCK` int DEFAULT NULL,
+  `REORDER` int DEFAULT '5',
+  PRIMARY KEY (`PRODUCT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ' (line 41): Unknown database 'shop_test'
+Error executing 'CREATE TABLE `order_details` (
+  `ORDER_ID` int NOT NULL,
+  `ORDER_LINE_NUMBER` int NOT NULL,
+  `PRODUCT_ID` varchar(45) NOT NULL,
+  `ORDERED_QUANTITY` int DEFAULT NULL,
+  `PRICE` decimal(5,2) DEFAULT NULL,
+  PRIMARY KEY (`ORDER_LINE_NUMBER`,`ORDER_ID`),
+  KEY `PRODUCT_ID_idx` (`PRODUCT_ID`),
+  CONSTRAINT `PRODUCT_ID` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `products` (`PRODUCT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ' (line 52): Failed to open the referenced table 'products'
+Error executing 'CREATE TABLE `shop_test`.`cart` (
+  `CUSTOMER_ID_CART` INT NOT NULL,
+  `PRODUCT_ID` VARCHAR(45) NOT NULL,
+  `QUANTITY_ORDERED` INT NULL,
+  `TOTAL_COST` DECIMAL(5,2) DEFAULT NULL,
+  PRIMARY KEY (`CUSTOMER_ID_CART`, `PRODUCT_ID`),
+  INDEX `PRODUCT_ID_CART_IDX_idx` (`PRODUCT_ID` ASC) VISIBLE,
+  CONSTRAINT `CUSTOMER_ID_CART_IDX`
+    FOREIGN KEY (`CUSTOMER_ID_CART`)
+    REFERENCES `shop_test`.`customer` (`CUSTOMER_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `PRODUCT_ID_CART_IDX`
+    FOREIGN KEY (`PRODUCT_ID`)
+    REFERENCES `shop_test`.`products` (`PRODUCT_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION) ' (line 70): Failed to open the referenced table 'products'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC01','Alcohol','Whiskey',10.99,30,5) ' (line 72): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC02','Alcohol','Beer',5.99,30,5) ' (line 73): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC03','Alcohol','Wine',10.99,30,5) ' (line 74): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC04','Alcohol','Vodka',12.99,30,5) ' (line 75): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC05','Alcohol','Gin',10.99,30,5) ' (line 76): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BAKE01','Bakery','Bread',2.99,30,5) ' (line 77): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BAKE02','Bakery','Muffin',2.99,30,5) ' (line 78): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BAKE03','Bakery','Cake',5.99,30,5) ' (line 79): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BAKE04','Bakery','Doughnut',0.99,30,5) ' (line 80): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BREAK01','Breakfast','Cereal',3.99,30,5) ' (line 81): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BREAK02','Breakfast','Oatmeal',5.99,30,5) ' (line 82): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BREAK03','Breakfast','Syrup',4.99,30,5) ' (line 83): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BREAK04','Breakfast','Pancake_mix',5.99,30,5) ' (line 84): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR01','Dairy','Gallon_2% Milk',3.99,30,5) ' (line 85): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR02','Dairy','Gallon_1% Milk',3.99,30,5) ' (line 86): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR03','Dairy','Gallon_Whole Milk',3.99,30,5) ' (line 87): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR04','Dairy','Gallon_fatfree milk',3.99,30,5) ' (line 88): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR05','Dairy','shredded_mozzarella',4.99,30,5) ' (line 89): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR06','Dairy','shredded_ItalianBlend',4.99,30,5) ' (line 90): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR07','Dairy','shredded_PepperJack',4.99,30,5) ' (line 91): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR08','Dairy','sliced_mozzarella',4.99,30,5) ' (line 92): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR09','Dairy','sliced_PepperJack',4.99,30,5) ' (line 93): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR10','Dairy','Butter',5.99,30,5) ' (line 94): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA01','Meat_seafood','Beef',10.99,30,5) ' (line 95): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA02','Meat_seafood','Chicken',10.99,30,5) ' (line 96): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA03','Meat_seafood','Turkey',12.99,30,5) ' (line 97): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA04','Meat_seafood','Lamb',20.00,30,5) ' (line 98): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA05','Meat_seafood','Pork',10.99,30,5) ' (line 99): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA06','Meat_seafood','Salmon',15.99,30,5) ' (line 100): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA07','Meat_seafood','Tuna',15.99,30,5) ' (line 101): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA08','Meat_seafood','Crab',15.99,30,5) ' (line 102): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD01','Produce','Brocolli',2.99,30,5) ' (line 103): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD02','Produce','Cabbage',2.99,30,5) ' (line 104): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD03','Produce','Avocado',4.99,30,5) ' (line 105): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD04','Produce','Radish',1.99,30,5) ' (line 106): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD05','Produce','Potato',0.99,30,5) ' (line 107): Table 'shop_test.products' doesn't exist
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD06','Produce','Mushroom',2.99,30,5) ' (line 108): Table 'shop_test.products' doesn't exist
+
+-------
+10/59/2021 16:59:46
+-------
+
+Error executing 'INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (1,'default','Jagannadha','Chidella','foo@bar.com','number') ' (line 110): Duplicate entry '1-default' for key 'customer.PRIMARY'
+Error executing 'INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (2,'user2','Jacob','Normington','foo@bar.com','number') ' (line 111): Duplicate entry '2-user2' for key 'customer.PRIMARY'
+Error executing 'INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (3,'user3','Alexander','Gunby','foo@bar.com','number') ' (line 112): Duplicate entry '3-user3' for key 'customer.PRIMARY'
+Error executing 'INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (4,'user4','Sai','Suresh','foo@bar.com','number') ' (line 113): Duplicate entry '4-user4' for key 'customer.PRIMARY'
+Error executing 'INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (5,'user5','Daniel','Beauchamp','foo@bar.com','number') ' (line 114): Duplicate entry '5-user5' for key 'customer.PRIMARY'
+Error executing 'INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (6,'user6','Youser','Alalusi','foo@bar.com','number') ' (line 115): Duplicate entry '6-user6' for key 'customer.PRIMARY'
+Error executing 'INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (7,'user7','Sikander','Ghafary','foo@bar.com','number') ' (line 116): Duplicate entry '7-user7' for key 'customer.PRIMARY'
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `alcohol` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Alcohol') ' (line 134): Table 'alcohol' already exists
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `bakery` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Bakery') ' (line 151): Table 'bakery' already exists
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `breakfast` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Breakfast') ' (line 169): Table 'breakfast' already exists
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `dairy` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Dairy') ' (line 186): Table 'dairy' already exists
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `meat_seafood` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Meat_seafood') ' (line 203): Table 'meat_seafood' already exists
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `produce` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Produce') ' (line 220): Table 'produce' already exists
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`) ' (line 235): Table 'customer_cart_v' already exists
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): Trigger already exists
+
+-------
+10/00/2021 17:00:04
+-------
+
+Error executing 'CREATE TABLE `customer` (
+  `CUSTOMER_ID` int AUTO_INCREMENT NOT NULL,
+  `USERNAME` varchar(45) NOT NULL,
+  `FIRST_NAME` varchar(45) DEFAULT NULL,
+  `LAST_NAME` varchar(45) DEFAULT NULL,
+  `EMAIL` varchar(45) DEFAULT NULL,
+  `PHONE` char(12) DEFAULT NULL,
+  PRIMARY KEY (`CUSTOMER_ID`, `USERNAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ' (line 19): Table 'customer' already exists
+Error executing 'CREATE TABLE `order` (
+  `ORDER_ID` int NOT NULL,
+  `CUSTOMER_ID` int NOT NULL,
+  `ORDER_DATE` datetime DEFAULT NULL,
+  `SHIPPING_COST` decimal(5,2) DEFAULT NULL,
+  `TAX` decimal(5,2) DEFAULT NULL,
+  `TOTAL_COST` decimal(6,2) DEFAULT NULL,
+  PRIMARY KEY (`ORDER_ID`),
+  KEY `CUSTOMER_ID_idx` (`CUSTOMER_ID`),
+  CONSTRAINT `CUSTOMER_ID` FOREIGN KEY (`CUSTOMER_ID`) REFERENCES `customer` (`CUSTOMER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ' (line 31): Table 'order' already exists
+Error executing 'CREATE TABLE `products` (
+  `PRODUCT_ID` varchar(30) NOT NULL,
+  `PRODUCT_TYPE` varchar(45) DEFAULT NULL,
+  `PRODUCT_NAME` varchar(30) DEFAULT NULL,
+  `PRICE` decimal(5,2) DEFAULT NULL,
+  `QUANTITY_IN_STOCK` int DEFAULT NULL,
+  `REORDER` int DEFAULT '5',
+  PRIMARY KEY (`PRODUCT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ' (line 41): Table 'products' already exists
+Error executing 'CREATE TABLE `order_details` (
+  `ORDER_ID` int NOT NULL,
+  `ORDER_LINE_NUMBER` int NOT NULL,
+  `PRODUCT_ID` varchar(45) NOT NULL,
+  `ORDERED_QUANTITY` int DEFAULT NULL,
+  `PRICE` decimal(5,2) DEFAULT NULL,
+  PRIMARY KEY (`ORDER_LINE_NUMBER`,`ORDER_ID`),
+  KEY `PRODUCT_ID_idx` (`PRODUCT_ID`),
+  CONSTRAINT `PRODUCT_ID` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `products` (`PRODUCT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ' (line 52): Table 'order_details' already exists
+Error executing 'CREATE TABLE `shop_test`.`cart` (
+  `CUSTOMER_ID_CART` INT NOT NULL,
+  `PRODUCT_ID` VARCHAR(45) NOT NULL,
+  `QUANTITY_ORDERED` INT NULL,
+  `TOTAL_COST` DECIMAL(5,2) DEFAULT NULL,
+  PRIMARY KEY (`CUSTOMER_ID_CART`, `PRODUCT_ID`),
+  INDEX `PRODUCT_ID_CART_IDX_idx` (`PRODUCT_ID` ASC) VISIBLE,
+  CONSTRAINT `CUSTOMER_ID_CART_IDX`
+    FOREIGN KEY (`CUSTOMER_ID_CART`)
+    REFERENCES `shop_test`.`customer` (`CUSTOMER_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `PRODUCT_ID_CART_IDX`
+    FOREIGN KEY (`PRODUCT_ID`)
+    REFERENCES `shop_test`.`products` (`PRODUCT_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION) ' (line 70): Table 'cart' already exists
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC01','Alcohol','Whiskey',10.99,30,5) ' (line 72): Duplicate entry 'ALC01' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC02','Alcohol','Beer',5.99,30,5) ' (line 73): Duplicate entry 'ALC02' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC03','Alcohol','Wine',10.99,30,5) ' (line 74): Duplicate entry 'ALC03' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC04','Alcohol','Vodka',12.99,30,5) ' (line 75): Duplicate entry 'ALC04' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC05','Alcohol','Gin',10.99,30,5) ' (line 76): Duplicate entry 'ALC05' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BAKE01','Bakery','Bread',2.99,30,5) ' (line 77): Duplicate entry 'BAKE01' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BAKE02','Bakery','Muffin',2.99,30,5) ' (line 78): Duplicate entry 'BAKE02' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BAKE03','Bakery','Cake',5.99,30,5) ' (line 79): Duplicate entry 'BAKE03' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BAKE04','Bakery','Doughnut',0.99,30,5) ' (line 80): Duplicate entry 'BAKE04' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BREAK01','Breakfast','Cereal',3.99,30,5) ' (line 81): Duplicate entry 'BREAK01' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BREAK02','Breakfast','Oatmeal',5.99,30,5) ' (line 82): Duplicate entry 'BREAK02' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BREAK03','Breakfast','Syrup',4.99,30,5) ' (line 83): Duplicate entry 'BREAK03' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BREAK04','Breakfast','Pancake_mix',5.99,30,5) ' (line 84): Duplicate entry 'BREAK04' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR01','Dairy','Gallon_2% Milk',3.99,30,5) ' (line 85): Duplicate entry 'DIAR01' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR02','Dairy','Gallon_1% Milk',3.99,30,5) ' (line 86): Duplicate entry 'DIAR02' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR03','Dairy','Gallon_Whole Milk',3.99,30,5) ' (line 87): Duplicate entry 'DIAR03' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR04','Dairy','Gallon_fatfree milk',3.99,30,5) ' (line 88): Duplicate entry 'DIAR04' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR05','Dairy','shredded_mozzarella',4.99,30,5) ' (line 89): Duplicate entry 'DIAR05' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR06','Dairy','shredded_ItalianBlend',4.99,30,5) ' (line 90): Duplicate entry 'DIAR06' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR07','Dairy','shredded_PepperJack',4.99,30,5) ' (line 91): Duplicate entry 'DIAR07' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR08','Dairy','sliced_mozzarella',4.99,30,5) ' (line 92): Duplicate entry 'DIAR08' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR09','Dairy','sliced_PepperJack',4.99,30,5) ' (line 93): Duplicate entry 'DIAR09' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR10','Dairy','Butter',5.99,30,5) ' (line 94): Duplicate entry 'DIAR10' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA01','Meat_seafood','Beef',10.99,30,5) ' (line 95): Duplicate entry 'MEA01' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA02','Meat_seafood','Chicken',10.99,30,5) ' (line 96): Duplicate entry 'MEA02' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA03','Meat_seafood','Turkey',12.99,30,5) ' (line 97): Duplicate entry 'MEA03' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA04','Meat_seafood','Lamb',20.00,30,5) ' (line 98): Duplicate entry 'MEA04' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA05','Meat_seafood','Pork',10.99,30,5) ' (line 99): Duplicate entry 'MEA05' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA06','Meat_seafood','Salmon',15.99,30,5) ' (line 100): Duplicate entry 'MEA06' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA07','Meat_seafood','Tuna',15.99,30,5) ' (line 101): Duplicate entry 'MEA07' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('MEA08','Meat_seafood','Crab',15.99,30,5) ' (line 102): Duplicate entry 'MEA08' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD01','Produce','Brocolli',2.99,30,5) ' (line 103): Duplicate entry 'PROD01' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD02','Produce','Cabbage',2.99,30,5) ' (line 104): Duplicate entry 'PROD02' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD03','Produce','Avocado',4.99,30,5) ' (line 105): Duplicate entry 'PROD03' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD04','Produce','Radish',1.99,30,5) ' (line 106): Duplicate entry 'PROD04' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD05','Produce','Potato',0.99,30,5) ' (line 107): Duplicate entry 'PROD05' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('PROD06','Produce','Mushroom',2.99,30,5) ' (line 108): Duplicate entry 'PROD06' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (1,'default','Jagannadha','Chidella','foo@bar.com','number') ' (line 110): Duplicate entry '1-default' for key 'customer.PRIMARY'
+Error executing 'INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (2,'user2','Jacob','Normington','foo@bar.com','number') ' (line 111): Duplicate entry '2-user2' for key 'customer.PRIMARY'
+Error executing 'INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (3,'user3','Alexander','Gunby','foo@bar.com','number') ' (line 112): Duplicate entry '3-user3' for key 'customer.PRIMARY'
+Error executing 'INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (4,'user4','Sai','Suresh','foo@bar.com','number') ' (line 113): Duplicate entry '4-user4' for key 'customer.PRIMARY'
+Error executing 'INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (5,'user5','Daniel','Beauchamp','foo@bar.com','number') ' (line 114): Duplicate entry '5-user5' for key 'customer.PRIMARY'
+Error executing 'INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (6,'user6','Youser','Alalusi','foo@bar.com','number') ' (line 115): Duplicate entry '6-user6' for key 'customer.PRIMARY'
+Error executing 'INSERT INTO `customer` (CUSTOMER_ID, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, PHONE) VALUES (7,'user7','Sikander','Ghafary','foo@bar.com','number') ' (line 116): Duplicate entry '7-user7' for key 'customer.PRIMARY'
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `alcohol` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Alcohol') ' (line 134): Table 'alcohol' already exists
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `bakery` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Bakery') ' (line 151): Table 'bakery' already exists
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `breakfast` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Breakfast') ' (line 169): Table 'breakfast' already exists
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `dairy` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Dairy') ' (line 186): Table 'dairy' already exists
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `meat_seafood` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STOCK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Meat_seafood') ' (line 203): Table 'meat_seafood' already exists
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `produce` AS
+    SELECT 
+        `products`.`PRODUCT_ID` AS `PRODUCT_ID`,
+        `products`.`PRODUCT_TYPE` AS `PRODUCT_TYPE`,
+        `products`.`PRODUCT_NAME` AS `PRODUCT_NAME`,
+        `products`.`PRICE` AS `PRICE`,
+        `products`.`QUANTITY_IN_STOCK` AS `QUANTITY_IN_STO
+-------
+10/00/2021 17:00:04
+-------
+
+CK`,
+        `products`.`REORDER` AS `REORDER`
+    FROM
+        `products`
+    WHERE
+        (`products`.`PRODUCT_TYPE` = 'Produce') ' (line 220): Table 'produce' already exists
+Error executing 'CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = 'shopMgr'@'localhost' 
+    SQL SECURITY DEFINER
+VIEW `shop_test`.`customer_cart_v` AS
+    SELECT 
+        `b`.`PRODUCT_NAME` AS `product_name`,
+        `a`.`QUANTITY_ORDERED` AS `quantity_ordered`,
+        (`b`.`PRICE` * `a`.`QUANTITY_ORDERED`) AS `total_cost`
+    FROM
+        (`shop_test`.`cart` `a`
+        JOIN `shop_test`.`products` `b`)
+    WHERE
+        (`a`.`PRODUCT_ID` = `b`.`PRODUCT_ID`) ' (line 235): Table 'customer_cart_v' already exists
+Error executing 'CREATE TRIGGER RESTOCK_PRODUCT_UPDATE BEFORE UPDATE ON PRODUCTS 
+	FOR EACH ROW 
+	BEGIN 
+	IF (NEW.QUANTITY_IN_STOCK <= 5) THEN 
+		SET NEW.QUANTITY_IN_STOCK = NEW.QUANTITY_IN_STOCK+30; 
+	END IF; 
+	END  ' (line 244): Trigger already exists
+
+-------
+10/00/2021 17:00:19
+-------
+
+Error executing 'CREATE TABLE `customer` (
+  `CUSTOMER_ID` int AUTO_INCREMENT NOT NULL,
+  `USERNAME` varchar(45) NOT NULL,
+  `FIRST_NAME` varchar(45) DEFAULT NULL,
+  `LAST_NAME` varchar(45) DEFAULT NULL,
+  `EMAIL` varchar(45) DEFAULT NULL,
+  `PHONE` char(12) DEFAULT NULL,
+  PRIMARY KEY (`CUSTOMER_ID`, `USERNAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ' (line 19): Table 'customer' already exists
+Error executing 'CREATE TABLE `order` (
+  `ORDER_ID` int NOT NULL,
+  `CUSTOMER_ID` int NOT NULL,
+  `ORDER_DATE` datetime DEFAULT NULL,
+  `SHIPPING_COST` decimal(5,2) DEFAULT NULL,
+  `TAX` decimal(5,2) DEFAULT NULL,
+  `TOTAL_COST` decimal(6,2) DEFAULT NULL,
+  PRIMARY KEY (`ORDER_ID`),
+  KEY `CUSTOMER_ID_idx` (`CUSTOMER_ID`),
+  CONSTRAINT `CUSTOMER_ID` FOREIGN KEY (`CUSTOMER_ID`) REFERENCES `customer` (`CUSTOMER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ' (line 31): Table 'order' already exists
+Error executing 'CREATE TABLE `products` (
+  `PRODUCT_ID` varchar(30) NOT NULL,
+  `PRODUCT_TYPE` varchar(45) DEFAULT NULL,
+  `PRODUCT_NAME` varchar(30) DEFAULT NULL,
+  `PRICE` decimal(5,2) DEFAULT NULL,
+  `QUANTITY_IN_STOCK` int DEFAULT NULL,
+  `REORDER` int DEFAULT '5',
+  PRIMARY KEY (`PRODUCT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ' (line 41): Table 'products' already exists
+Error executing 'CREATE TABLE `order_details` (
+  `ORDER_ID` int NOT NULL,
+  `ORDER_LINE_NUMBER` int NOT NULL,
+  `PRODUCT_ID` varchar(45) NOT NULL,
+  `ORDERED_QUANTITY` int DEFAULT NULL,
+  `PRICE` decimal(5,2) DEFAULT NULL,
+  PRIMARY KEY (`ORDER_LINE_NUMBER`,`ORDER_ID`),
+  KEY `PRODUCT_ID_idx` (`PRODUCT_ID`),
+  CONSTRAINT `PRODUCT_ID` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `products` (`PRODUCT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ' (line 52): Table 'order_details' already exists
+Error executing 'CREATE TABLE `shop_test`.`cart` (
+  `CUSTOMER_ID_CART` INT NOT NULL,
+  `PRODUCT_ID` VARCHAR(45) NOT NULL,
+  `QUANTITY_ORDERED` INT NULL,
+  `TOTAL_COST` DECIMAL(5,2) DEFAULT NULL,
+  PRIMARY KEY (`CUSTOMER_ID_CART`, `PRODUCT_ID`),
+  INDEX `PRODUCT_ID_CART_IDX_idx` (`PRODUCT_ID` ASC) VISIBLE,
+  CONSTRAINT `CUSTOMER_ID_CART_IDX`
+    FOREIGN KEY (`CUSTOMER_ID_CART`)
+    REFERENCES `shop_test`.`customer` (`CUSTOMER_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `PRODUCT_ID_CART_IDX`
+    FOREIGN KEY (`PRODUCT_ID`)
+    REFERENCES `shop_test`.`products` (`PRODUCT_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION) ' (line 70): Table 'cart' already exists
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC01','Alcohol','Whiskey',10.99,30,5) ' (line 72): Duplicate entry 'ALC01' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC02','Alcohol','Beer',5.99,30,5) ' (line 73): Duplicate entry 'ALC02' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC03','Alcohol','Wine',10.99,30,5) ' (line 74): Duplicate entry 'ALC03' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC04','Alcohol','Vodka',12.99,30,5) ' (line 75): Duplicate entry 'ALC04' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('ALC05','Alcohol','Gin',10.99,30,5) ' (line 76): Duplicate entry 'ALC05' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BAKE01','Bakery','Bread',2.99,30,5) ' (line 77): Duplicate entry 'BAKE01' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BAKE02','Bakery','Muffin',2.99,30,5) ' (line 78): Duplicate entry 'BAKE02' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BAKE03','Bakery','Cake',5.99,30,5) ' (line 79): Duplicate entry 'BAKE03' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BAKE04','Bakery','Doughnut',0.99,30,5) ' (line 80): Duplicate entry 'BAKE04' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BREAK01','Breakfast','Cereal',3.99,30,5) ' (line 81): Duplicate entry 'BREAK01' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BREAK02','Breakfast','Oatmeal',5.99,30,5) ' (line 82): Duplicate entry 'BREAK02' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BREAK03','Breakfast','Syrup',4.99,30,5) ' (line 83): Duplicate entry 'BREAK03' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('BREAK04','Breakfast','Pancake_mix',5.99,30,5) ' (line 84): Duplicate entry 'BREAK04' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR01','Dairy','Gallon_2% Milk',3.99,30,5) ' (line 85): Duplicate entry 'DIAR01' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR02','Dairy','Gallon_1% Milk',3.99,30,5) ' (line 86): Duplicate entry 'DIAR02' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR03','Dairy','Gallon_Whole Milk',3.99,30,5) ' (line 87): Duplicate entry 'DIAR03' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR04','Dairy','Gallon_fatfree milk',3.99,30,5) ' (line 88): Duplicate entry 'DIAR04' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR05','Dairy','shredded_mozzarella',4.99,30,5) ' (line 89): Duplicate entry 'DIAR05' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR06','Dairy','shredded_ItalianBlend',4.99,30,5) ' (line 90): Duplicate entry 'DIAR06' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR07','Dairy','shredded_PepperJack',4.99,30,5) ' (line 91): Duplicate entry 'DIAR07' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR08','Dairy','sliced_mozzarella',4.99,30,5) ' (line 92): Duplicate entry 'DIAR08' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR09','Dairy','sliced_PepperJack',4.99,30,5) ' (line 93): Duplicate entry 'DIAR09' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`PRODUCT_TYPE`,`PRODUCT_NAME`,`PRICE`,`QUANTITY_IN_STOCK`,`REORDER`) VALUES ('DIAR10','Dairy','Butter',5.99,30,5) ' (line 94): Duplicate entry 'DIAR10' for key 'products.PRIMARY'
+Error executing 'INSERT INTO `products` (`PRODUCT_ID`,`
+-------
+10/00/2021 17:00:19
+-------
+
