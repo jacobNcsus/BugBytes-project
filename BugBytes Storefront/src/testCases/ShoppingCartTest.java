@@ -3,7 +3,7 @@ package testCases;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-import java.util.Scanner;
+import main.*;
 
 /**
  * 	A test class for the BugBytes ShoppingCart class. Incomplete
@@ -13,7 +13,7 @@ import java.util.Scanner;
  */
 class ShoppingCartTest 
 {
-	main.ShoppingCart cart = new main.ShoppingCart(2,"username",false);
+	ShoppingCart cart = new ShoppingCart(2,"username",false);
 	
 	@Test
 	void constructor_lowID() 

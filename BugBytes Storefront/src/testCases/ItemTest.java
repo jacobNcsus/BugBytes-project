@@ -3,7 +3,7 @@ package testCases;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-
+import main.*;
 /**
  * 	A test class for the BugBytes Item class.
  * 	
@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
  */
 class ItemTest {
 
-	main.Item i1 = new main.Item("PROD06", "produce", "lettuce", 2.50001, 1);	// Item Constructor i1 
-	main.Item i2 = new main.Item("produce", "lettuce", 2.50001);				// Item Constructor i2
+	Item i1 = new Item("PROD06", "produce", "lettuce", 2.50001, 1);	// Item Constructor i1 
+	Item i2 = new Item("produce", "lettuce", 2.50001);				// Item Constructor i2
 
 	@Test
 	void constructor_default() 
