@@ -96,7 +96,7 @@ public class ShoppingCart
    	public ShoppingCart(int custID, String name, boolean reset, ShoppingCart oldCart)
    	{
    		this(custID, name, reset);
-   		if (oldCart != null && oldCart.getCartSize() > 1)
+   		if (oldCart != null && oldCart.getCartSize() > 0)
    		{
    			Item current = oldCart.first();
    			String productName = current.getName();
