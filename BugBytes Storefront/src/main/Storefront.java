@@ -248,7 +248,9 @@ public class Storefront
 			   
 			i = cart.next();
 			line++;
-		} while (cart.hasNext());
+		} while (cart.hasNext()); //doesn't include last element
+		c.addToOrder(orderID, line, i.getProductId(), i.getQuantity(), i.getPrice()); //last element
+		
 		System.out.println(); //for structuring, placeOrder and addToOrder should be in one block
 		   
 		cart.clearCart();
@@ -256,7 +258,7 @@ public class Storefront
 	
 	//update methods
 	/**
-	 * 	Changes the location of an item in the store.
+	 * 	Changes the location of an item in the store. Requires authorization. 
 	 * 
 	 * 	@param 		name	the product's name
 	 * 	@param 		aisle	the aisle it should be moved to
@@ -266,7 +268,7 @@ public class Storefront
 		c.update(name, "a", aisle); //changes product's type to aisle
 	}
 	/**
-	 * 	Changes the name of an item in the store.
+	 * 	Changes the name of an item in the store. Requires authorization.
 	 * 
 	 * 	@param 		oldName		the product's current name
 	 * 	@param 		newName		a new name the product should have
@@ -276,7 +278,7 @@ public class Storefront
 		c.update(oldName, "n", newName); //changes product's name to newName
 	}
 	/**
-	 *	Changes the price of an item in the store.
+	 *	Changes the price of an item in the store. Requires authorization.
 	 * 
 	 * 	@param 		name	the product's name
 	 * 	@param 		price	the new price to be charged for each unit
@@ -287,7 +289,7 @@ public class Storefront
 	}
 	//inventory stock is controlled on the backend
 	/**
-	 * 	Changes the quantity at which an item should be reordered.
+	 * 	Changes the quantity at which an item should be reordered. Requires authorization.
 	 * 
 	 * 	@param 		name		the product's name
 	 * 	@param 		reorder		a positive integer at which quantity this item should be restocked

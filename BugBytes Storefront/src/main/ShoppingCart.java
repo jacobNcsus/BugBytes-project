@@ -96,22 +96,34 @@ public class ShoppingCart
    	public ShoppingCart(int custID, String name, boolean reset, ShoppingCart oldCart)
    	{
    		this(custID, name, reset);
-   		if (oldCart != null)
+   		if (oldCart != null && oldCart.getCartSize() > 1)
    		{
    			Item current = oldCart.first();
-   	   		while(oldCart.hasNext())
+   			String productName = current.getName();
+	   		int oldCartQuantity = current.getQuantity();
+	   		if(containsName(productName)) //if cart have current, remove saved item, then add current quantity
+	   		{
+	   			removeFromCart(productName);
+	   			addToCart(productName, oldCartQuantity);
+	   		}
+	   		else //if cart does not have current, add it
+	   		{
+	   			addToCart(productName, oldCartQuantity);
+	   		}
+	   			
+   	   		while(oldCart.hasNext()) //does not include first
    	   		{
    	   			current = oldCart.next();
-   	   			String prodID = current.getProductId();
-   	   			int oldCartQuantity = current.getQuantity();
-   	   			if(contains(prodID)) //if cart have current, remove saved item, then add current quantity
+   	   			productName = current.getName();
+   	   			oldCartQuantity = current.getQuantity();
+   	   			if(contains(productName)) //if cart have current, remove saved item, then add current quantity
    	   			{
-   	   				removeFromCart(prodID);
-   	   				addToCart(prodID, oldCartQuantity);
+   	   				removeFromCart(productName);
+   	   				addToCart(productName, oldCartQuantity);
    	   			}
    	   			else //if cart does not have current, add it
    	   			{
-   	   				addToCart(prodID, oldCartQuantity);
+   	   				addToCart(productName, oldCartQuantity);
    	   			}
    	   		}
    		}
@@ -354,7 +366,7 @@ public class ShoppingCart
    	 * 	Determines whether the cart contains a certain item. Not case sensitive.
    	 * 
    	 *	@throws 	IllegalArgumentException	if no such item exists in the database	
-   	 * 	@param 		prodID		a String uniquely identifying one of the store's items
+   	 * 	@param 		name		the product's name
    	 * 	@return			true, if the cart contains such an item, false otherwise
    	 */
    	public boolean containsName(String name)

@@ -226,12 +226,24 @@ public class ShoppingCartManager
       		}
       		case "m":
       		{
-      			accountMenu(false);
+      			if(loggedIn)
+      				accountMenu(false);
+      			else
+      			{
+      				System.out.println("This is not possible without logging in. \n");
+      				printMenu();
+      			}
       			break;
       		}
       		case "o":
       		{
-      			orderMenu(false);
+      			if(loggedIn)
+      				orderMenu(false);
+      			else
+      			{
+      				System.out.println("This is not possible without logging in. \n");
+      				printMenu();
+      			}
       			break;
       		}
       		case "s":
@@ -242,6 +254,11 @@ public class ShoppingCartManager
       				store.requestAuthorization("", ""); //removes authorization
       				cart = null; //releases all information connected to your cart
           			welcome();
+      			}
+      			else
+      			{
+      				System.out.println("This is not possible without logging in. \n");
+      				printMenu();
       			}
       			break;
       		}
@@ -436,7 +453,8 @@ public class ShoppingCartManager
    	{
    		cart.printTotal();
    		System.out.println("Cart Menu Options:");
-   		System.out.println("1 - confirm order");
+   		if(loggedIn)
+   			System.out.println("1 - confirm order");
    		System.out.println("2 - remove item from cart");
    		System.out.println("3 - change quantity order for item");
    		System.out.println();
@@ -462,24 +480,33 @@ public class ShoppingCartManager
    		{
    			case 1:
    			{
-   				System.out.println("Confirm order? Y/N");
-   				System.out.print("Answer: ");
-   				String nextConfirm = in.nextLine();
-   				if (nextConfirm.equalsIgnoreCase("y"))
+   				if(loggedIn)
    				{
-   					store.checkout(cart);
-   					printMenu();
+   					System.out.println("Confirm order? Y/N");
+   	   				System.out.print("Answer: ");
+   	   				String nextConfirm = in.nextLine();
+   	   				if (nextConfirm.equalsIgnoreCase("y"))
+   	   				{
+   	   					store.checkout(cart);
+   	   					printMenu();
+   	   				}
+   	   				else if (nextConfirm.equalsIgnoreCase("n"))
+   	   				{
+   	   					System.out.println("Returning to Cart Menu: ");
+   	   					printCartMenu();
+   	   				}
+   	   				else 
+   	   				{
+   	   					System.out.println("Incorrect input: Please input a Y or N");
+   	   					printCartMenu();
+   	   				}
    				}
-   				else if (nextConfirm.equalsIgnoreCase("n"))
+   				else
    				{
-   					System.out.println("Returning to Cart Menu: ");
+   					System.out.println("This is not possible without logging in. \n");
    					printCartMenu();
    				}
-   				else 
-   				{
-   					System.out.println("Incorrect input: Please input a Y or N");
-   					printCartMenu();
-   				}
+   				
    				return;
    			}
    			
@@ -638,7 +665,7 @@ public class ShoppingCartManager
    	 * 
    	 * 	@param 	all		if all customers' information should be used
    	 */
-   	public static void accountMenu(boolean all)
+   	private static void accountMenu(boolean all)
    	{
    		if(all)
    			store.printCustomers();
@@ -972,8 +999,9 @@ public class ShoppingCartManager
    		   		{
    		   			int orderID = Integer.parseInt(order.trim());
    		   			store.printMyOrderDetails(orderID);
-   		   			System.out.println("Click any key to return to main menu: ");
+   		   			System.out.print("Click any key to return to main menu: ");
    		   			in.nextLine();
+   		   			System.out.println(); //spacing
    		   			printMenu();
    		   		}
    		   		catch (NumberFormatException e)
