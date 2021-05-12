@@ -7,7 +7,7 @@ import script.ScriptRunner;
  * 	Creates a connection to the BugBytes virtual store. 
  *
  * 	@author Jacob Normington, Daniel Beauchamp, Youser Alalusi
- * 	@version 5/5/2021
+ * 	@version 5/11/2021
  */
 public class Connector 
 {

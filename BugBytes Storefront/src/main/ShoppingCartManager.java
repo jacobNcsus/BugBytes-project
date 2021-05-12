@@ -5,7 +5,7 @@ import java.util.Scanner;
  * 	Implements a menu to interact with the virtual store via console input
  *
  * 	@author Alexander Gunby, Sikander Ghafary, Jacob Normington
- * 	@version 5/4/2021
+ * 	@version 5/11/2021
  */
 public class ShoppingCartManager
 {

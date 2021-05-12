@@ -3,7 +3,7 @@ package main;
  * 	A representation of a virtual storefront pulled from the shop_test database. 
  *
  * 	@author Jacob Normington
- * 	@version 5/3/2021
+ * 	@version 5/11/2021
  */
 public class Storefront 
 {
