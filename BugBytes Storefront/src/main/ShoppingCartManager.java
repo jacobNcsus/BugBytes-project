@@ -434,7 +434,6 @@ public class ShoppingCartManager
    	
    	private static void printCartMenu()
    	{
-   		//System.out.println("Viewing Cart Menu");
    		cart.printTotal();
    		System.out.println("Cart Menu Options:");
    		System.out.println("1 - confirm order");
@@ -445,7 +444,18 @@ public class ShoppingCartManager
    		System.out.println();
    		System.out.println("5 - delete cart"); //mainly used for testing 
    		System.out.print("Choose an option: ");
-   		int nextOrder = Integer.parseInt(in.nextLine().trim());
+   		int nextOrder = 0;
+   		try
+   		{
+   			nextOrder = Integer.parseInt(in.nextLine().trim());
+   		}
+   		catch (NumberFormatException e)
+   		{
+   			System.out.println("Invalid answer. Please enter 1, 2, 3, or 4. \n");
+    		printCartMenu();
+    		return;
+   		}
+   		
    		System.out.println(); //spacing
    		
    		switch (nextOrder)
@@ -455,25 +465,22 @@ public class ShoppingCartManager
    				System.out.println("Confirm order? Y/N");
    				System.out.print("Answer: ");
    				String nextConfirm = in.nextLine();
-   				//in.next();							//gets the \n so you can input again
-   				if (nextConfirm.equals("y")||nextConfirm.equals("Y"))
+   				if (nextConfirm.equalsIgnoreCase("y"))
    				{
    					store.checkout(cart);
    					printMenu();
-   					return;
    				}
-   				else if (nextConfirm.equals("n") || nextConfirm.equals("N"))
+   				else if (nextConfirm.equalsIgnoreCase("n"))
    				{
    					System.out.println("Returning to Cart Menu: ");
    					printCartMenu();
-   					return;
    				}
    				else 
    				{
    					System.out.println("Incorrect input: Please input a Y or N");
    					printCartMenu();
-   					return;
    				}
+   				return;
    			}
    			
    			case 2: //remove item from cart
@@ -605,7 +612,7 @@ public class ShoppingCartManager
    				}
    				catch (Exception e)
    				{
-   					System.out.println(e);
+   					System.out.println(e.getMessage());
    					if(retry())
    	   					makeOrder("an");
    	   				else
@@ -810,6 +817,7 @@ public class ShoppingCartManager
    		System.out.println("Would you like to cancel an order?");
    		System.out.print("Answer: ");
    		String answer = in.nextLine();
+   		System.out.println(); //spacing
    		
    		switch (answer)
    		{
@@ -864,7 +872,7 @@ public class ShoppingCartManager
    		   		String order = in.nextLine();
    		   		try
    		   		{
-   		   			int orderID = Integer.parseInt(answer.trim());
+   		   			int orderID = Integer.parseInt(order.trim());
 	   		   		System.out.print("Are You Sure? Please answer exactly 'yes'.");
 	   		   		System.out.print("Answer: ");
 	   		   		String value = in.nextLine();
@@ -877,13 +885,102 @@ public class ShoppingCartManager
 		    		else
 		    		{
 		    			System.out.println("You did not answer exactly 'yes'. Order not cancelled. \n");
-		    			accountMenu(all);
+		    			orderMenu(all);
 		    		}
    		   		}
    		   		catch (NumberFormatException e)
    		   		{
-   		   			System.out.println("'" + order + "' is not a valid customer ID. Returning to Main Menu. \n");
-		   			printMenu();
+   		   			System.out.println("'" + order + "' is not a valid order ID. No order cancelled. Please try again. \n");
+		   			orderMenu(all);
+   		   		}
+   				break;
+   			}
+   			case "n":
+   			{
+   				orderDetails();
+   				break;
+   			}
+   			default:
+   			{
+   				//do nothing, this is impossible
+   			}
+   		}
+   	}
+   	
+   	/**
+   	 * 	Displays the details of an order. 
+   	 */
+   	private static void orderDetails()
+   	{
+   		System.out.println("Would you like to view the contents of an order?");
+   		System.out.print("Answer: ");
+   		String answer = in.nextLine();
+   		System.out.println(); //spacing
+   		
+   		switch (answer)
+   		{
+   			case "y": 
+   				answer = "y";
+   				break;
+   			case "yes": 
+   				answer = "y";
+   				break;
+   			case "Y": 
+   				answer = "y";
+   				break;
+   			case "Yes": 
+   				answer = "y";
+   				break;
+   			case "YES": 
+   				answer = "y";
+   				break;
+
+   			case "n": 
+   				answer = "n";
+   				break;
+   			case "no": 
+   				answer = "n";
+   				break;
+   			case "N": 
+   				answer = "n";
+   				break;
+   			case "No": 
+   				answer = "n";
+   				break;
+   			case "NO": 
+   				answer = "n";
+   				break;
+   				
+   			default:
+   			{
+   				System.out.println("Answer cannot be understood.");
+   				if(retry())
+   					orderDetails();
+   				else
+   					printMenu();
+   				return;
+   			}
+   		}
+   			
+   		switch(answer)
+   		{
+   			case "y":
+   			{
+   				System.out.print("Order ID: ");
+   		   		String order = in.nextLine();
+   		   		try
+   		   		{
+   		   			int orderID = Integer.parseInt(order.trim());
+   		   			store.printMyOrderDetails(orderID);
+   		   			System.out.println("Click any key to return to main menu: ");
+   		   			in.nextLine();
+   		   			printMenu();
+   		   		}
+   		   		catch (NumberFormatException e)
+   		   		{
+   		   			e.printStackTrace();
+   		   			System.out.println("'" + order + "' is not a valid order ID. Pealse try again. \n");
+		   			orderDetails();
    		   		}
    				break;
    			}

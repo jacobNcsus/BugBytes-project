@@ -184,7 +184,7 @@ public class ShoppingCart
    			CartNode node = head;
    			if (head.getValue().getProductId().equalsIgnoreCase(prodID)) //remove first
    			{
-   				head = null;
+   				head = head.getNext();
    				if(node.getNext() != null) //there is a second node
    				{
    					node.getNext().setPrevious(null); //remove link from next node
@@ -209,7 +209,7 @@ public class ShoppingCart
    			
    			if (node != head && tail.getValue().getProductId().equalsIgnoreCase(prodID)) //remove last
    			{
-   				tail = null; 
+   				tail = tail.getPrevious(); 
    				node.getPrevious().setNext(null); //remove link from previous node
    				size -= node.getValue().getQuantity(); 
    				return node.getValue(); 
@@ -403,6 +403,7 @@ public class ShoppingCart
    	{
    		c.emptyCart(id); //clears database
 	   
+   		size = 0;
    		head.getNext().setPrevious(null); //remove reference from second
    		head = null; //remove reference from head
    		//garbage collector will delete all the stray nodes in frontend cart
@@ -435,7 +436,7 @@ public class ShoppingCart
 		   	}
 		   	cartPrice += tail.getValue().getTotalCost(); 
       	}
-	  	return cartPrice;
+	  	return Connector.round(cartPrice, 2);
    	}
    
    	/**
@@ -488,6 +489,7 @@ public class ShoppingCart
           	}
           	System.out.println("\t" + node.getValue());
           	subtotal += tail.getValue().getTotalCost(); 
+          	subtotal = Connector.round(subtotal, 2);
           	
           	System.out.println("Subtotal:  $" + subtotal);
           	double tax = Connector.round(subtotal*TAX_RATE, 2);
