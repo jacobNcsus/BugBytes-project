@@ -1366,7 +1366,7 @@ public class Connector
     }
     
     /**
-     * 	Removes an account from the database.
+     * 	Removes an account from the database, including associated cart. 
      * 
      * 	@throws 	IllegalArgumentException	if orderID is non-positive	
      * 	@param 		custID	a positive integer identifier of the account to be removed

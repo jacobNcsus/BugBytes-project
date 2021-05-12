@@ -49,7 +49,7 @@ public class Storefront
 	 */
 	public void printAisle(String aisle)
 	{
-		c.read(aisle, -1); //whole inventory
+		c.read(aisle, -1); //whole aisle
 	}
 	
 	/**
