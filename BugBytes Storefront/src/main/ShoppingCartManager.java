@@ -384,37 +384,37 @@ public class ShoppingCartManager
      	
      	switch(choice)
      	{
-     		case "w": //print alcohol aisle
+     		case "1": //print alcohol aisle
      		{
      			store.printAisle("Alcohol");
      			makeOrder("an"); //question
      			break;
      		}
-     		case "b":
+     		case "2":
      		{
      			store.printAisle("Bakery");
      			makeOrder("an"); //question
      			break;
      		}
-     		case "f": 
+     		case "3": 
      		{
      			store.printAisle("Breakfast");
      			makeOrder("an"); //question
      			break;
      		}
-     		case "d":
+     		case "4":
      		{
 	  			store.printAisle("Dairy");
 	  			makeOrder("an"); //question
 	  			break;
 	  		}
-	  		case "m": 
+	  		case "5": 
 	  		{
 	  			store.printAisle("Meat_seafood");
 	  			makeOrder("an"); //question
 	  			break;
 	  		}
-	  		case "p":
+	  		case "6":
 	  		{
 	  			store.printAisle("Produce");
 	  	   		makeOrder("an"); //question
@@ -422,7 +422,7 @@ public class ShoppingCartManager
 	  		}
 	  		default:
 	  		{
-	  			System.out.println("Answer cannot be understood.");
+	  			System.out.println("Answer cannot be understood. Please enter 1, 2, 3, 4, 5, or 6.");
    				if(retry())
    					goTo();
    				else
@@ -736,8 +736,10 @@ public class ShoppingCartManager
 		System.out.println("1 - Change Your Registered Email Adress");
 		System.out.println("2 - Change Your Registered Phone Number");
 		System.out.println("3 - Remove Your Account");
+		System.out.println("4 - Return to Main Menu");
 	    System.out.print("Choose an option: ");
 	    String toChange = in.nextLine();
+	    System.out.println(); //spacing
 	        
 		switch (toChange)
 	    {
@@ -747,6 +749,7 @@ public class ShoppingCartManager
 	    		String value = in.nextLine();
 	    		System.out.println(); //spacing
 	    		store.changeEmail(custID, value);
+	    		accountMenu(all);
 	    		break;
 	    	}
 	    	case "2":
@@ -755,6 +758,7 @@ public class ShoppingCartManager
 	    		String value = in.nextLine();
 	    		System.out.println(); //spacing
 	        	store.changePhone(custID, value);
+	        	accountMenu(all);
 	        	break;
 	        }
 	    	case "3":

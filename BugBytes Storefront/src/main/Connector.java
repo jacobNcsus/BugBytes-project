@@ -366,12 +366,12 @@ public class Connector
 				}
 				else //list is not empty
 				{
-					System.out.printf("%-3s%-15s%-15s%-15s%-20s%-15s \n"
-							+ "----------------------------------------------------------------------------------\n"
+					System.out.printf("%-3s%-15s%-15s%-15s%-30s%-15s \n"
+							+ "--------------------------------------------------------------------------------------------\n"
 							,"ID","Username","First Name","Last Name","Email","Phone Number");
 					do
 					{ 
-							System.out.printf("%-3s%-15s%-15s%-15s%-20s%-15s \n", 
+							System.out.printf("%-3s%-15s%-15s%-15s%-30s%-15s \n", 
 									myRs.getString("CUSTOMER_ID"), myRs.getString("USERNAME"), myRs.getString("FIRST_NAME"), myRs.getString("LAST_NAME"), myRs.getString("EMAIL"), myRs.getString("PHONE"));
 					} while(myRs.next());
 					System.out.println("\n"); //spacing, two lines
