@@ -56,28 +56,23 @@ public class ShoppingCart
    	 * 	@param	name		the user's first and last name
    	 * 	@param	reset		whether the parent database should be reset
    	 */
-   	public ShoppingCart(int custID, String name, boolean reset) throws IllegalArgumentException
-   	{
+   	public ShoppingCart(int custID, String name, boolean reset) throws IllegalArgumentException {
    		this(custID, name);
-   		if (custID < 1)
-   		{
+   		
+   		if (custID < 1) {
    			throw new IllegalArgumentException("Customer id must be positive.");
-   		}
-   		else if (custID == 1)
-   		{
+   			
+   		} else if (custID == 1) {
    			c.emptyCart(1);
    			customerName = "default";
    		}
    		
-   		if (reset)
-   		{
+   		if (reset) {
    			c.runScript("lib\\" + scriptName);
    			//System.out.println(System.getProperty("user.dir"));
    			System.out.println("Database initialized.\n");
    			
-   		}
-   		else if (custID > 1) //It's a waste of time to update the cart if you first reset the database, it will be empty.
-   		{
+   		} else if (custID > 1) { //It's a waste of time to update the cart if you first reset the database, it will be empty.
    			update();
    		}
    	}
@@ -311,7 +306,7 @@ public class ShoppingCart
       
    		c.removeFromCart(id, prodID); //update database
    	}
-   
+   	
    	/**
    	 *	Changes the quantity of an item in the cart. Not case sensitive.
    	 *
