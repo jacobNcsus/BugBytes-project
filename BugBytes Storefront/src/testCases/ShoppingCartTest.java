@@ -17,6 +17,11 @@ class ShoppingCartTest
 {
 	ShoppingCart s = new ShoppingCart(1,"username",false);
 	Connector c;
+
+	@Test
+	public void checkOldCartTest() {
+
+	}
 	
 	@Test
 	public void custIDLessThanOneTest() {
@@ -38,7 +43,6 @@ class ShoppingCartTest
 		ShoppingCart greater = new ShoppingCart(2,"username",false);
 		int result = greater.getCustomerId();
 		assertEquals(2,result);
-		greater.update();
 	}
 
 	
