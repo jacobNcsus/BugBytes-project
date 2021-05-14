@@ -179,7 +179,7 @@ public class Storefront
 			}
 			default:
 			{
-				throw new IllegalArgumentException("Product type invalid, please choose 'Alcohol', 'Bakery', 'Dairy', 'Meat_seafood', or 'Produce'.");
+				//throw new IllegalArgumentException("Product type invalid, please choose 'Alcohol', 'Bakery', 'Dairy', 'Meat_seafood', or 'Produce'."); //insert will throw this
 			}
 		}
 		productNums[index]++;

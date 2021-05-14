@@ -550,6 +550,7 @@ public class Connector
 	 * 	@throws		IllegalArgumentException	if type is not one of the six aisles
 	 * 	@throws		IllegalArgumentException	if price is non-positive
 	 * 	@throws		IllegalArgumentException	if quantity is non-positive
+	 * @throws		IllegalArgumentException	if reorder is non-positive
 	 * 	@param		PRODUCT_ID			a series of alphanumeric characters representing a unique product
 	 * 	@param		PRODUCT_TYPE		the product type or category
 	 * 	@param		PRODUCT_NAME		the name of the item
@@ -582,6 +583,12 @@ public class Connector
 
 		{
 			throw new IllegalArgumentException("Quantity invalid, please enter a quantity greater than zero.");
+		}
+		
+		if (REORDER <= 0) //if reorder is non-positive
+
+		{
+			throw new IllegalArgumentException("Reorder invalid, please enter a reorder greater than zero.");
 		}
 		
 		//other checks
