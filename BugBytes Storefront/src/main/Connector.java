@@ -184,11 +184,10 @@ public class Connector
 			myStmt.close();
 			return (String) ret;
 		}
-		catch (Exception e)
+		catch (Exception e) //if there is no item with that ID
 		{
-			e.printStackTrace(); 
+			return null;
 		}
-		return null;
 	}
 	
 	/**

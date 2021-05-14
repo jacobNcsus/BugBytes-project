@@ -193,7 +193,7 @@ public class Storefront
 		}
 		else
 		{
-			throw new ArrayIndexOutOfBoundsException();
+			throw new ArrayIndexOutOfBoundsException("This aisle is full, cannot add item.");
 		}
 		c.insert(prodID, aisle, name, item.getPrice(), quantity, restock);
 	}
