@@ -2,6 +2,7 @@ package testCases;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import main.*;
@@ -25,24 +26,30 @@ class ShoppingCartTest
 	
 	@Test
 	public void custIDLessThanOneTest() {
-		ShoppingCart less = new ShoppingCart(0,"username",false);
-		int result = less.getCustomerId();
-		assertEquals(0,result);
+		
+		ShoppingCart s = new ShoppingCart(0,"username",false);
+
+	    assertThrows(NullPointerException.class,
+	            ()->{
+	        		assertEquals(0,s.getCustomerId());
+	        		
+	            });
+
 		
 	}
 	
 	@Test
 	public void custIDEqualToOneTest() {
-		ShoppingCart one = new ShoppingCart(1,"username",true);
+		ShoppingCart one = new ShoppingCart(1,"username",false);
 		int result = one.getCustomerId();
 		assertEquals(1,result);
 	}
 	
 	@Test
 	public void custIDGreaterThanOneTest() {
-		ShoppingCart greater = new ShoppingCart(2,"username",false);
+		ShoppingCart greater = new ShoppingCart(1,"username",false);
 		int result = greater.getCustomerId();
-		assertEquals(2,result);
+		assertEquals(1,result);
 	}
 
 	
