@@ -353,7 +353,9 @@ public class StorefrontTest
 		cart.addToCart("Cake", 1);
 		cart.addToCart("Salmon", 2);
 		store.checkout(cart);
+		int id = c.getHighestOrderID()+1;
 		assertEquals(0,cart.getCartSize());
+		store.cancelOrder(id);
 	}
 	
 	@Test
