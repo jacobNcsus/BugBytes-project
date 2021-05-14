@@ -1,4 +1,4 @@
-package main;
+	package main;
 /**
  * 	A ShoppingCart is an List of Item objects, with 
  * 	functionality similar to that used in virtual storefronts.
@@ -56,28 +56,23 @@ public class ShoppingCart
    	 * 	@param	name		the user's first and last name
    	 * 	@param	reset		whether the parent database should be reset
    	 */
-   	public ShoppingCart(int custID, String name, boolean reset) throws IllegalArgumentException
-   	{
+   	public ShoppingCart(int custID, String name, boolean reset) throws IllegalArgumentException {
    		this(custID, name);
-   		if (custID < 1)
-   		{
+   		
+   		if (custID < 1) {
    			throw new IllegalArgumentException("Customer id must be positive.");
-   		}
-   		else if (custID == 1)
-   		{
+   			
+   		} else if (custID == 1) {
    			c.emptyCart(1);
    			customerName = "default";
    		}
    		
-   		if (reset)
-   		{
+   		if (reset) {
    			c.runScript("lib\\" + scriptName);
    			//System.out.println(System.getProperty("user.dir"));
    			System.out.println("Database initialized.\n");
    			
-   		}
-   		else if (custID > 1) //It's a waste of time to update the cart if you first reset the database, it will be empty.
-   		{
+   		} else if (custID > 1) { //It's a waste of time to update the cart if you first reset the database, it will be empty.
    			update();
    		}
    	}
@@ -311,7 +306,7 @@ public class ShoppingCart
       
    		c.removeFromCart(id, prodID); //update database
    	}
-   
+   	
    	/**
    	 *	Changes the quantity of an item in the cart. Not case sensitive.
    	 *
@@ -418,7 +413,7 @@ public class ShoppingCart
    		size = 0;
    		head.getNext().setPrevious(null); //remove reference from second
    		head = null; //remove reference from head
-   		//garbage collector will delete all the stray nodes in frontend cart
+   		//garbage collector will delete all the stray nodes in front-end cart
    	}
    
    	/**
@@ -429,11 +424,11 @@ public class ShoppingCart
    	{
    		c.fillCart(this);
    	}
-   
+   	
    	/**
    	 * 	Determines and returns the total cost of items in cart.
    	 *
-   	 * 	@return    the subtotal of cart's items before tax or shipping
+   	 * 	@return    the sub-total of cart's items before tax or shipping
    	 */
    	public double getSubtotal()
    	{
@@ -546,71 +541,3 @@ public class ShoppingCart
    	}
 }
 
-/**
- * 	Node in a doubly-linked list of Item objects
- */
-class CartNode
-{
-	private CartNode previous; 
-	private Item value;
-	private CartNode next; 
-	
-	public CartNode(Item val)
-	{
-		value = val; 
-		previous = null; 
-		next = null; 
-	}
-	
-	public CartNode(Item val, CartNode previous)
-	{
-		value = val; 
-		this.previous = previous; 
-	}
-	
-	public void add(Item next)
-	{
-		this.next = new CartNode(next, this); 
-	}
-	
-	/**
-	 * Removes a node from the list
-	 *
-	 * @throws	IllegalArgumentException
-	 */
-	public void remove()
-	{
-		if (previous != null && next != null) //not the first element
-		{
-			previous.next = next; //link previous to next
-			next.previous = previous; //link next back to previous
-		}
-		else
-			throw new IllegalArgumentException("Cannot remove head or tail of list"); 
-	}
-
-	public CartNode getPrevious() {
-		return previous;
-	}
-	public void setPrevious(CartNode previous) {
-		this.previous = previous;
-	}
-
-	public Item getValue() {
-		return value;
-	}
-	public void setValue(Item value) {
-		this.value = value;
-	}
-
-	public boolean hasNext() {
-		return next != null; 
-	}
-	public CartNode getNext() {
-		return next;
-	}
-	public void setNext(CartNode next) {
-		this.next = next;
-	}
-
-}

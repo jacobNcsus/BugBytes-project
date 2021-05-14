@@ -1,9 +1,10 @@
 package testCases;
 
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.Assert.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import java.util.Scanner;
+import main.*;
 
 /**
  * 	A test class for the BugBytes ShoppingCart class. Incomplete
@@ -11,74 +12,78 @@ import java.util.Scanner;
  * 	@author 	Jacob Normington, Sikander Ghafary
  *	@version	05/10/2021
  */
+
 class ShoppingCartTest 
 {
-	main.ShoppingCart cart = new main.ShoppingCart(2,"username",false);
-	
+	ShoppingCart s = new ShoppingCart(1,"username",false);
+	Connector c;
+
 	@Test
-	void constructor_lowID() 
-	{
-		assertThrows(IllegalArgumentException.class, () -> {
-			new main.ShoppingCart(0,"username", false);
-		});
+	public void checkOldCartTest() {
+
 	}
 	
 	@Test
-	void constructor_defaultUser()
-	{
-		main.ShoppingCart s = new main.ShoppingCart(1, "username", false);
-		
-		assertEquals(s.getCustomerName(), "default");
-		assertEquals(s.getCartSize(), 0);
-	}
-	
-	@Test
-	void constructor_reset()
-	{
-		//main.ShoppingCart s = new main.ShoppingCart(1, "username", true);
-		//how do we ensure the script was run correctly, though?
-	}
-	
-	@Test
-	void constructor_normalUser()
-	{
-		main.ShoppingCart s = new main.ShoppingCart(2, "username", false);
-		
-		assertEquals(s.getCustomerName(), "username");
-	}
-	
-	@Test
-	void addItem() 
-	{
-		cart.addToCart("lettuce", 1);
-		
-		assertEquals(cart.containsName("lettuce"), true);
-		assertEquals(cart.getQuantity("lettuce"), 1);
-	}
-	
-	@Test
-	void addItem_LowQuantity() 
-	{
-		assertThrows(IllegalArgumentException.class, () -> {
-			cart.addToCart("lettuce", 0);
-		});
-	}
-	
-	@Test
-	void addItem_DoesNotExist() 
-	{
-		//how do you do this?
-	}
-	
-	@Test
-	void removeItemTest() 
-	{
+	public void custIDLessThanOneTest() {
+		ShoppingCart less = new ShoppingCart(0,"username",false);
+		int result = less.getCustomerId();
+		assertEquals(0,result);
 		
 	}
 	
 	@Test
-	void changeQuantityTest() 
-	{
-		
+	public void custIDEqualToOneTest() {
+		ShoppingCart one = new ShoppingCart(1,"username",true);
+		int result = one.getCustomerId();
+		assertEquals(1,result);
 	}
+	
+	@Test
+	public void custIDGreaterThanOneTest() {
+		ShoppingCart greater = new ShoppingCart(2,"username",false);
+		int result = greater.getCustomerId();
+		assertEquals(2,result);
+	}
+
+	
+	@Test
+	public void getCustomerNameTest() {
+		s.getCustomerName();
+	}
+	
+	@Test
+	public void getCustomerIdTest() {
+		s.getCustomerId();
+	}
+	
+	@Test
+	public void getCartSizeTest() {
+		s.getCartSize();
+	}
+	
+	@Test
+	public void addToCartTest() {
+		s.addToCart("username",1);
+	}
+	
+	@Test
+	public void removeFromCartTest() {	
+		s.removeFromCart("username");
+
+	}
+	
+	@Test
+	public void containsTest() {
+		boolean result = s.contains("123");
+		assertEquals(s.getCartSize(),0);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
