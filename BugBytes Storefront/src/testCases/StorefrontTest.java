@@ -16,7 +16,7 @@ import org.junit.Test;
  *	@version	05/13/2021
  */
 
-public class StoreFrontTester {
+public class StorefrontTest {
 	Storefront store = new Storefront();
 	private Connector c;
 	

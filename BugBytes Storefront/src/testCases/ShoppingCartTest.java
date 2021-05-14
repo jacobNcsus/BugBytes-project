@@ -8,7 +8,7 @@ import main.*;
  * 	A test class for the BugBytes ShoppingCart class. Incomplete
  * 	
  * 	@author 	Jacob Normington, Sikander Ghafary
- *	@version	05/10/2021
+ *	@version	05/13/2021
  */
 
 class ShoppingCartTest 
