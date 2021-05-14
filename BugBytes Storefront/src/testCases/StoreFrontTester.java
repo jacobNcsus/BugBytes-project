@@ -74,11 +74,45 @@ public class StoreFrontTester {
 	}
 	
 	@Test
-	public void addInventoryTest() {
+	public void addAlcoholTest() {
+		Item item = new Item("ALC01", "Alcohol", "Whiskey", 10.99, 1);
+		store.addInventory(item,1,5);
+	}
+	
+	@Test
+	public void addBakeryTest() {
+		Item item = new Item("BAKE01", "Bakery", "Bread", 2.99, 1);	// Item Constructor i1 
+		store.addInventory(item,1,5);
+	}
+	
+	@Test
+	public void addBreakfastTest() {
+		Item item = new Item("BREAK01", "Breakfast", "lettuce", 2.50001, 1);
+		store.addInventory(item,1,5);
+	}
+	
+	@Test
+	public void addDairyTest() {
+		Item item = new Item("DIAR01", "Dairy", "lettuce", 2.50001, 1);
+		store.addInventory(item,1,5);
+	}
+	
+	@Test
+	public void addMeat_seafoodTest() {
+		Item item = new Item("MEA01", "Meat_seafood", "lettuce", 2.50001, 1);
+		store.addInventory(item,1,5);
+	}
+	
+	@Test
+	public void addProduceTest() {
 		Item item = new Item("PROD06", "produce", "lettuce", 2.50001, 1);	// Item Constructor i1 
 		store.addInventory(item,1,5);
-
 	}
+		
+	@Test
+	public void addNullCategoryTest() {
+	}
+	
 	
 	@Test
 	public void signUpTest() {
@@ -127,7 +161,6 @@ public class StoreFrontTester {
 	public void requestAuthorizationTest() {
 		store.requestAuthorization("Sai","Suresh");
 	}
-	
 	
 	
 	
