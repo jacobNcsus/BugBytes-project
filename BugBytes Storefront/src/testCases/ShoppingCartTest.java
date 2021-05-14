@@ -13,7 +13,7 @@ import main.*;
 
 class ShoppingCartTest 
 {
-	ShoppingCart s = new ShoppingCart(1,"username",false,null);
+	ShoppingCart s = new ShoppingCart(1,"username",false,null); //also resets database before anything else can happen
 	ShoppingCart s2 = new ShoppingCart(2,"jacob",false,null);
 
 	@Test
@@ -291,7 +291,7 @@ class ShoppingCartTest
 	public void containsTest_dontHave() 
 	{
 		s.clearCart();
-		assertTrue(!s.containsName("Chicken"));
+		assertFalse(s.containsName("Chicken"));
 		s.clearCart();
 	}
 	

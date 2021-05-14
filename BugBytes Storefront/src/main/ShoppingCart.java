@@ -580,9 +580,9 @@ class CartNode
 	}
 	
 	/**
-	 * Removes a node from the list
+	 * Removes a node from the list. Cannot remove head or tail of list.
 	 *
-	 * @throws	IllegalArgumentException
+	 * @throws	IllegalArgumentException	if this node is the head or tail of the list
 	 */
 	public void remove()
 	{
@@ -592,7 +592,7 @@ class CartNode
 			next.previous = previous; //link next back to previous
 		}
 		else
-			throw new IllegalArgumentException("Cannot remove head or tail of list"); 
+			throw new IllegalArgumentException("Cannot remove head or tail of list."); 
 	}
 
 	public CartNode getPrevious() {
@@ -604,9 +604,6 @@ class CartNode
 
 	public Item getValue() {
 		return value;
-	}
-	public void setValue(Item value) {
-		this.value = value;
 	}
 
 	public boolean hasNext() {
