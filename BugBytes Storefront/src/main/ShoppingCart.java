@@ -104,7 +104,7 @@ public class ShoppingCart
    	   			current = oldCart.next();
    	   			productName = current.getName();
    	   			oldCartQuantity = current.getQuantity();
-   	   			if(contains(productName)) //if cart have current, remove saved item, then add current quantity
+   	   			if(containsName(productName)) //if cart have current, remove saved item, then add current quantity
    	   			{
    	   				removeFromCart(productName);
    	   				addToCart(productName, oldCartQuantity);
@@ -225,8 +225,9 @@ public class ShoppingCart
    	 * 
    	 * 	@param	prodID		a string representing the item in the database
    	 * 	@param	amount		the number of item user wants to buy
+   	 * 	@return			whether or not the item was in your cart
    	 */
-   	private void changeQuantity(String prodID, int amount)
+   	private boolean changeQuantity(String prodID, int amount)
    	{
    		prodID = prodID.toUpperCase();
    		
@@ -240,7 +241,7 @@ public class ShoppingCart
    					size -= node.getValue().getQuantity();
    					node.getValue().setQuantity(amount);
    					size += amount;
-   					return;
+   					return true;
    				}
    				node = node.getNext(); 
    			}
@@ -249,10 +250,11 @@ public class ShoppingCart
    				size -= node.getValue().getQuantity();
    				tail.getValue().setQuantity(amount);
    				size += amount;
-   				return;
+   				return true;
    			}
    		}
    		System.out.println("Item not found in cart. No change.");
+   		return false;
    	}
    
    	/**
@@ -328,9 +330,12 @@ public class ShoppingCart
    		if (prodID == null)
    			throw new IllegalArgumentException("No product of that name exists: " + name + ".");
    		
-   		changeQuantity(prodID, quantity); //update cart
+   		boolean success = changeQuantity(prodID, quantity); //update cart
 	   	
-	   	c.updateCart(id, prodID, quantity); //update database
+   		if(!success)
+   			throw new IllegalArgumentException("You do not have a product called: " + name + ".");
+   		else
+   			c.updateCart(id, prodID, quantity); //update database
    	}
    
    	/**
