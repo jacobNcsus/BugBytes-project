@@ -434,16 +434,5 @@ public class StorefrontTest
 	public void cancelOrderTest() {
 		//store.cancelOrder(1);
 	}
-	
-	@Test
-	public void requestAuthorizationTest_failure() {
-		store.requestAuthorization("Sai","Suresh");
-		assertFalse(store.isAdmin());
-	}
-	
-	@Test
-	public void requestAuthorizationTest_success() {
-		store.requestAuthorization("shopMgr","csc131");
-		assertTrue(store.isAdmin());
-	}
+
 }
