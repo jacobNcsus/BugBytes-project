@@ -266,7 +266,7 @@ public class ShoppingCartManager
       		{
       			System.out.print("Product Type (Ex: Alcohol,Bakery,Breakfast,Dairy,Meat_seafood,Produce): ");
             	String category = in.nextLine();
-            	System.out.print("Product Type: ");
+            	System.out.print("Product Name: ");
             	String name = in.nextLine(); 
             	System.out.print("Product Price: ");
             	double price = Double.parseDouble(in.nextLine().trim());

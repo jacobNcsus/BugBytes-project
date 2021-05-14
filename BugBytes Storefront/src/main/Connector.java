@@ -640,6 +640,7 @@ public class Connector
     			||column.equalsIgnoreCase("c") || column.equalsIgnoreCase("category") || column.equalsIgnoreCase("'category'"))
     	{
     		query = "UPDATE products SET PRODUCT_TYPE=? WHERE PRODUCT_NAME=?";
+    		
     		type = -1; //string
     		System.out.println("Changing product type to " + value);
     	}
@@ -1608,10 +1609,12 @@ public class Connector
    	 * 	this format. 
    	 * 	
    	 * 	@param 		field	the String to be changed
+   	 * 	@return			the altered string
    	 */
-   	public static void capitalizeFirstLetter(String field)
+   	public static String capitalizeFirstLetter(String field)
    	{
    		field = field.substring(0,1).toUpperCase() + field.substring(1).toLowerCase();
+   		return field.substring(0,1).toUpperCase() + field.substring(1).toLowerCase();
    	}
     
     /**

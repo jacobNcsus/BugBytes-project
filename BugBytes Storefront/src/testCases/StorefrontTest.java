@@ -1,12 +1,8 @@
 package testCases;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.Before;
-
-import main.*;
-
 import org.junit.Test;
+import main.*;
 
 /**
  * 	A test class for the BugBytes ShoppingCart class. Incomplete
@@ -17,6 +13,13 @@ import org.junit.Test;
 
 public class StorefrontTest 
 {
+	/*
+	PrintStream oldStream = System.out; //saves value
+	java.io.File outFile = new java.io.File("lib\\StorefrontTest.out");
+	PrintStream printStream = new PrintStream(outFile);
+	System.setOut(printStream);
+	Scanner printScanner = new Scanner(outFile); */
+	
 	Storefront store = new Storefront();
 	Connector c = Connector.getCon(); //to verify certain fields
 	
@@ -319,30 +322,97 @@ public class StorefrontTest
 	
 	
 	@Test
-	public void signUpTest() {
-		//store.signUp("username","firstname","lastname","email","9168568535");
-		//store.signUp("username","Sai","Surseh","email","9168568535");
-
+	public void signUpTest_failure() 
+	{
+		store.signUp("user4","Sai","Surseh","email","9168568535");
 	}
 	
 	@Test
-	public void checkoutTest() {
-		//ShoppingCart cart = new ShoppingCart(1, "Jagannadha Chidella", false); 
-		//store.checkout(cart);
+	public void signUpTest_success() 
+	{
+		store.signUp("TestUser","firstname","lastname","email","9168568535");
+		store.removeAccount(c.getHighestCustomerID());
 	}
 	
 	@Test
-	public void checkOut() {
-		ShoppingCart cart1 = new ShoppingCart(1, "Jagannadha Chidella", false); 
-		//cart1.addToCart("Lettuce",5);
-		ShoppingCart cart2 = new ShoppingCart(1, "Jagannadha Chidella", false,cart1);
-
-		//store.checkout(cart2);
+	public void checkoutTest_empty() 
+	{
+		ShoppingCart cart = new ShoppingCart(1, "Jagannadha Chidella", false);
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			store.checkout(cart);
+	    });
+		String expectedMessage = "Cart is empty, no order to be made.";
+	    String actualMessage = exception.getMessage();
+	    
+	    assertTrue(actualMessage.contains(expectedMessage));
 	}
 	
 	@Test
-	public void moveItemTest() {
-		//store.moveItem("lettuce","produce");
+	public void checkoutTest_success() {
+		ShoppingCart cart = new ShoppingCart(3, "Alexander Gunby", false);
+		cart.addToCart("Cake", 1);
+		cart.addToCart("Salmon", 2);
+		store.checkout(cart);
+		assertEquals(0,cart.getCartSize());
+	}
+	
+	@Test
+	public void moveItemTest_notAllowed() 
+	{
+		if(store.isAdmin())
+			store.requestAuthorization("", "");
+		
+		Exception exception = assertThrows(SecurityException.class, () -> {
+			store.moveItem("Shredded_Pepper Jack","produce");
+	    });
+		String expectedMessage = "Ordinary customers are not permitted to alter the store's inventory.";
+	    String actualMessage = exception.getMessage();
+	    
+	    assertTrue(actualMessage.contains(expectedMessage));
+	}
+	
+	@Test
+	public void moveItemTest() 
+	{
+		if(!store.isAdmin())
+			store.requestAuthorization("shopMgr", "csc131");
+		
+		store.moveItem("Shredded_Pepper Jack","PrOdUcE");
+		assertEquals("Produce",c.readItem(c.getProductID("Shredded_Pepper Jack"),"t"));
+		store.moveItem("Shredded_Pepper Jack","dairy");
+	}
+	
+	@Test
+	public void setUnitPriceTest() 
+	{
+		if(!store.isAdmin())
+			store.requestAuthorization("shopMgr", "csc131");
+		
+		store.setUnitPrice("Shredded_Pepper Jack",7.00);
+		assertEquals("7.00",c.readItem(c.getProductID("Shredded_Pepper Jack"),"p"));
+		store.setUnitPrice("Shredded_Pepper Jack",4.99);
+	}
+	
+	@Test
+	public void setReorderTest() 
+	{
+		if(!store.isAdmin())
+			store.requestAuthorization("shopMgr", "csc131");
+		
+		store.setReorder("Shredded_Pepper Jack",7);
+		assertEquals("7",c.readItem(c.getProductID("Shredded_Pepper Jack"),"r"));
+		store.setUnitPrice("Shredded_Pepper Jack",5);
+	}
+	
+	@Test
+	public void changeProductNameTest() 
+	{
+		if(!store.isAdmin())
+			store.requestAuthorization("shopMgr", "csc131");
+		
+		store.changeProductName("Shredded_Pepper Jack","nonsense");
+		assertEquals("DIAR07",c.getProductID("nonsense"));
+		store.changeProductName("nonsense","Shredded_Pepper Jack");
 	}
 	
 	@Test

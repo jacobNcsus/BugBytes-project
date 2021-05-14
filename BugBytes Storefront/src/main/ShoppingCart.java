@@ -10,7 +10,7 @@ public class ShoppingCart
 {
 	private static double TAX_RATE = 0.07;
 	private static double SHIPPING_RATE = 10.00;
-	private static final String scriptName = "BugBytes_shop_script.sql";
+	private static final String scriptName = "lib\\BugBytes_shop_script.sql";
 	
 	private String customerName;
 	private int id; //user id
@@ -61,7 +61,7 @@ public class ShoppingCart
    		}
    		
    		if (reset) {
-   			c.runScript("lib\\" + scriptName);
+   			c.runScript(scriptName);
    			//System.out.println(System.getProperty("user.dir"));
    			System.out.println("Database initialized.\n");
    			
@@ -267,7 +267,7 @@ public class ShoppingCart
    	 */
    	public void addToCart(String name, int quantity)
    	{
-   		Connector.capitalizeFirstLetter(name);
+   		name = Connector.capitalizeFirstLetter(name);
    		
    		int oldQuantity = getQuantity(name);
    		if(oldQuantity > 0) //add that quantity to an existing Item's quantity
@@ -299,8 +299,6 @@ public class ShoppingCart
    	 */
    	public void removeFromCart(String name)
    	{
-   		Connector.capitalizeFirstLetter(name);
-   		
    		//find item
    		String prodID = c.getProductID(name);
    		if (prodID == null)
@@ -323,8 +321,6 @@ public class ShoppingCart
    	 */
    	public void changeCartQuantity(String name, int quantity)
    	{
-   		Connector.capitalizeFirstLetter(name);
-   		
    		//find item
    		String prodID = c.getProductID(name);
    		if (prodID == null)

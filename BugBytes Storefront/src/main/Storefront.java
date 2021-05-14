@@ -131,7 +131,6 @@ public class Storefront
 	public void addInventory(Item item, int quantity, int restock)
 	{
 		String name = item.getName();
-		Connector.capitalizeFirstLetter(name);
 		String aisle = item.getCategory();
 		
 		int index = 0;
@@ -212,24 +211,28 @@ public class Storefront
     public void signUp(String username, String firstName, String lastName, String email, String phone)
     {
     	String out = isCustomer(username, firstName, lastName);
-    	System.out.println(out);
     	if (out.contains("There is no account registered with username: "))
     	{
     		c.signUp(c.getHighestCustomerID()+1, username, firstName, lastName, email, phone);
     	}
     	else
     	{
-    		System.out.println("Sign up successful."); //for structuring
+    		System.out.println(out);
+    		System.out.println(""); //for structuring
     	}
     }
 	
     /**
 	 * 	Checks out a cart and issues the associated order to the store.
 	 * 
-	 * 	@param 		cart	a ShoppingCart of items to be checked out
+	 * @throws		IllegalArgumentException	if the cart is empty
+	 * @param 		cart	a ShoppingCart of items to be checked out
 	 */
 	public void checkout(ShoppingCart cart)
 	{
+		if(cart.getCartSize() < 1)
+			throw new IllegalArgumentException("Cart is empty, no order to be made.");
+		
 		int custID = cart.getCustomerId();
 		c.CONFIRM_ORDER(custID);
 		   
@@ -265,7 +268,7 @@ public class Storefront
 	 */
 	public void moveItem(String name, String aisle)
 	{
-		c.update(name, "a", aisle); //changes product's type to aisle
+		c.update(name, "a", Connector.capitalizeFirstLetter(aisle)); //changes product's type to aisle
 	}
 	/**
 	 * 	Changes the name of an item in the store. Requires authorization.
@@ -275,6 +278,7 @@ public class Storefront
 	 */
 	public void changeProductName(String oldName, String newName)
 	{
+		Connector.capitalizeFirstLetter(newName);
 		c.update(oldName, "n", newName); //changes product's name to newName
 	}
 	/**
