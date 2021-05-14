@@ -1,6 +1,7 @@
 package testCases;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.Before;
 
@@ -12,11 +13,12 @@ import org.junit.Test;
  * 	A test class for the BugBytes ShoppingCart class. Incomplete
  * 	
  * 	@author 	Sikander Ghafary
- *	@version	05/12/2021
+ *	@version	05/13/2021
  */
 
 public class StoreFrontTester {
 	Storefront store = new Storefront();
+	private Connector c;
 	
 	@Test
 	public void testingTest() {
@@ -108,24 +110,31 @@ public class StoreFrontTester {
 		Item item = new Item("PROD06", "produce", "lettuce", 2.50001, 1);	// Item Constructor i1 
 		store.addInventory(item,1,5);
 	}
-		
-	@Test
-	public void addNullCategoryTest() {
-	}
 	
 	
 	@Test
 	public void signUpTest() {
 		store.signUp("username","firstname","lastname","email","9168568535");
+		store.signUp("username","Sai","Surseh","email","9168568535");
+
 	}
 	
 	@Test
 	public void checkoutTest() {
 		ShoppingCart cart = new ShoppingCart(1, "Jagannadha Chidella", false); //true to test if scriptRunner works
 		store.checkout(cart);
-		
-		
 	}
+	
+	@Test
+	public void checkOut() {
+		ShoppingCart cart1 = new ShoppingCart(1, "Jagannadha Chidella", false); //true to test if scriptRunner works
+		cart1.addToCart("Lettuce",5);
+		ShoppingCart cart2 = new ShoppingCart(1, "Jagannadha Chidella", false,cart1); //true to test if scriptRunner works
+
+		store.checkout(cart2);
+	}
+	
+
 	
 	@Test
 	public void moveItemTest() {
@@ -162,6 +171,12 @@ public class StoreFrontTester {
 		store.requestAuthorization("Sai","Suresh");
 	}
 	
+	@Test
+	public void removeInventoryTest() {
+		c.admin();
+		store.requestAuthorization("", ""); //removes authorization
+		store.removeInventory("PROD06");
+	}
 	
 	
 	
