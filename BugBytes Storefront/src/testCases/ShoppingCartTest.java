@@ -98,13 +98,79 @@ class ShoppingCartTest
 	@Test
 	public void addToCartTest() 
 	{
-		s.addToCart("username",1);
+		s.clearCart();
+		s.addToCart("Wine", 1);
+		assertTrue(s.containsName("Wine"));
+		assertEquals(1,s.getQuantity("Wine"));
+		s.clearCart();
 	}
 	
 	@Test
-	public void removeFromCartTest() 
+	public void addToCartTest_exists() 
+	{
+		s.clearCart();
+		s.addToCart("Wine", 1);
+		s.addToCart("Wine", 2);
+		assertTrue(s.containsName("Wine"));
+		assertEquals(3,s.getQuantity("Wine"));
+		s.clearCart();
+	}
+	
+	@Test
+	public void removeFromCartTest_nonsense() 
 	{	
-		s.removeFromCart("username");
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			s.removeFromCart("dfindf");
+	    });
+		String expectedMessage = "No product of that name exists: dfindf.";
+	    String actualMessage = exception.getMessage();
+
+	    assertTrue(actualMessage.contains(expectedMessage));
+	}
+	
+	@Test
+	public void removeFromCartTest_donthave() 
+	{	
+		s.clearCart();
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			s.removeFromCart("Wine");
+	    });
+		String expectedMessage = "You do not have a product called: Wine.";
+	    String actualMessage = exception.getMessage();
+
+	    assertTrue(actualMessage.contains(expectedMessage));
+	}
+	
+	@Test
+	public void removeFromCartTest_first() 
+	{	
+		s.clearCart();
+		s.addToCart("Wine", 1);
+		s.addToCart("Beef", 1);
+		s.removeFromCart("Wine");
+		assertFalse(s.containsName("Wine"));
+	}
+	
+	@Test
+	public void removeFromCartTest_second() 
+	{	
+		s.clearCart();
+		s.addToCart("Wine", 1);
+		s.addToCart("Beef", 1);
+		s.addToCart("Cereal", 1);
+		s.removeFromCart("Beef");
+		assertFalse(s.containsName("Beef"));
+	}
+	
+	@Test
+	public void removeFromCartTest_last() 
+	{	
+		s.clearCart();
+		s.addToCart("Wine", 1);
+		s.addToCart("Beef", 1);
+		s.addToCart("Cereal", 1);
+		s.removeFromCart("Cereal");
+		assertFalse(s.containsName("Cereal"));
 	}
 	
 	@Test

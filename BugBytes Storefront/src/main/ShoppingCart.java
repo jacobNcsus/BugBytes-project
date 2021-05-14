@@ -21,13 +21,6 @@ public class ShoppingCart
 	private CartNode current; //an iterator
 	private int size; //the total number of items in the cart
 
-
-	public static void main(String[] args)
-	{
-		ShoppingCart cart = new ShoppingCart(1, "Jagannadha Chidella", false); //true to test if scriptRunner works
-		cart.addToCart("Whiskey", 1);
-		cart.printTotal();
-	}
    
 	/**
      * 	Constructor of a shopping cart matching a specified user. 1 for default user.
@@ -274,22 +267,31 @@ public class ShoppingCart
    	{
    		Connector.capitalizeFirstLetter(name);
    		
-   		//find item
-   		String prodID = c.getProductID(name);	// converts to prodID from Product_name 
-   		if (prodID == null)
-   			throw new IllegalArgumentException("No product of that name exists: " + name + ".");
-   		String category = c.readItem(prodID, "PRODUCT_TYPE");
-   		double price = Double.parseDouble(c.readItem(prodID, "PRICE")); 
+   		int oldQuantity = getQuantity(name);
+   		if(oldQuantity > 0) //add that quantity to an existing Item's quantity
+   		{
+   			changeCartQuantity(name,oldQuantity+quantity);
+   		}
+   		else
+   		{
+   			//find item
+   	   		String prodID = c.getProductID(name);	// converts to prodID from Product_name 
+   	   		if (prodID == null)
+   	   			throw new IllegalArgumentException("No product of that name exists: " + name + ".");
+   	   		String category = c.readItem(prodID, "PRODUCT_TYPE");
+   	   		double price = Double.parseDouble(c.readItem(prodID, "PRICE")); 
 
-   		addItem(new Item(prodID, category, name, price, quantity)); //update cart
-   		
-   		c.addToCart(id, prodID, quantity); //update database
+   	   		addItem(new Item(prodID, category, name, price, quantity)); //update cart
+   	   		
+   	   		c.addToCart(id, prodID, quantity); //update database
+   		}
    	}
    
    	/**
    	 * 	Removes an item from the shopping cart. Not case sensitive.
    	 * 
-   	 * 	@throws 	IllegalArgumentException	if no such item exists in the database	
+   	 * 	@throws 	IllegalArgumentException	if no such item exists in the database
+   	 * 	@throws		IllegalArgumentException	if the cart does not contain such an item
    	 *	@param		name		the name of the item to be added
    	 * 	@return        	none
    	 */
@@ -302,9 +304,12 @@ public class ShoppingCart
    		if (prodID == null)
    			throw new IllegalArgumentException("No product of that name exists: " + name + ".");
    		
-   		removeItem(prodID); //update cart
-      
-   		c.removeFromCart(id, prodID); //update database
+   		Item item = removeItem(prodID); //update cart
+   		
+   		if(item == null)
+   			throw new IllegalArgumentException("You do not have a product called: " + name + ".");
+   		else
+   			c.removeFromCart(id, prodID); //update database
    	}
    	
    	/**
