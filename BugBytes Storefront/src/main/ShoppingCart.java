@@ -408,12 +408,16 @@ public class ShoppingCart
    	 */
    	public void clearCart()
    	{
-   		c.emptyCart(id); //clears database
-	   
-   		size = 0;
-   		head.getNext().setPrevious(null); //remove reference from second
-   		head = null; //remove reference from head
-   		//garbage collector will delete all the stray nodes in front-end cart
+   		if(size > 0)
+   		{
+   			c.emptyCart(id); //clears database
+   		   
+   	   		size = 0;
+   	   		if(head.hasNext())
+   	   			head.getNext().setPrevious(null); //remove reference from second
+   	   		head = null; //remove reference from head
+   	   		//garbage collector will delete all the stray nodes in front-end cart
+   		}
    	}
    
    	/**
