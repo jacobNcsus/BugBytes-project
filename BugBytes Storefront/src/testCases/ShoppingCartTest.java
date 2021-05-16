@@ -84,6 +84,7 @@ class ShoppingCartTest
 		ShoppingCart reset = new ShoppingCart(1,"username",true);
 		assertTrue(s.containsName("Chicken"));
 		assertFalse(reset.containsName("Chicken"));
+		s.clearCart();
 	}
 	
 	@Test
@@ -95,7 +96,7 @@ class ShoppingCartTest
 		String expectedMessage = "Customer id must be positive.";
 	    String actualMessage = exception.getMessage();
 
-	    assertTrue(actualMessage.contains(expectedMessage));
+	    assertTrue(actualMessage.equalsIgnoreCase(expectedMessage));
 	}
 	
 	@Test
@@ -132,13 +133,15 @@ class ShoppingCartTest
 	@Test
 	public void addToCartTest_nonsense() 
 	{	
+		s.clearCart();
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 			s.addToCart("dfindf",1);
 	    });
 		String expectedMessage = "No product of that name exists: dfindf.";
 	    String actualMessage = exception.getMessage();
 
-	    assertTrue(actualMessage.contains(expectedMessage));
+	    assertTrue(actualMessage.equalsIgnoreCase(expectedMessage));
+	    s.clearCart();
 	}
 	
 	@Test
@@ -171,7 +174,7 @@ class ShoppingCartTest
 		String expectedMessage = "No product of that name exists: dfindf.";
 	    String actualMessage = exception.getMessage();
 
-	    assertTrue(actualMessage.contains(expectedMessage));
+	    assertTrue(actualMessage.equalsIgnoreCase(expectedMessage));
 	}
 	
 	@Test
@@ -184,7 +187,7 @@ class ShoppingCartTest
 		String expectedMessage = "You do not have a product called: Wine.";
 	    String actualMessage = exception.getMessage();
 
-	    assertTrue(actualMessage.contains(expectedMessage));
+	    assertTrue(actualMessage.equalsIgnoreCase(expectedMessage));
 	}
 	
 	@Test
@@ -204,6 +207,7 @@ class ShoppingCartTest
 		s.addToCart("Beef", 1);
 		s.removeFromCart("Wine");
 		assertFalse(s.containsName("Wine"));
+		s.clearCart();
 	}
 	
 	@Test
@@ -215,6 +219,7 @@ class ShoppingCartTest
 		s.addToCart("Cereal", 1);
 		s.removeFromCart("Beef");
 		assertFalse(s.containsName("Beef"));
+		s.clearCart();
 	}
 	
 	@Test
@@ -226,6 +231,7 @@ class ShoppingCartTest
 		s.addToCart("Cereal", 1);
 		s.removeFromCart("Cereal");
 		assertFalse(s.containsName("Cereal"));
+		s.clearCart();
 	}
 	
 	@Test
@@ -237,7 +243,7 @@ class ShoppingCartTest
 		String expectedMessage = "No product of that name exists: dfindf.";
 	    String actualMessage = exception.getMessage();
 
-	    assertTrue(actualMessage.contains(expectedMessage));
+	    assertTrue(actualMessage.equalsIgnoreCase(expectedMessage));
 	}
 	
 	@Test
@@ -250,7 +256,7 @@ class ShoppingCartTest
 		String expectedMessage = "You do not have a product called: Wine.";
 	    String actualMessage = exception.getMessage();
 
-	    assertTrue(actualMessage.contains(expectedMessage));
+	    assertTrue(actualMessage.equalsIgnoreCase(expectedMessage));
 	}
 	
 	@Test
@@ -284,7 +290,7 @@ class ShoppingCartTest
 		String expectedMessage = "No product of that name exists: dfindf.";
 	    String actualMessage = exception.getMessage();
 
-	    assertTrue(actualMessage.contains(expectedMessage));
+	    assertTrue(actualMessage.equalsIgnoreCase(expectedMessage));
 	}
 	
 	@Test

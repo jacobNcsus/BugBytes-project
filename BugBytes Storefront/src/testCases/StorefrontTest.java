@@ -320,11 +320,16 @@ public class StorefrontTest
 		assertEquals(null,c.readItem(prodID,"q")); //null if not found
 	}
 	
+	@Test
+	public void signUpTest_exists() 
+	{
+		store.signUp("user4","Sai","Suresh","email","9168568535");
+	}
 	
 	@Test
-	public void signUpTest_failure() 
+	public void signUpTest_usernameTaken() 
 	{
-		store.signUp("user4","Sai","Surseh","email","9168568535");
+		store.signUp("user4","firstNameBad","lastNameBad","email","phone");
 	}
 	
 	@Test
@@ -353,7 +358,7 @@ public class StorefrontTest
 		cart.addToCart("Cake", 1);
 		cart.addToCart("Salmon", 2);
 		store.checkout(cart);
-		int id = c.getHighestOrderID()+1;
+		int id = c.getHighestOrderID();
 		assertEquals(0,cart.getCartSize());
 		store.cancelOrder(id);
 	}
@@ -418,23 +423,30 @@ public class StorefrontTest
 	}
 	
 	@Test
-	public void changeEmailTest() {
-		//store.changeEmail(1,"email");
+	public void changeEmailTest() 
+	{
+		store.changeEmail(1,"TestEmail");
+		store.changeEmail(1, "foo@bar.com");
 	}
 	
 	@Test
-	public void changePhoneTest() {
-		//store.changePhone(1,"phoneNumber");
+	public void changePhoneTest() 
+	{
+		store.changePhone(1,"phoneNumber");
+		store.changePhone(1,"number");
 	}
 	
 	@Test
-	public void removeAccountTest() {
-		//store.removeAccount(1);
+	public void loginTest_exists() 
+	{
+		int i = store.login("user4","Sai","Suresh");
+		assertEquals(4,i);
 	}
 	
 	@Test
-	public void cancelOrderTest() {
-		//store.cancelOrder(1);
+	public void loginTest_absent() 
+	{
+		int i = store.login("user5","Sai","Suresh");
+		assertEquals(0,i);
 	}
-
 }

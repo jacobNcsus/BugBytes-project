@@ -136,6 +136,7 @@ public class Connector
 	 * 	@return        	a String representation of the column value
 	 */
 	public String readItem(String id, String column) 
+		throws IllegalArgumentException
 	{
 		if (column.equalsIgnoreCase("a") || column.equalsIgnoreCase("aisle") || column.equalsIgnoreCase("'aisle'")
     			||column.equalsIgnoreCase("t") || column.equalsIgnoreCase("type") || column.equalsIgnoreCase("'type'")
@@ -235,6 +236,7 @@ public class Connector
 	 * 	@param		id			an optional parameter for either a user or order id, negative to print all 
 	 */
 	public void read(String tableView, int id) 
+		throws IllegalArgumentException, SecurityException
 	{
 		Connector.capitalizeFirstLetter(tableView);
 		
@@ -497,7 +499,7 @@ public class Connector
 			else 
 				throw new IllegalArgumentException("Invalid table choice.");
 		}
-		catch (Exception e)
+		catch (SQLException e)
 		{
 			e.printStackTrace(); 
 		}
@@ -511,6 +513,7 @@ public class Connector
 	 * 	@return		the product number
 	 */
 	public int getHighestProductID(String aisle)
+		throws IllegalArgumentException
 	{
 		if (!isAisle(aisle))
 		{
@@ -539,8 +542,8 @@ public class Connector
 		catch (Exception e)
 		{
 			e.printStackTrace(); 
+			return 0; //failure
 		}
-		return 0; //failure
 	}
 	
 	/**
@@ -560,6 +563,7 @@ public class Connector
 	 * 	@return        		0 on failure, or 1 on success
 	 */
 	public int insert(String PRODUCT_ID, String PRODUCT_TYPE, String PRODUCT_NAME, double PRICE, int QUANTITY_IN_STOCK, int REORDER)
+		throws SecurityException, IllegalArgumentException
 	{
 		if (!admin)
 		{
@@ -626,14 +630,21 @@ public class Connector
 	/**
 	 * 	Updates an item in the inventory. Requires authorization.
 	 * 
+	 * 	@throws		SecurityException			if this connection does not have admin privileges	
+	 * 	@throws		IllegalArgumentException	if no item of that name exists	
 	 * 	@throws		IllegalArgumentException	if column is invalid
-	 * 	@throws		SecurityException			if this connection does not have admin privileges
 	 * 	@param 		name		the name of the item to be changed
 	 * 	@param		column		the field you wish to change, either aisle, name, price, quantity, or reorder
 	 * 	@param		value		the new value proposed for this field
 	 */
 	public void update(String name, String column, String value)
+			throws SecurityException, IllegalArgumentException
 	{
+		if (!admin)
+		{
+			throw new SecurityException("Ordinary customers are not permitted to alter the store's inventory.");
+		}
+		
 		int type; //-1 for String, 0 for double, 1 for int
 		if (column.equalsIgnoreCase("a") || column.equalsIgnoreCase("aisle") || column.equalsIgnoreCase("'aisle'")
     			||column.equalsIgnoreCase("t") || column.equalsIgnoreCase("type") || column.equalsIgnoreCase("'type'")
@@ -676,11 +687,6 @@ public class Connector
     		throw new IllegalArgumentException("Invalid position. Please choose either 'aisle', 'name', 'price', 'quantity', or 'reorder'.");
     	}
 		
-		if (!admin)
-		{
-			throw new SecurityException("Ordinary customers are not permitted to alter the store's inventory.");
-		}
-		
 		try
     	{
 			PreparedStatement myStmt = myConn.prepareStatement(query);
@@ -698,17 +704,12 @@ public class Connector
     		{
     			System.out.println("Update complete. \n");
     		}
-    		else if (rows < 1)
-    		{
-    			System.out.println("Error. Could not complete update. Please try again later. \n");
-    		}
     		else
     		{
-    			//error, somehow edited more than one entry
-    			System.out.println("Update complete. \n");
+    			throw new IllegalArgumentException("No product of that name exists: " + name + ".");
     		}
     	}
-    	catch (Exception e)
+    	catch (SQLException e)
     	{
     		e.printStackTrace();
     	}
@@ -717,10 +718,12 @@ public class Connector
 	/**
 	 * 	Removes an item from the inventory. Requires authorization.
 	 * 
-	 * 	@throws		SecurityException	if this connection does not have admin privileges
+	 * 	@throws		SecurityException			if this connection does not have admin privileges
+	 * 	@throws		IllegalArgumentException	if no product of this name exists
 	 * 	@param		name		the name of the item to be removed
 	 */
 	public void delete(String name)
+			throws SecurityException, IllegalArgumentException
 	{
 		if (!admin)
 		{
@@ -735,7 +738,7 @@ public class Connector
 			query = "delete from products where PRODUCT_NAME ='"+ name + "'"; 
 			int rowsAffected = myStmt.executeUpdate(query); 
 			if (rowsAffected < 1)
-				System.out.println("No matching item was found. Nothing removed.");
+				throw new IllegalArgumentException("No product of that name exists: " + name + ".");
 			else
 				System.out.println("Item " + name + " removed \n");
 
@@ -1438,7 +1441,7 @@ public class Connector
 			{ 
 				if(username.equals(myRs.getString("USERNAME")))
 				{
-					if(firstName.equals(myRs.getString("FIRST_NAME")) && lastName.equals(myRs.getString("LAST_NAME")))
+					if(firstName.equalsIgnoreCase(myRs.getString("FIRST_NAME")) && lastName.equalsIgnoreCase(myRs.getString("LAST_NAME")))
 					{
 						int ret = myRs.getInt("CUSTOMER_ID");
 						myStmt.close();
