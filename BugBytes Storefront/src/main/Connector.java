@@ -738,7 +738,7 @@ public class Connector
 			query = "delete from products where PRODUCT_NAME ='"+ name + "'"; 
 			int rowsAffected = myStmt.executeUpdate(query); 
 			if (rowsAffected < 1)
-				throw new IllegalArgumentException("No product of that name exists: " + name + ".");
+				System.out.println("No matching item was found. Nothing removed.");
 			else
 				System.out.println("Item " + name + " removed \n");
 

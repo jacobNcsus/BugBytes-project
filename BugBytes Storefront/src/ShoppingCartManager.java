@@ -1,5 +1,9 @@
-package main;
+
 import java.util.Scanner;
+
+import main.Item;
+import main.ShoppingCart;
+import main.Storefront;
 
 /**
  * 	Implements a menu to interact with the virtual store via console input
